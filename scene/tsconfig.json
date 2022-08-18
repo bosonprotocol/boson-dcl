@@ -2,8 +2,17 @@
   "compilerOptions": {
     "outFile": "./bin/game.js",
     "allowJs": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@bosonprotocol/boson-dcl": [
+        "..\\library\\dist\\index.d.ts"
+      ]
+    },
+    "baseUrl": "."
   },
-  "include": ["src/**/*.ts"],
-  "extends": "./node_modules/decentraland-ecs/types/tsconfig.json"
+  "include": [
+    "src/**/*.ts"
+  ],
+  "extends": "./node_modules/decentraland-ecs/types/tsconfig.json",
+  "compileOnSave": false
 }

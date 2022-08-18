@@ -20,5 +20,11 @@
     "node": ">=14.0.0",
     "npm": ">=6.0.0",
     "yarn": "please use npm"
-  }
+  },
+  "dependencies": {
+    "@bosonprotocol/boson-dcl": "file:../library"
+  },
+  "bundledDependencies": [
+    "@bosonprotocol/boson-dcl"
+  ]
 }
