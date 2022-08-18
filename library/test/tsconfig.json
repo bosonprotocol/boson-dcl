@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "types": [
+      "jest",
+      "node"
+    ],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "files": ["../node_modules/decentraland-ecs/types/dcl/index.d.ts"]
+}

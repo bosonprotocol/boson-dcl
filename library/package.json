@@ -1,0 +1,51 @@
+{
+  "name": "sdk-library",
+  "version": "1.0.0",
+  "description": "Dcl SDK Library",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "docs": "api-documenter markdown --output-folder docs/ --input-folder temp/",
+    "build": "rm -rf temp/ && rollup -c && npm run docs",
+    "link": "npm link && rollup --watch -c ",
+    "test": "jest --detectOpenHandles --silent=false --verbose --colors --runInBand"
+  },
+  "typings": "./dist/index.d.ts",
+  "decentralandLibrary": {
+    "main": "./dist/index.js"
+  },
+  "keywords": [
+    "dcl",
+    "decentraland",
+    "sdk",
+    "library"
+  ],
+  "author": "-",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/$dcl-author/$dcl-library-name"
+  },
+  "files": [
+    "dist",
+    "!dist/types"
+  ],
+  "devDependencies": {
+    "@microsoft/api-documenter": "^7.17.11",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-typescript": "^8.3.1",
+    "@types/jest": "^27.4.1",
+    "decentraland-ecs": "latest",
+    "jest": "^27.5.1",
+    "rollup": "^2.70.1",
+    "rollup-plugin-api-extractor": "^0.2.5",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^27.1.4"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0",
+    "yarn": "please use npm"
+  }
+}
