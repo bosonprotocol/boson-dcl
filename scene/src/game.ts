@@ -1,5 +1,7 @@
 /// --- Set up a system ---
 
+import { useBoson } from "./boson"
+
 class RotatorSystem {
   // this group will contain every entity that has a Transform component
   group = engine.getComponentGroup(Transform)
@@ -49,3 +51,5 @@ cube.addComponent(
     spawnCube(Math.random() * 8 + 1, Math.random() * 8, Math.random() * 8 + 1)
   })
 )
+
+useBoson();

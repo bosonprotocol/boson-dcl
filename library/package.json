@@ -1,12 +1,12 @@
 {
-  "name": "sdk-library",
-  "version": "1.0.0",
-  "description": "Dcl SDK Library",
+  "name": "@bosonprotocol/boson-dcl",
+  "version": "2.0.0-alpha.0",
+  "description": "Boson Protocol - Decentraland library v2",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "docs": "api-documenter markdown --output-folder docs/ --input-folder temp/",
-    "build": "rm -rf temp/ && rollup -c && npm run docs",
+    "build": "rimraf temp/ && rollup -c && npm run docs",
     "link": "npm link && rollup --watch -c ",
     "test": "jest --detectOpenHandles --silent=false --verbose --colors --runInBand"
   },
@@ -17,7 +17,8 @@
   "keywords": [
     "dcl",
     "decentraland",
-    "sdk",
+    "boson protocol",
+    "bosonprotocol",
     "library"
   ],
   "author": "-",
@@ -38,6 +39,7 @@
     "@types/jest": "^27.4.1",
     "decentraland-ecs": "^6.11.4",
     "jest": "^27.5.1",
+    "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
     "rollup-plugin-api-extractor": "^0.2.5",
     "rollup-plugin-terser": "^7.0.2",

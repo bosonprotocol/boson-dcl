@@ -1,4 +1,4 @@
-## SDK Library
+## BOSON PROTOCOL - Decentraland Library
 
 This project has the basics to start building your own library for using in Decentraland scenes.
 

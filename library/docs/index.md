@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [sdk-library](./sdk-library.md) |  |
+|  [@bosonprotocol/boson-dcl](./boson-dcl.md) |  |
 
