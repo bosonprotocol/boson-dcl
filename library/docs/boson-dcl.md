@@ -15,6 +15,7 @@
 
 |  Function | Description |
 |  --- | --- |
+|  [initCoreSdk(chainId)](./boson-dcl.initcoresdk.md) |  |
 |  [someFn()](./boson-dcl.somefn.md) |  |
 
 ## Variables
