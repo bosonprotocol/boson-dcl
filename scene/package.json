@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@dcl/eslint-config": "^1.0.1",
-    "decentraland-ecs": "^6.11.4"
+    "decentraland-ecs": "^6.11.4",
+    "eth-connect": "^6.0.3"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -25,6 +26,7 @@
     "@bosonprotocol/boson-dcl": "file:../library"
   },
   "bundledDependencies": [
+    "eth-connect",
     "@bosonprotocol/boson-dcl"
   ]
 }

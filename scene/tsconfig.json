@@ -5,7 +5,11 @@
     "strict": true,
     "paths": {
       "@bosonprotocol/boson-dcl": [
-        "..\\library\\dist\\index.d.ts"
+        "..\\library\\dist\\index.d.ts",
+        "../library/dist/index.d.ts"
+      ],
+      "eth-connect": [
+        "node_modules/eth-connect/eth-connect.d.ts"
       ]
     },
     "baseUrl": "."

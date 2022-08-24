@@ -17,7 +17,7 @@ npm i -g decentraland
 Open this folder on the command line, then run:
 
 ```
-dcl start
+dcl start --web3
 ```
 
 Any dependencies are installed and then the CLI opens the scene in a new browser tab.

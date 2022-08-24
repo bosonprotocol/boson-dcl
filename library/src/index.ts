@@ -1,9 +1,7 @@
-import { ExampleComponent, constant, someFn } from './exampleComponent'
+import { ExampleComponent, constant, someFn } from "./exampleComponent";
 
-export {
-  ExampleComponent,
-  constant,
-  someFn
-}
+export { ExampleComponent, constant, someFn };
 
-export * from './customSystem'
+export * from "./customSystem";
+
+export { initCoreSdk } from "./core-sdk";
