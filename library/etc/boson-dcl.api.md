@@ -5,9 +5,3092 @@
 ```ts
 
 /// <reference types="dcl" />
+/// <reference types="env" />
+
+import * as accounts from './accounts';
+import { AnyMetadata } from '@bosonprotocol/common';
+import { BigNumberish } from '@ethersproject/bignumber';
+import { BytesLike } from '@ethersproject/bytes';
+import * as disputes from './disputes';
+import { GraphQLClient } from 'graphql-request';
+import { Log } from '@bosonprotocol/common';
+import { MetadataStorage } from '@bosonprotocol/common';
+import * as metaTx from './meta-tx';
+import * as offers from './offers';
+import { TransactionResponse } from '@bosonprotocol/common';
+import { Web3LibAdapter } from '@bosonprotocol/common';
+
+// @public
+type Account = {
+    funds: Array<FundsEntity>;
+    id: Scalars["ID"];
+};
+
+// @public (undocumented)
+type Account_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+};
+
+// @public (undocumented)
+enum Account_OrderBy {
+    // (undocumented)
+    Funds = "funds",
+    // (undocumented)
+    Id = "id"
+}
+
+// @public
+type AccountFundsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
+
+// @public (undocumented)
+type BaseBaseMetadataEntityFieldsFragment = {
+    __typename?: "BaseMetadataEntity";
+    id: string;
+    name: string;
+    description: string;
+    externalUrl: string;
+    schemaUrl: string;
+    type: MetadataType;
+    image: string;
+    createdAt: string;
+    voided: boolean;
+    validFromDate: string;
+    validUntilDate: string;
+    quantityAvailable: string;
+    attributes?: Array<{
+        __typename?: "MetadataAttribute";
+        traitType: string;
+        value: string;
+        displayType: string;
+    }> | null;
+    offer: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+};
+
+// @public (undocumented)
+const BaseBaseMetadataEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseBuyerFieldsFragment = {
+    __typename?: "Buyer";
+    id: string;
+    wallet: string;
+    active: boolean;
+};
+
+// @public (undocumented)
+const BaseBuyerFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseDisputeFieldsFragment = {
+    __typename?: "Dispute";
+    id: string;
+    exchangeId: string;
+    complaint: string;
+    state: DisputeState;
+    buyerPercent: string;
+    disputedDate: string;
+    escalatedDate?: string | null;
+    finalizedDate?: string | null;
+    timeout: string;
+    exchange: {
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    buyer: {
+        __typename?: "Buyer";
+        id: string;
+        wallet: string;
+        active: boolean;
+    };
+};
+
+// @public (undocumented)
+const BaseDisputeFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseDisputeResolutionTermsEntityFieldsFragment = {
+    __typename?: "DisputeResolutionTermsEntity";
+    id: string;
+    disputeResolverId: string;
+    escalationResponsePeriod: string;
+    feeAmount: string;
+    buyerEscalationDeposit: string;
+};
+
+// @public (undocumented)
+const BaseDisputeResolutionTermsEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseDisputeResolverFeeFieldsFragment = {
+    __typename?: "DisputeResolverFee";
+    id: string;
+    tokenAddress: string;
+    tokenName: string;
+    feeAmount: string;
+    token: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+};
+
+// @public (undocumented)
+const BaseDisputeResolverFeeFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseDisputeResolverFieldsFragment = {
+    __typename?: "DisputeResolver";
+    id: string;
+    escalationResponsePeriod: string;
+    admin: string;
+    clerk: string;
+    treasury: string;
+    operator: string;
+    metadataUri: string;
+    active: boolean;
+    sellerAllowList: Array<string>;
+    fees: Array<{
+        __typename?: "DisputeResolverFee";
+        id: string;
+        tokenAddress: string;
+        tokenName: string;
+        feeAmount: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+};
+
+// @public (undocumented)
+const BaseDisputeResolverFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseExchangeFieldsFragment = {
+    __typename?: "Exchange";
+    id: string;
+    disputed: boolean;
+    state: ExchangeState;
+    committedDate: string;
+    finalizedDate?: string | null;
+    validUntilDate: string;
+    redeemedDate?: string | null;
+    revokedDate?: string | null;
+    cancelledDate?: string | null;
+    completedDate?: string | null;
+    expired: boolean;
+};
+
+// @public (undocumented)
+const BaseExchangeFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseExchangeTokenFieldsFragment = {
+    __typename?: "ExchangeToken";
+    id: string;
+    address: string;
+    decimals: string;
+    symbol: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseExchangeTokenFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseFundsEntityFieldsFragment = {
+    __typename?: "FundsEntity";
+    id: string;
+    availableAmount: string;
+    accountId: string;
+};
+
+// @public (undocumented)
+const BaseFundsEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseMetadataEntity = MetadataInterface & {
+    __typename?: "BaseMetadataEntity";
+    attributes?: Maybe<Array<MetadataAttribute>>;
+    createdAt: Scalars["BigInt"];
+    description: Scalars["String"];
+    exchangeToken: ExchangeToken;
+    externalUrl: Scalars["String"];
+    id: Scalars["ID"];
+    image: Scalars["String"];
+    name: Scalars["String"];
+    offer: Offer;
+    quantityAvailable: Scalars["BigInt"];
+    schemaUrl: Scalars["String"];
+    seller: Seller;
+    type: MetadataType;
+    validFromDate: Scalars["BigInt"];
+    validUntilDate: Scalars["BigInt"];
+    voided: Scalars["Boolean"];
+};
+
+// @public (undocumented)
+type BaseMetadataEntity_Filter = {
+    attributes?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    createdAt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    createdAt_lt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_lte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_lt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_lte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_gt?: InputMaybe<Scalars["String"]>;
+    externalUrl_gte?: InputMaybe<Scalars["String"]>;
+    externalUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_lt?: InputMaybe<Scalars["String"]>;
+    externalUrl_lte?: InputMaybe<Scalars["String"]>;
+    externalUrl_not?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    image?: InputMaybe<Scalars["String"]>;
+    image_contains?: InputMaybe<Scalars["String"]>;
+    image_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_ends_with?: InputMaybe<Scalars["String"]>;
+    image_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_gt?: InputMaybe<Scalars["String"]>;
+    image_gte?: InputMaybe<Scalars["String"]>;
+    image_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_lt?: InputMaybe<Scalars["String"]>;
+    image_lte?: InputMaybe<Scalars["String"]>;
+    image_not?: InputMaybe<Scalars["String"]>;
+    image_not_contains?: InputMaybe<Scalars["String"]>;
+    image_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_not_starts_with?: InputMaybe<Scalars["String"]>;
+    image_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_starts_with?: InputMaybe<Scalars["String"]>;
+    image_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer?: InputMaybe<Scalars["String"]>;
+    offer_contains?: InputMaybe<Scalars["String"]>;
+    offer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_gt?: InputMaybe<Scalars["String"]>;
+    offer_gte?: InputMaybe<Scalars["String"]>;
+    offer_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_lt?: InputMaybe<Scalars["String"]>;
+    offer_lte?: InputMaybe<Scalars["String"]>;
+    offer_not?: InputMaybe<Scalars["String"]>;
+    offer_not_contains?: InputMaybe<Scalars["String"]>;
+    offer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    quantityAvailable?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityAvailable_lt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_lte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    schemaUrl?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_lt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_lte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type?: InputMaybe<MetadataType>;
+    type_in?: InputMaybe<Array<MetadataType>>;
+    type_not?: InputMaybe<MetadataType>;
+    type_not_in?: InputMaybe<Array<MetadataType>>;
+    validFromDate?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validFromDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voided?: InputMaybe<Scalars["Boolean"]>;
+    voided_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    voided_not?: InputMaybe<Scalars["Boolean"]>;
+    voided_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+};
+
+// @public (undocumented)
+enum BaseMetadataEntity_OrderBy {
+    // (undocumented)
+    Attributes = "attributes",
+    // (undocumented)
+    CreatedAt = "createdAt",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    ExchangeToken = "exchangeToken",
+    // (undocumented)
+    ExternalUrl = "externalUrl",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Image = "image",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Offer = "offer",
+    // (undocumented)
+    QuantityAvailable = "quantityAvailable",
+    // (undocumented)
+    SchemaUrl = "schemaUrl",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    Type = "type",
+    // (undocumented)
+    ValidFromDate = "validFromDate",
+    // (undocumented)
+    ValidUntilDate = "validUntilDate",
+    // (undocumented)
+    Voided = "voided"
+}
+
+// @public (undocumented)
+type BaseMetadataEntityAttributesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataAttribute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<MetadataAttribute_Filter>;
+};
+
+// @public (undocumented)
+type BaseMetadataEntityFieldsFragment = {
+    __typename?: "BaseMetadataEntity";
+    id: string;
+    name: string;
+    description: string;
+    externalUrl: string;
+    schemaUrl: string;
+    type: MetadataType;
+    image: string;
+    createdAt: string;
+    voided: boolean;
+    validFromDate: string;
+    validUntilDate: string;
+    quantityAvailable: string;
+    attributes?: Array<{
+        __typename?: "MetadataAttribute";
+        traitType: string;
+        value: string;
+        displayType: string;
+    }> | null;
+    offer: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+};
+
+// @public (undocumented)
+const BaseMetadataEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseOfferFieldsFragment = {
+    __typename?: "Offer";
+    id: string;
+    createdAt: string;
+    price: string;
+    sellerDeposit: string;
+    protocolFee: string;
+    agentFee: string;
+    agentId: string;
+    buyerCancelPenalty: string;
+    quantityAvailable: string;
+    quantityInitial: string;
+    validFromDate: string;
+    validUntilDate: string;
+    voucherRedeemableFromDate: string;
+    voucherRedeemableUntilDate: string;
+    fulfillmentPeriodDuration: string;
+    voucherValidDuration: string;
+    resolutionPeriodDuration: string;
+    metadataUri: string;
+    metadataHash: string;
+    voidedAt?: string | null;
+    disputeResolverId: string;
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+    disputeResolver: {
+        __typename?: "DisputeResolver";
+        id: string;
+        escalationResponsePeriod: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        operator: string;
+        metadataUri: string;
+        active: boolean;
+        sellerAllowList: Array<string>;
+        fees: Array<{
+            __typename?: "DisputeResolverFee";
+            id: string;
+            tokenAddress: string;
+            tokenName: string;
+            feeAmount: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+    };
+    disputeResolutionTerms: {
+        __typename?: "DisputeResolutionTermsEntity";
+        id: string;
+        disputeResolverId: string;
+        escalationResponsePeriod: string;
+        feeAmount: string;
+        buyerEscalationDeposit: string;
+    };
+    metadata?: {
+        __typename?: "BaseMetadataEntity";
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+    } | {
+        __typename?: "ProductV1MetadataEntity";
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        uuid: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        product: {
+            __typename?: "ProductV1Product";
+            id: string;
+            uuid: string;
+            version: number;
+            title: string;
+            description: string;
+            identification_sKU?: string | null;
+            identification_productId?: string | null;
+            identification_productIdType?: string | null;
+            productionInformation_brandName: string;
+            productionInformation_manufacturer?: string | null;
+            productionInformation_manufacturerPartNumber?: string | null;
+            productionInformation_modelNumber?: string | null;
+            productionInformation_materials?: Array<string> | null;
+            details_category?: string | null;
+            details_subCategory?: string | null;
+            details_subCategory2?: string | null;
+            details_offerCategory: string;
+            offerCategory: ProductV1OfferCategory;
+            details_tags?: Array<string> | null;
+            details_sections?: Array<string> | null;
+            details_personalisation?: Array<string> | null;
+            packaging_packageQuantity?: string | null;
+            packaging_dimensions_length?: string | null;
+            packaging_dimensions_width?: string | null;
+            packaging_dimensions_height?: string | null;
+            packaging_dimensions_unit?: string | null;
+            packaging_weight_value?: string | null;
+            packaging_weight_unit?: string | null;
+            brand: {
+                __typename?: "ProductV1Brand";
+                id: string;
+                name: string;
+            };
+            category?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory2?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            tags?: Array<{
+                __typename?: "ProductV1Tag";
+                id: string;
+                name: string;
+            }> | null;
+            sections?: Array<{
+                __typename?: "ProductV1Section";
+                id: string;
+                name: string;
+            }> | null;
+            personalisation?: Array<{
+                __typename?: "ProductV1Personalisation";
+                id: string;
+                name: string;
+            }> | null;
+            visuals_images: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }>;
+            visuals_videos?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+        };
+        variations?: Array<{
+            __typename?: "ProductV1Variation";
+            id: string;
+            type: string;
+            option: string;
+        }> | null;
+        productV1Seller: {
+            __typename?: "ProductV1Seller";
+            id: string;
+            defaultVersion?: number | null;
+            name?: string | null;
+            description?: string | null;
+            externalUrl?: string | null;
+            tokenId?: string | null;
+            images?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+            contactLinks?: Array<{
+                __typename?: "ProductV1SellerContactLink";
+                id: string;
+                url: string;
+                tag: string;
+            }> | null;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+        };
+        exchangePolicy: {
+            __typename?: "ProductV1ExchangePolicy";
+            id: string;
+            uuid: string;
+            version: number;
+            label?: string | null;
+            template: string;
+        };
+        shipping?: {
+            __typename?: "ProductV1ShippingOption";
+            id: string;
+            defaultVersion?: number | null;
+            countryOfOrigin?: string | null;
+            redemptionPoint?: string | null;
+            supportedJurisdictions?: Array<{
+                __typename?: "ProductV1ShippingJurisdiction";
+                id: string;
+                label: string;
+                deliveryTime: string;
+            }> | null;
+        } | null;
+    } | null;
+};
+
+// @public (undocumented)
+const BaseOfferFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1BrandFieldsFragment = {
+    __typename?: "ProductV1Brand";
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseProductV1BrandFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1CategoryFieldsFragment = {
+    __typename?: "ProductV1Category";
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseProductV1CategoryFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1ExchangePolicyFieldsFragment = {
+    __typename?: "ProductV1ExchangePolicy";
+    id: string;
+    uuid: string;
+    version: number;
+    label?: string | null;
+    template: string;
+};
+
+// @public (undocumented)
+const BaseProductV1ExchangePolicyFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1MediaFieldsFragment = {
+    __typename?: "ProductV1Media";
+    id: string;
+    url: string;
+    tag?: string | null;
+    type: ProductV1MediaType;
+};
+
+// @public (undocumented)
+const BaseProductV1MediaFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1MetadataEntityFieldsFragment = {
+    __typename?: "ProductV1MetadataEntity";
+    id: string;
+    name: string;
+    description: string;
+    externalUrl: string;
+    schemaUrl: string;
+    type: MetadataType;
+    image: string;
+    createdAt: string;
+    voided: boolean;
+    validFromDate: string;
+    validUntilDate: string;
+    quantityAvailable: string;
+    uuid: string;
+    attributes?: Array<{
+        __typename?: "MetadataAttribute";
+        traitType: string;
+        value: string;
+        displayType: string;
+    }> | null;
+    offer: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+    product: {
+        __typename?: "ProductV1Product";
+        id: string;
+        uuid: string;
+        version: number;
+        title: string;
+        description: string;
+        identification_sKU?: string | null;
+        identification_productId?: string | null;
+        identification_productIdType?: string | null;
+        productionInformation_brandName: string;
+        productionInformation_manufacturer?: string | null;
+        productionInformation_manufacturerPartNumber?: string | null;
+        productionInformation_modelNumber?: string | null;
+        productionInformation_materials?: Array<string> | null;
+        details_category?: string | null;
+        details_subCategory?: string | null;
+        details_subCategory2?: string | null;
+        details_offerCategory: string;
+        offerCategory: ProductV1OfferCategory;
+        details_tags?: Array<string> | null;
+        details_sections?: Array<string> | null;
+        details_personalisation?: Array<string> | null;
+        packaging_packageQuantity?: string | null;
+        packaging_dimensions_length?: string | null;
+        packaging_dimensions_width?: string | null;
+        packaging_dimensions_height?: string | null;
+        packaging_dimensions_unit?: string | null;
+        packaging_weight_value?: string | null;
+        packaging_weight_unit?: string | null;
+        brand: {
+            __typename?: "ProductV1Brand";
+            id: string;
+            name: string;
+        };
+        category?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        subCategory?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        subCategory2?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        tags?: Array<{
+            __typename?: "ProductV1Tag";
+            id: string;
+            name: string;
+        }> | null;
+        sections?: Array<{
+            __typename?: "ProductV1Section";
+            id: string;
+            name: string;
+        }> | null;
+        personalisation?: Array<{
+            __typename?: "ProductV1Personalisation";
+            id: string;
+            name: string;
+        }> | null;
+        visuals_images: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }>;
+        visuals_videos?: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }> | null;
+    };
+    variations?: Array<{
+        __typename?: "ProductV1Variation";
+        id: string;
+        type: string;
+        option: string;
+    }> | null;
+    productV1Seller: {
+        __typename?: "ProductV1Seller";
+        id: string;
+        defaultVersion?: number | null;
+        name?: string | null;
+        description?: string | null;
+        externalUrl?: string | null;
+        tokenId?: string | null;
+        images?: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }> | null;
+        contactLinks?: Array<{
+            __typename?: "ProductV1SellerContactLink";
+            id: string;
+            url: string;
+            tag: string;
+        }> | null;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+    };
+    exchangePolicy: {
+        __typename?: "ProductV1ExchangePolicy";
+        id: string;
+        uuid: string;
+        version: number;
+        label?: string | null;
+        template: string;
+    };
+};
+
+// @public (undocumented)
+const BaseProductV1MetadataEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1PersonalisationFieldsFragment = {
+    __typename?: "ProductV1Personalisation";
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseProductV1PersonalisationFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1ProductFieldsFragment = {
+    __typename?: "ProductV1Product";
+    id: string;
+    uuid: string;
+    version: number;
+    title: string;
+    description: string;
+    identification_sKU?: string | null;
+    identification_productId?: string | null;
+    identification_productIdType?: string | null;
+    productionInformation_brandName: string;
+    productionInformation_manufacturer?: string | null;
+    productionInformation_manufacturerPartNumber?: string | null;
+    productionInformation_modelNumber?: string | null;
+    productionInformation_materials?: Array<string> | null;
+    details_category?: string | null;
+    details_subCategory?: string | null;
+    details_subCategory2?: string | null;
+    details_offerCategory: string;
+    offerCategory: ProductV1OfferCategory;
+    details_tags?: Array<string> | null;
+    details_sections?: Array<string> | null;
+    details_personalisation?: Array<string> | null;
+    packaging_packageQuantity?: string | null;
+    packaging_dimensions_length?: string | null;
+    packaging_dimensions_width?: string | null;
+    packaging_dimensions_height?: string | null;
+    packaging_dimensions_unit?: string | null;
+    packaging_weight_value?: string | null;
+    packaging_weight_unit?: string | null;
+    brand: {
+        __typename?: "ProductV1Brand";
+        id: string;
+        name: string;
+    };
+    category?: {
+        __typename?: "ProductV1Category";
+        id: string;
+        name: string;
+    } | null;
+    subCategory?: {
+        __typename?: "ProductV1Category";
+        id: string;
+        name: string;
+    } | null;
+    subCategory2?: {
+        __typename?: "ProductV1Category";
+        id: string;
+        name: string;
+    } | null;
+    tags?: Array<{
+        __typename?: "ProductV1Tag";
+        id: string;
+        name: string;
+    }> | null;
+    sections?: Array<{
+        __typename?: "ProductV1Section";
+        id: string;
+        name: string;
+    }> | null;
+    personalisation?: Array<{
+        __typename?: "ProductV1Personalisation";
+        id: string;
+        name: string;
+    }> | null;
+    visuals_images: Array<{
+        __typename?: "ProductV1Media";
+        id: string;
+        url: string;
+        tag?: string | null;
+        type: ProductV1MediaType;
+    }>;
+    visuals_videos?: Array<{
+        __typename?: "ProductV1Media";
+        id: string;
+        url: string;
+        tag?: string | null;
+        type: ProductV1MediaType;
+    }> | null;
+};
+
+// @public (undocumented)
+const BaseProductV1ProductFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1ProductOverridesFieldsFragment = {
+    __typename?: "ProductV1ProductOverrides";
+    id: string;
+    version: number;
+    title: string;
+    description: string;
+    identification_sKU?: string | null;
+    identification_productId?: string | null;
+    identification_productIdType?: string | null;
+    productionInformation_brandName: string;
+    productionInformation_manufacturer?: string | null;
+    productionInformation_manufacturerPartNumber?: string | null;
+    productionInformation_modelNumber?: string | null;
+    productionInformation_materials?: Array<string> | null;
+    packaging_packageQuantity?: string | null;
+    packaging_dimensions_length?: string | null;
+    packaging_dimensions_width?: string | null;
+    packaging_dimensions_height?: string | null;
+    packaging_dimensions_unit?: string | null;
+    packaging_weight_value?: string | null;
+    packaging_weight_unit?: string | null;
+    brand: {
+        __typename?: "ProductV1Brand";
+        id: string;
+        name: string;
+    };
+    visuals_images: Array<{
+        __typename?: "ProductV1Media";
+        id: string;
+        url: string;
+        tag?: string | null;
+        type: ProductV1MediaType;
+    }>;
+    visuals_videos?: Array<{
+        __typename?: "ProductV1Media";
+        id: string;
+        url: string;
+        tag?: string | null;
+        type: ProductV1MediaType;
+    }> | null;
+};
+
+// @public (undocumented)
+const BaseProductV1ProductOverridesFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1SectionFieldsFragment = {
+    __typename?: "ProductV1Section";
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseProductV1SectionFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1SellerContactLinkFieldsFragment = {
+    __typename?: "ProductV1SellerContactLink";
+    id: string;
+    url: string;
+    tag: string;
+};
+
+// @public (undocumented)
+const BaseProductV1SellerContactLinkFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1SellerFieldsFragment = {
+    __typename?: "ProductV1Seller";
+    id: string;
+    defaultVersion?: number | null;
+    name?: string | null;
+    description?: string | null;
+    externalUrl?: string | null;
+    tokenId?: string | null;
+    images?: Array<{
+        __typename?: "ProductV1Media";
+        id: string;
+        url: string;
+        tag?: string | null;
+        type: ProductV1MediaType;
+    }> | null;
+    contactLinks?: Array<{
+        __typename?: "ProductV1SellerContactLink";
+        id: string;
+        url: string;
+        tag: string;
+    }> | null;
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+};
+
+// @public (undocumented)
+const BaseProductV1SellerFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1ShippingJurisdictionFieldsFragment = {
+    __typename?: "ProductV1ShippingJurisdiction";
+    id: string;
+    label: string;
+    deliveryTime: string;
+};
+
+// @public (undocumented)
+const BaseProductV1ShippingJurisdictionFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1ShippingOptionFieldsFragment = {
+    __typename?: "ProductV1ShippingOption";
+    id: string;
+    defaultVersion?: number | null;
+    countryOfOrigin?: string | null;
+    redemptionPoint?: string | null;
+    supportedJurisdictions?: Array<{
+        __typename?: "ProductV1ShippingJurisdiction";
+        id: string;
+        label: string;
+        deliveryTime: string;
+    }> | null;
+};
+
+// @public (undocumented)
+const BaseProductV1ShippingOptionFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1TagFieldsFragment = {
+    __typename?: "ProductV1Tag";
+    id: string;
+    name: string;
+};
+
+// @public (undocumented)
+const BaseProductV1TagFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseProductV1VariationFieldsFragment = {
+    __typename?: "ProductV1Variation";
+    id: string;
+    type: string;
+    option: string;
+};
+
+// @public (undocumented)
+const BaseProductV1VariationFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BaseSellerFieldsFragment = {
+    __typename?: "Seller";
+    id: string;
+    operator: string;
+    admin: string;
+    clerk: string;
+    treasury: string;
+    authTokenId: string;
+    authTokenType: number;
+    voucherCloneAddress: string;
+    active: boolean;
+};
+
+// @public (undocumented)
+const BaseSellerFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type _Block_ = {
+    __typename?: "_Block_";
+    hash?: Maybe<Scalars["Bytes"]>;
+    number: Scalars["Int"];
+};
+
+// @public
+type Block_Height = {
+    hash?: InputMaybe<Scalars["Bytes"]>;
+    number?: InputMaybe<Scalars["Int"]>;
+    number_gte?: InputMaybe<Scalars["Int"]>;
+};
+
+// @public (undocumented)
+type Buyer = Account & {
+    __typename?: "Buyer";
+    active: Scalars["Boolean"];
+    exchanges: Array<Exchange>;
+    funds: Array<FundsEntity>;
+    id: Scalars["ID"];
+    wallet: Scalars["Bytes"];
+};
+
+// @public (undocumented)
+type Buyer_Filter = {
+    active?: InputMaybe<Scalars["Boolean"]>;
+    active_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    active_not?: InputMaybe<Scalars["Boolean"]>;
+    active_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    wallet?: InputMaybe<Scalars["Bytes"]>;
+    wallet_contains?: InputMaybe<Scalars["Bytes"]>;
+    wallet_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    wallet_not?: InputMaybe<Scalars["Bytes"]>;
+    wallet_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    wallet_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+};
+
+// @public (undocumented)
+enum Buyer_OrderBy {
+    // (undocumented)
+    Active = "active",
+    // (undocumented)
+    Exchanges = "exchanges",
+    // (undocumented)
+    Funds = "funds",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Wallet = "wallet"
+}
+
+// @public (undocumented)
+type BuyerExchangesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Exchange_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Exchange_Filter>;
+};
+
+// @public (undocumented)
+type BuyerFieldsFragment = {
+    __typename?: "Buyer";
+    id: string;
+    wallet: string;
+    active: boolean;
+    funds?: Array<{
+        __typename?: "FundsEntity";
+        id: string;
+        availableAmount: string;
+        accountId: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+    exchanges?: Array<{
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+    }>;
+};
+
+// @public (undocumented)
+const BuyerFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type BuyerFundsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
 
 // @public (undocumented)
 export const constant = "constant";
+
+// @public (undocumented)
+type Dispute = {
+    __typename?: "Dispute";
+    buyer: Buyer;
+    buyerPercent: Scalars["BigInt"];
+    complaint: Scalars["String"];
+    disputedDate: Scalars["BigInt"];
+    escalatedDate?: Maybe<Scalars["BigInt"]>;
+    exchange: Exchange;
+    exchangeId: Scalars["BigInt"];
+    finalizedDate?: Maybe<Scalars["BigInt"]>;
+    id: Scalars["ID"];
+    seller: Seller;
+    state: DisputeState;
+    timeout: Scalars["BigInt"];
+};
+
+// @public (undocumented)
+type Dispute_Filter = {
+    buyer?: InputMaybe<Scalars["String"]>;
+    buyerPercent?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_gt?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_gte?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    buyerPercent_lt?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_lte?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_not?: InputMaybe<Scalars["BigInt"]>;
+    buyerPercent_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    buyer_contains?: InputMaybe<Scalars["String"]>;
+    buyer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_ends_with?: InputMaybe<Scalars["String"]>;
+    buyer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_gt?: InputMaybe<Scalars["String"]>;
+    buyer_gte?: InputMaybe<Scalars["String"]>;
+    buyer_in?: InputMaybe<Array<Scalars["String"]>>;
+    buyer_lt?: InputMaybe<Scalars["String"]>;
+    buyer_lte?: InputMaybe<Scalars["String"]>;
+    buyer_not?: InputMaybe<Scalars["String"]>;
+    buyer_not_contains?: InputMaybe<Scalars["String"]>;
+    buyer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    buyer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    buyer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    buyer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_starts_with?: InputMaybe<Scalars["String"]>;
+    buyer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    complaint?: InputMaybe<Scalars["String"]>;
+    complaint_contains?: InputMaybe<Scalars["String"]>;
+    complaint_contains_nocase?: InputMaybe<Scalars["String"]>;
+    complaint_ends_with?: InputMaybe<Scalars["String"]>;
+    complaint_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    complaint_gt?: InputMaybe<Scalars["String"]>;
+    complaint_gte?: InputMaybe<Scalars["String"]>;
+    complaint_in?: InputMaybe<Array<Scalars["String"]>>;
+    complaint_lt?: InputMaybe<Scalars["String"]>;
+    complaint_lte?: InputMaybe<Scalars["String"]>;
+    complaint_not?: InputMaybe<Scalars["String"]>;
+    complaint_not_contains?: InputMaybe<Scalars["String"]>;
+    complaint_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    complaint_not_ends_with?: InputMaybe<Scalars["String"]>;
+    complaint_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    complaint_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    complaint_not_starts_with?: InputMaybe<Scalars["String"]>;
+    complaint_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    complaint_starts_with?: InputMaybe<Scalars["String"]>;
+    complaint_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputedDate?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    escalatedDate?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    escalatedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    escalatedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    exchange?: InputMaybe<Scalars["String"]>;
+    exchangeId?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_gt?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_gte?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    exchangeId_lt?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_lte?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_not?: InputMaybe<Scalars["BigInt"]>;
+    exchangeId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    exchange_contains?: InputMaybe<Scalars["String"]>;
+    exchange_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchange_ends_with?: InputMaybe<Scalars["String"]>;
+    exchange_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchange_gt?: InputMaybe<Scalars["String"]>;
+    exchange_gte?: InputMaybe<Scalars["String"]>;
+    exchange_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchange_lt?: InputMaybe<Scalars["String"]>;
+    exchange_lte?: InputMaybe<Scalars["String"]>;
+    exchange_not?: InputMaybe<Scalars["String"]>;
+    exchange_not_contains?: InputMaybe<Scalars["String"]>;
+    exchange_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchange_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchange_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchange_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchange_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchange_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchange_starts_with?: InputMaybe<Scalars["String"]>;
+    exchange_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    finalizedDate?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    finalizedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    state?: InputMaybe<DisputeState>;
+    state_in?: InputMaybe<Array<DisputeState>>;
+    state_not?: InputMaybe<DisputeState>;
+    state_not_in?: InputMaybe<Array<DisputeState>>;
+    timeout?: InputMaybe<Scalars["BigInt"]>;
+    timeout_gt?: InputMaybe<Scalars["BigInt"]>;
+    timeout_gte?: InputMaybe<Scalars["BigInt"]>;
+    timeout_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    timeout_lt?: InputMaybe<Scalars["BigInt"]>;
+    timeout_lte?: InputMaybe<Scalars["BigInt"]>;
+    timeout_not?: InputMaybe<Scalars["BigInt"]>;
+    timeout_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+};
+
+// @public (undocumented)
+enum Dispute_OrderBy {
+    // (undocumented)
+    Buyer = "buyer",
+    // (undocumented)
+    BuyerPercent = "buyerPercent",
+    // (undocumented)
+    Complaint = "complaint",
+    // (undocumented)
+    DisputedDate = "disputedDate",
+    // (undocumented)
+    EscalatedDate = "escalatedDate",
+    // (undocumented)
+    Exchange = "exchange",
+    // (undocumented)
+    ExchangeId = "exchangeId",
+    // (undocumented)
+    FinalizedDate = "finalizedDate",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    State = "state",
+    // (undocumented)
+    Timeout = "timeout"
+}
+
+// @public (undocumented)
+type DisputeFieldsFragment = {
+    __typename?: "Dispute";
+    id: string;
+    exchangeId: string;
+    complaint: string;
+    state: DisputeState;
+    buyerPercent: string;
+    disputedDate: string;
+    escalatedDate?: string | null;
+    finalizedDate?: string | null;
+    timeout: string;
+    exchange: {
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    buyer: {
+        __typename?: "Buyer";
+        id: string;
+        wallet: string;
+        active: boolean;
+    };
+};
+
+// @public (undocumented)
+const DisputeFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type DisputeResolutionTermsEntity = {
+    __typename?: "DisputeResolutionTermsEntity";
+    buyerEscalationDeposit: Scalars["BigInt"];
+    disputeResolver: DisputeResolver;
+    disputeResolverId: Scalars["BigInt"];
+    escalationResponsePeriod: Scalars["BigInt"];
+    feeAmount: Scalars["BigInt"];
+    id: Scalars["ID"];
+    offer: Offer;
+};
+
+// @public (undocumented)
+type DisputeResolutionTermsEntity_Filter = {
+    buyerEscalationDeposit?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_gt?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_gte?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    buyerEscalationDeposit_lt?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_lte?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_not?: InputMaybe<Scalars["BigInt"]>;
+    buyerEscalationDeposit_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolver?: InputMaybe<Scalars["String"]>;
+    disputeResolverId?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_gt?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_gte?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolverId_lt?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_lte?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_not?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolver_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolver_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_gt?: InputMaybe<Scalars["String"]>;
+    disputeResolver_gte?: InputMaybe<Scalars["String"]>;
+    disputeResolver_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolver_lt?: InputMaybe<Scalars["String"]>;
+    disputeResolver_lte?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolver_not_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    escalationResponsePeriod?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_gt?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_gte?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    escalationResponsePeriod_lt?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_lte?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_not?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    feeAmount?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_gt?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_gte?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    feeAmount_lt?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_lte?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_not?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    offer?: InputMaybe<Scalars["String"]>;
+    offer_contains?: InputMaybe<Scalars["String"]>;
+    offer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_gt?: InputMaybe<Scalars["String"]>;
+    offer_gte?: InputMaybe<Scalars["String"]>;
+    offer_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_lt?: InputMaybe<Scalars["String"]>;
+    offer_lte?: InputMaybe<Scalars["String"]>;
+    offer_not?: InputMaybe<Scalars["String"]>;
+    offer_not_contains?: InputMaybe<Scalars["String"]>;
+    offer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum DisputeResolutionTermsEntity_OrderBy {
+    // (undocumented)
+    BuyerEscalationDeposit = "buyerEscalationDeposit",
+    // (undocumented)
+    DisputeResolver = "disputeResolver",
+    // (undocumented)
+    DisputeResolverId = "disputeResolverId",
+    // (undocumented)
+    EscalationResponsePeriod = "escalationResponsePeriod",
+    // (undocumented)
+    FeeAmount = "feeAmount",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Offer = "offer"
+}
+
+// @public (undocumented)
+type DisputeResolver = {
+    __typename?: "DisputeResolver";
+    active: Scalars["Boolean"];
+    admin: Scalars["Bytes"];
+    clerk: Scalars["Bytes"];
+    escalationResponsePeriod: Scalars["BigInt"];
+    fees: Array<DisputeResolverFee>;
+    id: Scalars["ID"];
+    metadataUri: Scalars["String"];
+    offers: Array<Offer>;
+    operator: Scalars["Bytes"];
+    sellerAllowList: Array<Scalars["BigInt"]>;
+    treasury: Scalars["Bytes"];
+};
+
+// @public (undocumented)
+type DisputeResolver_Filter = {
+    active?: InputMaybe<Scalars["Boolean"]>;
+    active_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    active_not?: InputMaybe<Scalars["Boolean"]>;
+    active_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    admin?: InputMaybe<Scalars["Bytes"]>;
+    admin_contains?: InputMaybe<Scalars["Bytes"]>;
+    admin_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    admin_not?: InputMaybe<Scalars["Bytes"]>;
+    admin_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    admin_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    clerk?: InputMaybe<Scalars["Bytes"]>;
+    clerk_contains?: InputMaybe<Scalars["Bytes"]>;
+    clerk_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    clerk_not?: InputMaybe<Scalars["Bytes"]>;
+    clerk_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    clerk_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    escalationResponsePeriod?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_gt?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_gte?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    escalationResponsePeriod_lt?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_lte?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_not?: InputMaybe<Scalars["BigInt"]>;
+    escalationResponsePeriod_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    fees?: InputMaybe<Array<Scalars["String"]>>;
+    fees_contains?: InputMaybe<Array<Scalars["String"]>>;
+    fees_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    fees_not?: InputMaybe<Array<Scalars["String"]>>;
+    fees_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    fees_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    metadataUri?: InputMaybe<Scalars["String"]>;
+    metadataUri_contains?: InputMaybe<Scalars["String"]>;
+    metadataUri_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_gt?: InputMaybe<Scalars["String"]>;
+    metadataUri_gte?: InputMaybe<Scalars["String"]>;
+    metadataUri_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataUri_lt?: InputMaybe<Scalars["String"]>;
+    metadataUri_lte?: InputMaybe<Scalars["String"]>;
+    metadataUri_not?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_contains?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataUri_not_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    operator?: InputMaybe<Scalars["Bytes"]>;
+    operator_contains?: InputMaybe<Scalars["Bytes"]>;
+    operator_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    operator_not?: InputMaybe<Scalars["Bytes"]>;
+    operator_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    operator_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    sellerAllowList?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerAllowList_contains?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerAllowList_contains_nocase?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerAllowList_not?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerAllowList_not_contains?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerAllowList_not_contains_nocase?: InputMaybe<Array<Scalars["BigInt"]>>;
+    treasury?: InputMaybe<Scalars["Bytes"]>;
+    treasury_contains?: InputMaybe<Scalars["Bytes"]>;
+    treasury_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    treasury_not?: InputMaybe<Scalars["Bytes"]>;
+    treasury_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    treasury_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+};
+
+// @public (undocumented)
+enum DisputeResolver_OrderBy {
+    // (undocumented)
+    Active = "active",
+    // (undocumented)
+    Admin = "admin",
+    // (undocumented)
+    Clerk = "clerk",
+    // (undocumented)
+    EscalationResponsePeriod = "escalationResponsePeriod",
+    // (undocumented)
+    Fees = "fees",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    MetadataUri = "metadataUri",
+    // (undocumented)
+    Offers = "offers",
+    // (undocumented)
+    Operator = "operator",
+    // (undocumented)
+    SellerAllowList = "sellerAllowList",
+    // (undocumented)
+    Treasury = "treasury"
+}
+
+// @public (undocumented)
+type DisputeResolverFee = {
+    __typename?: "DisputeResolverFee";
+    feeAmount: Scalars["BigInt"];
+    id: Scalars["ID"];
+    token: ExchangeToken;
+    tokenAddress: Scalars["Bytes"];
+    tokenName: Scalars["String"];
+};
+
+// @public (undocumented)
+type DisputeResolverFee_Filter = {
+    feeAmount?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_gt?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_gte?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    feeAmount_lt?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_lte?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_not?: InputMaybe<Scalars["BigInt"]>;
+    feeAmount_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    token?: InputMaybe<Scalars["String"]>;
+    tokenAddress?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_contains?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    tokenAddress_not?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    tokenName?: InputMaybe<Scalars["String"]>;
+    tokenName_contains?: InputMaybe<Scalars["String"]>;
+    tokenName_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tokenName_ends_with?: InputMaybe<Scalars["String"]>;
+    tokenName_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenName_gt?: InputMaybe<Scalars["String"]>;
+    tokenName_gte?: InputMaybe<Scalars["String"]>;
+    tokenName_in?: InputMaybe<Array<Scalars["String"]>>;
+    tokenName_lt?: InputMaybe<Scalars["String"]>;
+    tokenName_lte?: InputMaybe<Scalars["String"]>;
+    tokenName_not?: InputMaybe<Scalars["String"]>;
+    tokenName_not_contains?: InputMaybe<Scalars["String"]>;
+    tokenName_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tokenName_not_ends_with?: InputMaybe<Scalars["String"]>;
+    tokenName_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenName_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    tokenName_not_starts_with?: InputMaybe<Scalars["String"]>;
+    tokenName_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenName_starts_with?: InputMaybe<Scalars["String"]>;
+    tokenName_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_contains?: InputMaybe<Scalars["String"]>;
+    token_contains_nocase?: InputMaybe<Scalars["String"]>;
+    token_ends_with?: InputMaybe<Scalars["String"]>;
+    token_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_gt?: InputMaybe<Scalars["String"]>;
+    token_gte?: InputMaybe<Scalars["String"]>;
+    token_in?: InputMaybe<Array<Scalars["String"]>>;
+    token_lt?: InputMaybe<Scalars["String"]>;
+    token_lte?: InputMaybe<Scalars["String"]>;
+    token_not?: InputMaybe<Scalars["String"]>;
+    token_not_contains?: InputMaybe<Scalars["String"]>;
+    token_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    token_not_ends_with?: InputMaybe<Scalars["String"]>;
+    token_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    token_not_starts_with?: InputMaybe<Scalars["String"]>;
+    token_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_starts_with?: InputMaybe<Scalars["String"]>;
+    token_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum DisputeResolverFee_OrderBy {
+    // (undocumented)
+    FeeAmount = "feeAmount",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Token = "token",
+    // (undocumented)
+    TokenAddress = "tokenAddress",
+    // (undocumented)
+    TokenName = "tokenName"
+}
+
+// @public (undocumented)
+type DisputeResolverFeesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolverFee_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<DisputeResolverFee_Filter>;
+};
+
+// @public (undocumented)
+type DisputeResolverFieldsFragment = {
+    __typename?: "DisputeResolver";
+    id: string;
+    escalationResponsePeriod: string;
+    admin: string;
+    clerk: string;
+    treasury: string;
+    operator: string;
+    metadataUri: string;
+    active: boolean;
+    sellerAllowList: Array<string>;
+    offers?: Array<{
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    }>;
+    fees: Array<{
+        __typename?: "DisputeResolverFee";
+        id: string;
+        tokenAddress: string;
+        tokenName: string;
+        feeAmount: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+};
+
+// @public (undocumented)
+const DisputeResolverFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type DisputeResolverOffersArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Offer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Offer_Filter>;
+};
+
+// @public
+enum DisputeState {
+    // (undocumented)
+    Decided = "DECIDED",
+    // (undocumented)
+    Escalated = "ESCALATED",
+    // (undocumented)
+    Refused = "REFUSED",
+    // (undocumented)
+    Resolved = "RESOLVED",
+    // (undocumented)
+    Resolving = "RESOLVING",
+    // (undocumented)
+    Retracted = "RETRACTED"
+}
+
+// @public
+type ErrorPolicy = 'none' | 'ignore' | 'all';
+
+// @public (undocumented)
+type Exact<T extends {
+    [key: string]: unknown;
+}> = {
+    [K in keyof T]: T[K];
+};
 
 // @public (undocumented)
 export class ExampleComponent {
@@ -17,7 +3100,11703 @@ export class ExampleComponent {
 }
 
 // @public (undocumented)
+type Exchange = {
+    __typename?: "Exchange";
+    buyer: Buyer;
+    cancelledDate?: Maybe<Scalars["BigInt"]>;
+    committedDate: Scalars["BigInt"];
+    completedDate?: Maybe<Scalars["BigInt"]>;
+    disputed: Scalars["Boolean"];
+    expired: Scalars["Boolean"];
+    finalizedDate?: Maybe<Scalars["BigInt"]>;
+    id: Scalars["ID"];
+    offer: Offer;
+    redeemedDate?: Maybe<Scalars["BigInt"]>;
+    revokedDate?: Maybe<Scalars["BigInt"]>;
+    seller: Seller;
+    state: ExchangeState;
+    validUntilDate: Scalars["BigInt"];
+};
+
+// @public (undocumented)
+type Exchange_Filter = {
+    buyer?: InputMaybe<Scalars["String"]>;
+    buyer_contains?: InputMaybe<Scalars["String"]>;
+    buyer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_ends_with?: InputMaybe<Scalars["String"]>;
+    buyer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_gt?: InputMaybe<Scalars["String"]>;
+    buyer_gte?: InputMaybe<Scalars["String"]>;
+    buyer_in?: InputMaybe<Array<Scalars["String"]>>;
+    buyer_lt?: InputMaybe<Scalars["String"]>;
+    buyer_lte?: InputMaybe<Scalars["String"]>;
+    buyer_not?: InputMaybe<Scalars["String"]>;
+    buyer_not_contains?: InputMaybe<Scalars["String"]>;
+    buyer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    buyer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    buyer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    buyer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    buyer_starts_with?: InputMaybe<Scalars["String"]>;
+    buyer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    cancelledDate?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    cancelledDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_not?: InputMaybe<Scalars["BigInt"]>;
+    cancelledDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    committedDate?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    committedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    committedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    completedDate?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    completedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    completedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputed?: InputMaybe<Scalars["Boolean"]>;
+    disputed_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    disputed_not?: InputMaybe<Scalars["Boolean"]>;
+    disputed_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    expired?: InputMaybe<Scalars["Boolean"]>;
+    expired_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    expired_not?: InputMaybe<Scalars["Boolean"]>;
+    expired_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    finalizedDate?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    finalizedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    finalizedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    offer?: InputMaybe<Scalars["String"]>;
+    offer_contains?: InputMaybe<Scalars["String"]>;
+    offer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_gt?: InputMaybe<Scalars["String"]>;
+    offer_gte?: InputMaybe<Scalars["String"]>;
+    offer_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_lt?: InputMaybe<Scalars["String"]>;
+    offer_lte?: InputMaybe<Scalars["String"]>;
+    offer_not?: InputMaybe<Scalars["String"]>;
+    offer_not_contains?: InputMaybe<Scalars["String"]>;
+    offer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    redeemedDate?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    redeemedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    redeemedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    revokedDate?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    revokedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    revokedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    state?: InputMaybe<ExchangeState>;
+    state_in?: InputMaybe<Array<ExchangeState>>;
+    state_not?: InputMaybe<ExchangeState>;
+    state_not_in?: InputMaybe<Array<ExchangeState>>;
+    validUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+};
+
+// @public (undocumented)
+enum Exchange_OrderBy {
+    // (undocumented)
+    Buyer = "buyer",
+    // (undocumented)
+    CancelledDate = "cancelledDate",
+    // (undocumented)
+    CommittedDate = "committedDate",
+    // (undocumented)
+    CompletedDate = "completedDate",
+    // (undocumented)
+    Disputed = "disputed",
+    // (undocumented)
+    Expired = "expired",
+    // (undocumented)
+    FinalizedDate = "finalizedDate",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Offer = "offer",
+    // (undocumented)
+    RedeemedDate = "redeemedDate",
+    // (undocumented)
+    RevokedDate = "revokedDate",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    State = "state",
+    // (undocumented)
+    ValidUntilDate = "validUntilDate"
+}
+
+// @public (undocumented)
+type ExchangeFieldsFragment = {
+    __typename?: "Exchange";
+    id: string;
+    disputed: boolean;
+    state: ExchangeState;
+    committedDate: string;
+    finalizedDate?: string | null;
+    validUntilDate: string;
+    redeemedDate?: string | null;
+    revokedDate?: string | null;
+    cancelledDate?: string | null;
+    completedDate?: string | null;
+    expired: boolean;
+    buyer: {
+        __typename?: "Buyer";
+        id: string;
+        wallet: string;
+        active: boolean;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    offer: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    };
+};
+
+// @public (undocumented)
+const ExchangeFieldsFragmentDoc: string;
+
+// @public
+enum ExchangeState {
+    // (undocumented)
+    Cancelled = "CANCELLED",
+    // (undocumented)
+    Committed = "COMMITTED",
+    // (undocumented)
+    Completed = "COMPLETED",
+    // (undocumented)
+    Disputed = "DISPUTED",
+    // (undocumented)
+    Redeemed = "REDEEMED",
+    // (undocumented)
+    Revoked = "REVOKED"
+}
+
+// @public
+type ExchangeToken = {
+    __typename?: "ExchangeToken";
+    address: Scalars["Bytes"];
+    decimals: Scalars["BigInt"];
+    funds: Array<FundsEntity>;
+    id: Scalars["ID"];
+    name: Scalars["String"];
+    offers: Array<Offer>;
+    symbol: Scalars["String"];
+};
+
+// @public (undocumented)
+type ExchangeToken_Filter = {
+    address?: InputMaybe<Scalars["Bytes"]>;
+    address_contains?: InputMaybe<Scalars["Bytes"]>;
+    address_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    address_not?: InputMaybe<Scalars["Bytes"]>;
+    address_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    address_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    decimals?: InputMaybe<Scalars["BigInt"]>;
+    decimals_gt?: InputMaybe<Scalars["BigInt"]>;
+    decimals_gte?: InputMaybe<Scalars["BigInt"]>;
+    decimals_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    decimals_lt?: InputMaybe<Scalars["BigInt"]>;
+    decimals_lte?: InputMaybe<Scalars["BigInt"]>;
+    decimals_not?: InputMaybe<Scalars["BigInt"]>;
+    decimals_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    symbol?: InputMaybe<Scalars["String"]>;
+    symbol_contains?: InputMaybe<Scalars["String"]>;
+    symbol_contains_nocase?: InputMaybe<Scalars["String"]>;
+    symbol_ends_with?: InputMaybe<Scalars["String"]>;
+    symbol_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    symbol_gt?: InputMaybe<Scalars["String"]>;
+    symbol_gte?: InputMaybe<Scalars["String"]>;
+    symbol_in?: InputMaybe<Array<Scalars["String"]>>;
+    symbol_lt?: InputMaybe<Scalars["String"]>;
+    symbol_lte?: InputMaybe<Scalars["String"]>;
+    symbol_not?: InputMaybe<Scalars["String"]>;
+    symbol_not_contains?: InputMaybe<Scalars["String"]>;
+    symbol_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    symbol_not_ends_with?: InputMaybe<Scalars["String"]>;
+    symbol_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    symbol_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    symbol_not_starts_with?: InputMaybe<Scalars["String"]>;
+    symbol_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    symbol_starts_with?: InputMaybe<Scalars["String"]>;
+    symbol_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ExchangeToken_OrderBy {
+    // (undocumented)
+    Address = "address",
+    // (undocumented)
+    Decimals = "decimals",
+    // (undocumented)
+    Funds = "funds",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Offers = "offers",
+    // (undocumented)
+    Symbol = "symbol"
+}
+
+// @public (undocumented)
+type ExchangeTokenFieldsFragment = {
+    __typename?: "ExchangeToken";
+    id: string;
+    address: string;
+    decimals: string;
+    symbol: string;
+    name: string;
+    offers?: Array<{
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    }>;
+    funds?: Array<{
+        __typename?: "FundsEntity";
+        id: string;
+        availableAmount: string;
+        accountId: string;
+    }>;
+};
+
+// @public (undocumented)
+const ExchangeTokenFieldsFragmentDoc: string;
+
+// @public
+type ExchangeTokenFundsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
+
+// @public
+type ExchangeTokenOffersArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Offer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Offer_Filter>;
+};
+
+// @public
+type FundsEntity = {
+    __typename?: "FundsEntity";
+    account: Account;
+    accountId: Scalars["BigInt"];
+    availableAmount: Scalars["BigInt"];
+    id: Scalars["ID"];
+    token: ExchangeToken;
+    tokenAddress: Scalars["Bytes"];
+};
+
+// @public (undocumented)
+type FundsEntity_Filter = {
+    account?: InputMaybe<Scalars["String"]>;
+    accountId?: InputMaybe<Scalars["BigInt"]>;
+    accountId_gt?: InputMaybe<Scalars["BigInt"]>;
+    accountId_gte?: InputMaybe<Scalars["BigInt"]>;
+    accountId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    accountId_lt?: InputMaybe<Scalars["BigInt"]>;
+    accountId_lte?: InputMaybe<Scalars["BigInt"]>;
+    accountId_not?: InputMaybe<Scalars["BigInt"]>;
+    accountId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    account_contains?: InputMaybe<Scalars["String"]>;
+    account_contains_nocase?: InputMaybe<Scalars["String"]>;
+    account_ends_with?: InputMaybe<Scalars["String"]>;
+    account_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    account_gt?: InputMaybe<Scalars["String"]>;
+    account_gte?: InputMaybe<Scalars["String"]>;
+    account_in?: InputMaybe<Array<Scalars["String"]>>;
+    account_lt?: InputMaybe<Scalars["String"]>;
+    account_lte?: InputMaybe<Scalars["String"]>;
+    account_not?: InputMaybe<Scalars["String"]>;
+    account_not_contains?: InputMaybe<Scalars["String"]>;
+    account_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    account_not_ends_with?: InputMaybe<Scalars["String"]>;
+    account_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    account_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    account_not_starts_with?: InputMaybe<Scalars["String"]>;
+    account_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    account_starts_with?: InputMaybe<Scalars["String"]>;
+    account_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    availableAmount?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_gt?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_gte?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    availableAmount_lt?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_lte?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_not?: InputMaybe<Scalars["BigInt"]>;
+    availableAmount_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    token?: InputMaybe<Scalars["String"]>;
+    tokenAddress?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_contains?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    tokenAddress_not?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    tokenAddress_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    token_contains?: InputMaybe<Scalars["String"]>;
+    token_contains_nocase?: InputMaybe<Scalars["String"]>;
+    token_ends_with?: InputMaybe<Scalars["String"]>;
+    token_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_gt?: InputMaybe<Scalars["String"]>;
+    token_gte?: InputMaybe<Scalars["String"]>;
+    token_in?: InputMaybe<Array<Scalars["String"]>>;
+    token_lt?: InputMaybe<Scalars["String"]>;
+    token_lte?: InputMaybe<Scalars["String"]>;
+    token_not?: InputMaybe<Scalars["String"]>;
+    token_not_contains?: InputMaybe<Scalars["String"]>;
+    token_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    token_not_ends_with?: InputMaybe<Scalars["String"]>;
+    token_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    token_not_starts_with?: InputMaybe<Scalars["String"]>;
+    token_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    token_starts_with?: InputMaybe<Scalars["String"]>;
+    token_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum FundsEntity_OrderBy {
+    // (undocumented)
+    Account = "account",
+    // (undocumented)
+    AccountId = "accountId",
+    // (undocumented)
+    AvailableAmount = "availableAmount",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Token = "token",
+    // (undocumented)
+    TokenAddress = "tokenAddress"
+}
+
+// @public (undocumented)
+type FundsEntityFieldsFragment = {
+    __typename?: "FundsEntity";
+    id: string;
+    availableAmount: string;
+    accountId: string;
+    token: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+};
+
+// @public (undocumented)
+const FundsEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+const GetBaseMetadataEntitiesQueryDocument: string;
+
+// @public (undocumented)
+type GetBaseMetadataEntitiesQueryQuery = {
+    __typename?: "Query";
+    baseMetadataEntities: Array<{
+        __typename?: "BaseMetadataEntity";
+        id: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+};
+
+// @public (undocumented)
+type GetBaseMetadataEntitiesQueryQueryVariables = Exact<{
+    metadataSkip?: InputMaybe<Scalars["Int"]>;
+    metadataFirst?: InputMaybe<Scalars["Int"]>;
+    metadataOrderBy?: InputMaybe<BaseMetadataEntity_OrderBy>;
+    metadataOrderDirection?: InputMaybe<OrderDirection>;
+    metadataFilter?: InputMaybe<BaseMetadataEntity_Filter>;
+}>;
+
+// @public (undocumented)
+const GetBaseMetadataEntityByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetBaseMetadataEntityByIdQueryQuery = {
+    __typename?: "Query";
+    baseMetadataEntity?: {
+        __typename?: "BaseMetadataEntity";
+        id: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    } | null;
+};
+
+// @public (undocumented)
+type GetBaseMetadataEntityByIdQueryQueryVariables = Exact<{
+    metadataId: Scalars["ID"];
+    metadataSkip?: InputMaybe<Scalars["Int"]>;
+    metadataFirst?: InputMaybe<Scalars["Int"]>;
+    metadataOrderBy?: InputMaybe<BaseMetadataEntity_OrderBy>;
+    metadataOrderDirection?: InputMaybe<OrderDirection>;
+    metadataFilter?: InputMaybe<BaseMetadataEntity_Filter>;
+}>;
+
+// @public (undocumented)
+const GetBuyerByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetBuyerByIdQueryQuery = {
+    __typename?: "Query";
+    buyer?: {
+        __typename?: "Buyer";
+        id: string;
+        wallet: string;
+        active: boolean;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+    } | null;
+};
+
+// @public (undocumented)
+type GetBuyerByIdQueryQueryVariables = Exact<{
+    buyerId: Scalars["ID"];
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetBuyersQueryDocument: string;
+
+// @public (undocumented)
+type GetBuyersQueryQuery = {
+    __typename?: "Query";
+    buyers: Array<{
+        __typename?: "Buyer";
+        id: string;
+        wallet: string;
+        active: boolean;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+    }>;
+};
+
+// @public (undocumented)
+type GetBuyersQueryQueryVariables = Exact<{
+    buyersSkip?: InputMaybe<Scalars["Int"]>;
+    buyersFirst?: InputMaybe<Scalars["Int"]>;
+    buyersOrderBy?: InputMaybe<Buyer_OrderBy>;
+    buyersOrderDirection?: InputMaybe<OrderDirection>;
+    buyersFilter?: InputMaybe<Buyer_Filter>;
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetDisputeByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetDisputeByIdQueryQuery = {
+    __typename?: "Query";
+    dispute?: {
+        __typename?: "Dispute";
+        id: string;
+        exchangeId: string;
+        complaint: string;
+        state: DisputeState;
+        buyerPercent: string;
+        disputedDate: string;
+        escalatedDate?: string | null;
+        finalizedDate?: string | null;
+        timeout: string;
+        exchange: {
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        buyer: {
+            __typename?: "Buyer";
+            id: string;
+            wallet: string;
+            active: boolean;
+        };
+    } | null;
+};
+
+// @public (undocumented)
+type GetDisputeByIdQueryQueryVariables = Exact<{
+    disputeId: Scalars["ID"];
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetDisputeResolverByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetDisputeResolverByIdQueryQuery = {
+    __typename?: "Query";
+    disputeResolver?: {
+        __typename?: "DisputeResolver";
+        id: string;
+        escalationResponsePeriod: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        operator: string;
+        metadataUri: string;
+        active: boolean;
+        sellerAllowList: Array<string>;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        fees: Array<{
+            __typename?: "DisputeResolverFee";
+            id: string;
+            tokenAddress: string;
+            tokenName: string;
+            feeAmount: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+    } | null;
+};
+
+// @public (undocumented)
+type GetDisputeResolverByIdQueryQueryVariables = Exact<{
+    disputeResolverId: Scalars["ID"];
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetDisputeResolversQueryDocument: string;
+
+// @public (undocumented)
+type GetDisputeResolversQueryQuery = {
+    __typename?: "Query";
+    disputeResolvers: Array<{
+        __typename?: "DisputeResolver";
+        id: string;
+        escalationResponsePeriod: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        operator: string;
+        metadataUri: string;
+        active: boolean;
+        sellerAllowList: Array<string>;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        fees: Array<{
+            __typename?: "DisputeResolverFee";
+            id: string;
+            tokenAddress: string;
+            tokenName: string;
+            feeAmount: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+    }>;
+};
+
+// @public (undocumented)
+type GetDisputeResolversQueryQueryVariables = Exact<{
+    disputeResolversSkip?: InputMaybe<Scalars["Int"]>;
+    disputeResolversFirst?: InputMaybe<Scalars["Int"]>;
+    disputeResolversOrderBy?: InputMaybe<DisputeResolver_OrderBy>;
+    disputeResolversOrderDirection?: InputMaybe<OrderDirection>;
+    disputeResolversFilter?: InputMaybe<DisputeResolver_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetDisputesQueryDocument: string;
+
+// @public (undocumented)
+type GetDisputesQueryQuery = {
+    __typename?: "Query";
+    disputes: Array<{
+        __typename?: "Dispute";
+        id: string;
+        exchangeId: string;
+        complaint: string;
+        state: DisputeState;
+        buyerPercent: string;
+        disputedDate: string;
+        escalatedDate?: string | null;
+        finalizedDate?: string | null;
+        timeout: string;
+        exchange: {
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        buyer: {
+            __typename?: "Buyer";
+            id: string;
+            wallet: string;
+            active: boolean;
+        };
+    }>;
+};
+
+// @public (undocumented)
+type GetDisputesQueryQueryVariables = Exact<{
+    disputesSkip?: InputMaybe<Scalars["Int"]>;
+    disputesFirst?: InputMaybe<Scalars["Int"]>;
+    disputesOrderBy?: InputMaybe<Dispute_OrderBy>;
+    disputesOrderDirection?: InputMaybe<OrderDirection>;
+    disputesFilter?: InputMaybe<Dispute_Filter>;
+}>;
+
+// @public (undocumented)
+const GetExchangeByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetExchangeByIdQueryQuery = {
+    __typename?: "Query";
+    exchange?: {
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+        buyer: {
+            __typename?: "Buyer";
+            id: string;
+            wallet: string;
+            active: boolean;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+    } | null;
+};
+
+// @public (undocumented)
+type GetExchangeByIdQueryQueryVariables = Exact<{
+    exchangeId: Scalars["ID"];
+}>;
+
+// @public (undocumented)
+const GetExchangesQueryDocument: string;
+
+// @public (undocumented)
+type GetExchangesQueryQuery = {
+    __typename?: "Query";
+    exchanges: Array<{
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+        buyer: {
+            __typename?: "Buyer";
+            id: string;
+            wallet: string;
+            active: boolean;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+    }>;
+};
+
+// @public (undocumented)
+type GetExchangesQueryQueryVariables = Exact<{
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+}>;
+
+// @public (undocumented)
+const GetExchangeTokenByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetExchangeTokenByIdQueryQuery = {
+    __typename?: "Query";
+    exchangeToken?: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+        }>;
+    } | null;
+};
+
+// @public (undocumented)
+type GetExchangeTokenByIdQueryQueryVariables = Exact<{
+    exchangeTokenId: Scalars["ID"];
+    exchangeTokensSkip?: InputMaybe<Scalars["Int"]>;
+    exchangeTokensFirst?: InputMaybe<Scalars["Int"]>;
+    exchangeTokensOrderBy?: InputMaybe<ExchangeToken_OrderBy>;
+    exchangeTokensOrderDirection?: InputMaybe<OrderDirection>;
+    exchangeTokensFilter?: InputMaybe<ExchangeToken_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetExchangeTokensQueryDocument: string;
+
+// @public (undocumented)
+type GetExchangeTokensQueryQuery = {
+    __typename?: "Query";
+    exchangeTokens: Array<{
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+        }>;
+    }>;
+};
+
+// @public (undocumented)
+type GetExchangeTokensQueryQueryVariables = Exact<{
+    exchangeTokensSkip?: InputMaybe<Scalars["Int"]>;
+    exchangeTokensFirst?: InputMaybe<Scalars["Int"]>;
+    exchangeTokensOrderBy?: InputMaybe<ExchangeToken_OrderBy>;
+    exchangeTokensOrderDirection?: InputMaybe<OrderDirection>;
+    exchangeTokensFilter?: InputMaybe<ExchangeToken_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetFundsByIdDocument: string;
+
+// @public (undocumented)
+type GetFundsByIdQuery = {
+    __typename?: "Query";
+    fundsEntity?: {
+        __typename?: "FundsEntity";
+        id: string;
+        availableAmount: string;
+        accountId: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    } | null;
+};
+
+// @public (undocumented)
+type GetFundsByIdQueryVariables = Exact<{
+    fundsId: Scalars["ID"];
+}>;
+
+// @public (undocumented)
+const GetFundsDocument: string;
+
+// @public (undocumented)
+type GetFundsQuery = {
+    __typename?: "Query";
+    fundsEntities: Array<{
+        __typename?: "FundsEntity";
+        id: string;
+        availableAmount: string;
+        accountId: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+};
+
+// @public (undocumented)
+type GetFundsQueryVariables = Exact<{
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+}>;
+
+// @public (undocumented)
+const GetOfferByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetOfferByIdQueryQuery = {
+    __typename?: "Query";
+    offer?: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    } | null;
+};
+
+// @public (undocumented)
+type GetOfferByIdQueryQueryVariables = Exact<{
+    offerId: Scalars["ID"];
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetOffersQueryDocument: string;
+
+// @public (undocumented)
+type GetOffersQueryQuery = {
+    __typename?: "Query";
+    offers: Array<{
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    }>;
+};
+
+// @public (undocumented)
+type GetOffersQueryQueryVariables = Exact<{
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetProductV1BrandsQueryDocument: string;
+
+// @public (undocumented)
+type GetProductV1BrandsQueryQuery = {
+    __typename?: "Query";
+    productV1Brands: Array<{
+        __typename?: "ProductV1Brand";
+        id: string;
+        name: string;
+    }>;
+};
+
+// @public (undocumented)
+type GetProductV1BrandsQueryQueryVariables = Exact<{
+    brandsSkip?: InputMaybe<Scalars["Int"]>;
+    brandsFirst?: InputMaybe<Scalars["Int"]>;
+    brandsOrderBy?: InputMaybe<ProductV1Brand_OrderBy>;
+    brandsOrderDirection?: InputMaybe<OrderDirection>;
+    brandsFilter?: InputMaybe<ProductV1Brand_Filter>;
+}>;
+
+// @public (undocumented)
+const GetProductV1CategoriesQueryDocument: string;
+
+// @public (undocumented)
+type GetProductV1CategoriesQueryQuery = {
+    __typename?: "Query";
+    productV1Categories: Array<{
+        __typename?: "ProductV1Category";
+        id: string;
+        name: string;
+    }>;
+};
+
+// @public (undocumented)
+type GetProductV1CategoriesQueryQueryVariables = Exact<{
+    categoriesSkip?: InputMaybe<Scalars["Int"]>;
+    categoriesFirst?: InputMaybe<Scalars["Int"]>;
+    categoriesOrderBy?: InputMaybe<ProductV1Category_OrderBy>;
+    categoriesOrderDirection?: InputMaybe<OrderDirection>;
+    categoriesFilter?: InputMaybe<ProductV1Category_Filter>;
+}>;
+
+// @public (undocumented)
+const GetProductV1MetadataEntitiesQueryDocument: string;
+
+// @public (undocumented)
+type GetProductV1MetadataEntitiesQueryQuery = {
+    __typename?: "Query";
+    productV1MetadataEntities: Array<{
+        __typename?: "ProductV1MetadataEntity";
+        id: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        uuid: string;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        product: {
+            __typename?: "ProductV1Product";
+            id: string;
+            uuid: string;
+            version: number;
+            title: string;
+            description: string;
+            identification_sKU?: string | null;
+            identification_productId?: string | null;
+            identification_productIdType?: string | null;
+            productionInformation_brandName: string;
+            productionInformation_manufacturer?: string | null;
+            productionInformation_manufacturerPartNumber?: string | null;
+            productionInformation_modelNumber?: string | null;
+            productionInformation_materials?: Array<string> | null;
+            details_category?: string | null;
+            details_subCategory?: string | null;
+            details_subCategory2?: string | null;
+            details_offerCategory: string;
+            offerCategory: ProductV1OfferCategory;
+            details_tags?: Array<string> | null;
+            details_sections?: Array<string> | null;
+            details_personalisation?: Array<string> | null;
+            packaging_packageQuantity?: string | null;
+            packaging_dimensions_length?: string | null;
+            packaging_dimensions_width?: string | null;
+            packaging_dimensions_height?: string | null;
+            packaging_dimensions_unit?: string | null;
+            packaging_weight_value?: string | null;
+            packaging_weight_unit?: string | null;
+            brand: {
+                __typename?: "ProductV1Brand";
+                id: string;
+                name: string;
+            };
+            category?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory2?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            tags?: Array<{
+                __typename?: "ProductV1Tag";
+                id: string;
+                name: string;
+            }> | null;
+            sections?: Array<{
+                __typename?: "ProductV1Section";
+                id: string;
+                name: string;
+            }> | null;
+            personalisation?: Array<{
+                __typename?: "ProductV1Personalisation";
+                id: string;
+                name: string;
+            }> | null;
+            visuals_images: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }>;
+            visuals_videos?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+        };
+        variations?: Array<{
+            __typename?: "ProductV1Variation";
+            id: string;
+            type: string;
+            option: string;
+        }> | null;
+        productV1Seller: {
+            __typename?: "ProductV1Seller";
+            id: string;
+            defaultVersion?: number | null;
+            name?: string | null;
+            description?: string | null;
+            externalUrl?: string | null;
+            tokenId?: string | null;
+            images?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+            contactLinks?: Array<{
+                __typename?: "ProductV1SellerContactLink";
+                id: string;
+                url: string;
+                tag: string;
+            }> | null;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+        };
+        exchangePolicy: {
+            __typename?: "ProductV1ExchangePolicy";
+            id: string;
+            uuid: string;
+            version: number;
+            label?: string | null;
+            template: string;
+        };
+    }>;
+};
+
+// @public (undocumented)
+type GetProductV1MetadataEntitiesQueryQueryVariables = Exact<{
+    metadataSkip?: InputMaybe<Scalars["Int"]>;
+    metadataFirst?: InputMaybe<Scalars["Int"]>;
+    metadataOrderBy?: InputMaybe<ProductV1MetadataEntity_OrderBy>;
+    metadataOrderDirection?: InputMaybe<OrderDirection>;
+    metadataFilter?: InputMaybe<ProductV1MetadataEntity_Filter>;
+}>;
+
+// @public (undocumented)
+const GetProductV1MetadataEntityByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetProductV1MetadataEntityByIdQueryQuery = {
+    __typename?: "Query";
+    productV1MetadataEntity?: {
+        __typename?: "ProductV1MetadataEntity";
+        id: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        uuid: string;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        offer: {
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        };
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        product: {
+            __typename?: "ProductV1Product";
+            id: string;
+            uuid: string;
+            version: number;
+            title: string;
+            description: string;
+            identification_sKU?: string | null;
+            identification_productId?: string | null;
+            identification_productIdType?: string | null;
+            productionInformation_brandName: string;
+            productionInformation_manufacturer?: string | null;
+            productionInformation_manufacturerPartNumber?: string | null;
+            productionInformation_modelNumber?: string | null;
+            productionInformation_materials?: Array<string> | null;
+            details_category?: string | null;
+            details_subCategory?: string | null;
+            details_subCategory2?: string | null;
+            details_offerCategory: string;
+            offerCategory: ProductV1OfferCategory;
+            details_tags?: Array<string> | null;
+            details_sections?: Array<string> | null;
+            details_personalisation?: Array<string> | null;
+            packaging_packageQuantity?: string | null;
+            packaging_dimensions_length?: string | null;
+            packaging_dimensions_width?: string | null;
+            packaging_dimensions_height?: string | null;
+            packaging_dimensions_unit?: string | null;
+            packaging_weight_value?: string | null;
+            packaging_weight_unit?: string | null;
+            brand: {
+                __typename?: "ProductV1Brand";
+                id: string;
+                name: string;
+            };
+            category?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory2?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            tags?: Array<{
+                __typename?: "ProductV1Tag";
+                id: string;
+                name: string;
+            }> | null;
+            sections?: Array<{
+                __typename?: "ProductV1Section";
+                id: string;
+                name: string;
+            }> | null;
+            personalisation?: Array<{
+                __typename?: "ProductV1Personalisation";
+                id: string;
+                name: string;
+            }> | null;
+            visuals_images: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }>;
+            visuals_videos?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+        };
+        variations?: Array<{
+            __typename?: "ProductV1Variation";
+            id: string;
+            type: string;
+            option: string;
+        }> | null;
+        productV1Seller: {
+            __typename?: "ProductV1Seller";
+            id: string;
+            defaultVersion?: number | null;
+            name?: string | null;
+            description?: string | null;
+            externalUrl?: string | null;
+            tokenId?: string | null;
+            images?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+            contactLinks?: Array<{
+                __typename?: "ProductV1SellerContactLink";
+                id: string;
+                url: string;
+                tag: string;
+            }> | null;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+        };
+        exchangePolicy: {
+            __typename?: "ProductV1ExchangePolicy";
+            id: string;
+            uuid: string;
+            version: number;
+            label?: string | null;
+            template: string;
+        };
+    } | null;
+};
+
+// @public (undocumented)
+type GetProductV1MetadataEntityByIdQueryQueryVariables = Exact<{
+    metadataId: Scalars["ID"];
+    metadataSkip?: InputMaybe<Scalars["Int"]>;
+    metadataFirst?: InputMaybe<Scalars["Int"]>;
+    metadataOrderBy?: InputMaybe<ProductV1MetadataEntity_OrderBy>;
+    metadataOrderDirection?: InputMaybe<OrderDirection>;
+    metadataFilter?: InputMaybe<ProductV1MetadataEntity_Filter>;
+}>;
+
+// @public (undocumented)
+function getSdk(client: GraphQLClient, withWrapper?: SdkFunctionWrapper): {
+    getSellerByIdQuery(variables: GetSellerByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSellerByIdQueryQuery>;
+    getSellersQuery(variables?: GetSellersQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSellersQueryQuery>;
+    getBuyerByIdQuery(variables: GetBuyerByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBuyerByIdQueryQuery>;
+    getBuyersQuery(variables?: GetBuyersQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBuyersQueryQuery>;
+    getDisputeResolverByIdQuery(variables: GetDisputeResolverByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDisputeResolverByIdQueryQuery>;
+    getDisputeResolversQuery(variables?: GetDisputeResolversQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDisputeResolversQueryQuery>;
+    getDisputeByIdQuery(variables: GetDisputeByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDisputeByIdQueryQuery>;
+    getDisputesQuery(variables?: GetDisputesQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetDisputesQueryQuery>;
+    getExchangeTokenByIdQuery(variables: GetExchangeTokenByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExchangeTokenByIdQueryQuery>;
+    getExchangeTokensQuery(variables?: GetExchangeTokensQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExchangeTokensQueryQuery>;
+    getExchangeByIdQuery(variables: GetExchangeByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExchangeByIdQueryQuery>;
+    getExchangesQuery(variables?: GetExchangesQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetExchangesQueryQuery>;
+    getFundsById(variables: GetFundsByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetFundsByIdQuery>;
+    getFunds(variables?: GetFundsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetFundsQuery>;
+    getBaseMetadataEntityByIdQuery(variables: GetBaseMetadataEntityByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBaseMetadataEntityByIdQueryQuery>;
+    getBaseMetadataEntitiesQuery(variables?: GetBaseMetadataEntitiesQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBaseMetadataEntitiesQueryQuery>;
+    getProductV1BrandsQuery(variables?: GetProductV1BrandsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetProductV1BrandsQueryQuery>;
+    getProductV1CategoriesQuery(variables?: GetProductV1CategoriesQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetProductV1CategoriesQueryQuery>;
+    getProductV1MetadataEntityByIdQuery(variables: GetProductV1MetadataEntityByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetProductV1MetadataEntityByIdQueryQuery>;
+    getProductV1MetadataEntitiesQuery(variables?: GetProductV1MetadataEntitiesQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetProductV1MetadataEntitiesQueryQuery>;
+    getOfferByIdQuery(variables: GetOfferByIdQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetOfferByIdQueryQuery>;
+    getOffersQuery(variables?: GetOffersQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetOffersQueryQuery>;
+};
+
+// @public (undocumented)
+const GetSellerByIdQueryDocument: string;
+
+// @public (undocumented)
+type GetSellerByIdQueryQuery = {
+    __typename?: "Query";
+    seller?: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+    } | null;
+};
+
+// @public (undocumented)
+type GetSellerByIdQueryQueryVariables = Exact<{
+    sellerId: Scalars["ID"];
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public (undocumented)
+const GetSellersQueryDocument: string;
+
+// @public (undocumented)
+type GetSellersQueryQuery = {
+    __typename?: "Query";
+    sellers: Array<{
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+        funds?: Array<{
+            __typename?: "FundsEntity";
+            id: string;
+            availableAmount: string;
+            accountId: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+        offers?: Array<{
+            __typename?: "Offer";
+            id: string;
+            createdAt: string;
+            price: string;
+            sellerDeposit: string;
+            protocolFee: string;
+            agentFee: string;
+            agentId: string;
+            buyerCancelPenalty: string;
+            quantityAvailable: string;
+            quantityInitial: string;
+            validFromDate: string;
+            validUntilDate: string;
+            voucherRedeemableFromDate: string;
+            voucherRedeemableUntilDate: string;
+            fulfillmentPeriodDuration: string;
+            voucherValidDuration: string;
+            resolutionPeriodDuration: string;
+            metadataUri: string;
+            metadataHash: string;
+            voidedAt?: string | null;
+            disputeResolverId: string;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+            exchangeToken: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+            disputeResolver: {
+                __typename?: "DisputeResolver";
+                id: string;
+                escalationResponsePeriod: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                operator: string;
+                metadataUri: string;
+                active: boolean;
+                sellerAllowList: Array<string>;
+                fees: Array<{
+                    __typename?: "DisputeResolverFee";
+                    id: string;
+                    tokenAddress: string;
+                    tokenName: string;
+                    feeAmount: string;
+                    token: {
+                        __typename?: "ExchangeToken";
+                        id: string;
+                        address: string;
+                        decimals: string;
+                        symbol: string;
+                        name: string;
+                    };
+                }>;
+            };
+            disputeResolutionTerms: {
+                __typename?: "DisputeResolutionTermsEntity";
+                id: string;
+                disputeResolverId: string;
+                escalationResponsePeriod: string;
+                feeAmount: string;
+                buyerEscalationDeposit: string;
+            };
+            metadata?: {
+                __typename?: "BaseMetadataEntity";
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+            } | {
+                __typename?: "ProductV1MetadataEntity";
+                image: string;
+                createdAt: string;
+                voided: boolean;
+                validFromDate: string;
+                validUntilDate: string;
+                quantityAvailable: string;
+                uuid: string;
+                name: string;
+                description: string;
+                externalUrl: string;
+                schemaUrl: string;
+                type: MetadataType;
+                attributes?: Array<{
+                    __typename?: "MetadataAttribute";
+                    traitType: string;
+                    value: string;
+                    displayType: string;
+                }> | null;
+                product: {
+                    __typename?: "ProductV1Product";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    title: string;
+                    description: string;
+                    identification_sKU?: string | null;
+                    identification_productId?: string | null;
+                    identification_productIdType?: string | null;
+                    productionInformation_brandName: string;
+                    productionInformation_manufacturer?: string | null;
+                    productionInformation_manufacturerPartNumber?: string | null;
+                    productionInformation_modelNumber?: string | null;
+                    productionInformation_materials?: Array<string> | null;
+                    details_category?: string | null;
+                    details_subCategory?: string | null;
+                    details_subCategory2?: string | null;
+                    details_offerCategory: string;
+                    offerCategory: ProductV1OfferCategory;
+                    details_tags?: Array<string> | null;
+                    details_sections?: Array<string> | null;
+                    details_personalisation?: Array<string> | null;
+                    packaging_packageQuantity?: string | null;
+                    packaging_dimensions_length?: string | null;
+                    packaging_dimensions_width?: string | null;
+                    packaging_dimensions_height?: string | null;
+                    packaging_dimensions_unit?: string | null;
+                    packaging_weight_value?: string | null;
+                    packaging_weight_unit?: string | null;
+                    brand: {
+                        __typename?: "ProductV1Brand";
+                        id: string;
+                        name: string;
+                    };
+                    category?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    subCategory2?: {
+                        __typename?: "ProductV1Category";
+                        id: string;
+                        name: string;
+                    } | null;
+                    tags?: Array<{
+                        __typename?: "ProductV1Tag";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    sections?: Array<{
+                        __typename?: "ProductV1Section";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    personalisation?: Array<{
+                        __typename?: "ProductV1Personalisation";
+                        id: string;
+                        name: string;
+                    }> | null;
+                    visuals_images: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }>;
+                    visuals_videos?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                };
+                variations?: Array<{
+                    __typename?: "ProductV1Variation";
+                    id: string;
+                    type: string;
+                    option: string;
+                }> | null;
+                productV1Seller: {
+                    __typename?: "ProductV1Seller";
+                    id: string;
+                    defaultVersion?: number | null;
+                    name?: string | null;
+                    description?: string | null;
+                    externalUrl?: string | null;
+                    tokenId?: string | null;
+                    images?: Array<{
+                        __typename?: "ProductV1Media";
+                        id: string;
+                        url: string;
+                        tag?: string | null;
+                        type: ProductV1MediaType;
+                    }> | null;
+                    contactLinks?: Array<{
+                        __typename?: "ProductV1SellerContactLink";
+                        id: string;
+                        url: string;
+                        tag: string;
+                    }> | null;
+                    seller: {
+                        __typename?: "Seller";
+                        id: string;
+                        operator: string;
+                        admin: string;
+                        clerk: string;
+                        treasury: string;
+                        authTokenId: string;
+                        authTokenType: number;
+                        voucherCloneAddress: string;
+                        active: boolean;
+                    };
+                };
+                exchangePolicy: {
+                    __typename?: "ProductV1ExchangePolicy";
+                    id: string;
+                    uuid: string;
+                    version: number;
+                    label?: string | null;
+                    template: string;
+                };
+                shipping?: {
+                    __typename?: "ProductV1ShippingOption";
+                    id: string;
+                    defaultVersion?: number | null;
+                    countryOfOrigin?: string | null;
+                    redemptionPoint?: string | null;
+                    supportedJurisdictions?: Array<{
+                        __typename?: "ProductV1ShippingJurisdiction";
+                        id: string;
+                        label: string;
+                        deliveryTime: string;
+                    }> | null;
+                } | null;
+            } | null;
+        }>;
+        exchanges?: Array<{
+            __typename?: "Exchange";
+            id: string;
+            disputed: boolean;
+            state: ExchangeState;
+            committedDate: string;
+            finalizedDate?: string | null;
+            validUntilDate: string;
+            redeemedDate?: string | null;
+            revokedDate?: string | null;
+            cancelledDate?: string | null;
+            completedDate?: string | null;
+            expired: boolean;
+        }>;
+    }>;
+};
+
+// @public (undocumented)
+type GetSellersQueryQueryVariables = Exact<{
+    sellersSkip?: InputMaybe<Scalars["Int"]>;
+    sellersFirst?: InputMaybe<Scalars["Int"]>;
+    sellersOrderBy?: InputMaybe<Seller_OrderBy>;
+    sellersOrderDirection?: InputMaybe<OrderDirection>;
+    sellersFilter?: InputMaybe<Seller_Filter>;
+    fundsSkip?: InputMaybe<Scalars["Int"]>;
+    fundsFirst?: InputMaybe<Scalars["Int"]>;
+    fundsOrderBy?: InputMaybe<FundsEntity_OrderBy>;
+    fundsOrderDirection?: InputMaybe<OrderDirection>;
+    fundsFilter?: InputMaybe<FundsEntity_Filter>;
+    offersSkip?: InputMaybe<Scalars["Int"]>;
+    offersFirst?: InputMaybe<Scalars["Int"]>;
+    offersOrderBy?: InputMaybe<Offer_OrderBy>;
+    offersOrderDirection?: InputMaybe<OrderDirection>;
+    offersFilter?: InputMaybe<Offer_Filter>;
+    exchangesSkip?: InputMaybe<Scalars["Int"]>;
+    exchangesFirst?: InputMaybe<Scalars["Int"]>;
+    exchangesOrderBy?: InputMaybe<Exchange_OrderBy>;
+    exchangesOrderDirection?: InputMaybe<OrderDirection>;
+    exchangesFilter?: InputMaybe<Exchange_Filter>;
+    includeExchanges?: InputMaybe<Scalars["Boolean"]>;
+    includeOffers?: InputMaybe<Scalars["Boolean"]>;
+    includeFunds?: InputMaybe<Scalars["Boolean"]>;
+}>;
+
+// @public
+interface Headers {
+    // (undocumented)
+    append(name: string, value: string): void;
+    // (undocumented)
+    delete(name: string): void;
+    // (undocumented)
+    forEach(callbackfn: (value: string, key: string, parent: Headers) => void, thisArg?: any): void;
+    // (undocumented)
+    get(name: string): string | null;
+    // (undocumented)
+    has(name: string): boolean;
+    // (undocumented)
+    set(name: string, value: string): void;
+}
+
+// Warning: (ae-forgotten-export) The symbol "CoreSDK" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export function initCoreSdk(chainId: number): Promise<CoreSDK>;
+
+// @public (undocumented)
+type InputMaybe<T> = Maybe<T>;
+
+// @public (undocumented)
+interface JsonSerializer {
+    // (undocumented)
+    parse(obj: string): unknown;
+    // (undocumented)
+    stringify(obj: any): string;
+}
+
+// @public (undocumented)
+type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+    [SubKey in K]: Maybe<T[SubKey]>;
+};
+
+// @public (undocumented)
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+    [SubKey in K]?: Maybe<T[SubKey]>;
+};
+
+// @public (undocumented)
+type Maybe<T> = T | null;
+
+// @public
+type _Meta_ = {
+    __typename?: "_Meta_";
+    block: _Block_;
+    deployment: Scalars["String"];
+    hasIndexingErrors: Scalars["Boolean"];
+};
+
+// @public (undocumented)
+type MetadataAttribute = {
+    __typename?: "MetadataAttribute";
+    displayType: Scalars["String"];
+    id: Scalars["ID"];
+    traitType: Scalars["String"];
+    value: Scalars["String"];
+};
+
+// @public (undocumented)
+type MetadataAttribute_Filter = {
+    displayType?: InputMaybe<Scalars["String"]>;
+    displayType_contains?: InputMaybe<Scalars["String"]>;
+    displayType_contains_nocase?: InputMaybe<Scalars["String"]>;
+    displayType_ends_with?: InputMaybe<Scalars["String"]>;
+    displayType_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    displayType_gt?: InputMaybe<Scalars["String"]>;
+    displayType_gte?: InputMaybe<Scalars["String"]>;
+    displayType_in?: InputMaybe<Array<Scalars["String"]>>;
+    displayType_lt?: InputMaybe<Scalars["String"]>;
+    displayType_lte?: InputMaybe<Scalars["String"]>;
+    displayType_not?: InputMaybe<Scalars["String"]>;
+    displayType_not_contains?: InputMaybe<Scalars["String"]>;
+    displayType_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    displayType_not_ends_with?: InputMaybe<Scalars["String"]>;
+    displayType_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    displayType_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    displayType_not_starts_with?: InputMaybe<Scalars["String"]>;
+    displayType_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    displayType_starts_with?: InputMaybe<Scalars["String"]>;
+    displayType_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    traitType?: InputMaybe<Scalars["String"]>;
+    traitType_contains?: InputMaybe<Scalars["String"]>;
+    traitType_contains_nocase?: InputMaybe<Scalars["String"]>;
+    traitType_ends_with?: InputMaybe<Scalars["String"]>;
+    traitType_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    traitType_gt?: InputMaybe<Scalars["String"]>;
+    traitType_gte?: InputMaybe<Scalars["String"]>;
+    traitType_in?: InputMaybe<Array<Scalars["String"]>>;
+    traitType_lt?: InputMaybe<Scalars["String"]>;
+    traitType_lte?: InputMaybe<Scalars["String"]>;
+    traitType_not?: InputMaybe<Scalars["String"]>;
+    traitType_not_contains?: InputMaybe<Scalars["String"]>;
+    traitType_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    traitType_not_ends_with?: InputMaybe<Scalars["String"]>;
+    traitType_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    traitType_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    traitType_not_starts_with?: InputMaybe<Scalars["String"]>;
+    traitType_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    traitType_starts_with?: InputMaybe<Scalars["String"]>;
+    traitType_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    value?: InputMaybe<Scalars["String"]>;
+    value_contains?: InputMaybe<Scalars["String"]>;
+    value_contains_nocase?: InputMaybe<Scalars["String"]>;
+    value_ends_with?: InputMaybe<Scalars["String"]>;
+    value_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    value_gt?: InputMaybe<Scalars["String"]>;
+    value_gte?: InputMaybe<Scalars["String"]>;
+    value_in?: InputMaybe<Array<Scalars["String"]>>;
+    value_lt?: InputMaybe<Scalars["String"]>;
+    value_lte?: InputMaybe<Scalars["String"]>;
+    value_not?: InputMaybe<Scalars["String"]>;
+    value_not_contains?: InputMaybe<Scalars["String"]>;
+    value_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    value_not_ends_with?: InputMaybe<Scalars["String"]>;
+    value_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    value_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    value_not_starts_with?: InputMaybe<Scalars["String"]>;
+    value_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    value_starts_with?: InputMaybe<Scalars["String"]>;
+    value_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum MetadataAttribute_OrderBy {
+    // (undocumented)
+    DisplayType = "displayType",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    TraitType = "traitType",
+    // (undocumented)
+    Value = "value"
+}
+
+// @public (undocumented)
+type MetadataInterface = {
+    attributes?: Maybe<Array<MetadataAttribute>>;
+    createdAt: Scalars["BigInt"];
+    description: Scalars["String"];
+    exchangeToken: ExchangeToken;
+    externalUrl: Scalars["String"];
+    id: Scalars["ID"];
+    image: Scalars["String"];
+    name: Scalars["String"];
+    offer: Offer;
+    quantityAvailable: Scalars["BigInt"];
+    schemaUrl: Scalars["String"];
+    seller: Seller;
+    type: MetadataType;
+    validFromDate: Scalars["BigInt"];
+    validUntilDate: Scalars["BigInt"];
+    voided: Scalars["Boolean"];
+};
+
+// @public (undocumented)
+type MetadataInterface_Filter = {
+    attributes?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    createdAt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    createdAt_lt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_lte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_lt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_lte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_gt?: InputMaybe<Scalars["String"]>;
+    externalUrl_gte?: InputMaybe<Scalars["String"]>;
+    externalUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_lt?: InputMaybe<Scalars["String"]>;
+    externalUrl_lte?: InputMaybe<Scalars["String"]>;
+    externalUrl_not?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    image?: InputMaybe<Scalars["String"]>;
+    image_contains?: InputMaybe<Scalars["String"]>;
+    image_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_ends_with?: InputMaybe<Scalars["String"]>;
+    image_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_gt?: InputMaybe<Scalars["String"]>;
+    image_gte?: InputMaybe<Scalars["String"]>;
+    image_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_lt?: InputMaybe<Scalars["String"]>;
+    image_lte?: InputMaybe<Scalars["String"]>;
+    image_not?: InputMaybe<Scalars["String"]>;
+    image_not_contains?: InputMaybe<Scalars["String"]>;
+    image_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_not_starts_with?: InputMaybe<Scalars["String"]>;
+    image_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_starts_with?: InputMaybe<Scalars["String"]>;
+    image_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer?: InputMaybe<Scalars["String"]>;
+    offer_contains?: InputMaybe<Scalars["String"]>;
+    offer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_gt?: InputMaybe<Scalars["String"]>;
+    offer_gte?: InputMaybe<Scalars["String"]>;
+    offer_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_lt?: InputMaybe<Scalars["String"]>;
+    offer_lte?: InputMaybe<Scalars["String"]>;
+    offer_not?: InputMaybe<Scalars["String"]>;
+    offer_not_contains?: InputMaybe<Scalars["String"]>;
+    offer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    quantityAvailable?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityAvailable_lt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_lte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    schemaUrl?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_lt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_lte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type?: InputMaybe<MetadataType>;
+    type_in?: InputMaybe<Array<MetadataType>>;
+    type_not?: InputMaybe<MetadataType>;
+    type_not_in?: InputMaybe<Array<MetadataType>>;
+    validFromDate?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validFromDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voided?: InputMaybe<Scalars["Boolean"]>;
+    voided_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    voided_not?: InputMaybe<Scalars["Boolean"]>;
+    voided_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+};
+
+// @public (undocumented)
+enum MetadataInterface_OrderBy {
+    // (undocumented)
+    Attributes = "attributes",
+    // (undocumented)
+    CreatedAt = "createdAt",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    ExchangeToken = "exchangeToken",
+    // (undocumented)
+    ExternalUrl = "externalUrl",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Image = "image",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Offer = "offer",
+    // (undocumented)
+    QuantityAvailable = "quantityAvailable",
+    // (undocumented)
+    SchemaUrl = "schemaUrl",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    Type = "type",
+    // (undocumented)
+    ValidFromDate = "validFromDate",
+    // (undocumented)
+    ValidUntilDate = "validUntilDate",
+    // (undocumented)
+    Voided = "voided"
+}
+
+// @public (undocumented)
+type MetadataInterfaceAttributesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataAttribute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<MetadataAttribute_Filter>;
+};
+
+// @public (undocumented)
+enum MetadataType {
+    // (undocumented)
+    Base = "BASE",
+    // (undocumented)
+    ProductV1 = "PRODUCT_V1"
+}
+
+// @public
+type Offer = {
+    __typename?: "Offer";
+    agentFee: Scalars["BigInt"];
+    agentId: Scalars["BigInt"];
+    buyerCancelPenalty: Scalars["BigInt"];
+    createdAt: Scalars["BigInt"];
+    disputeResolutionTerms: DisputeResolutionTermsEntity;
+    disputeResolver: DisputeResolver;
+    disputeResolverId: Scalars["BigInt"];
+    exchangeToken: ExchangeToken;
+    exchanges: Array<Exchange>;
+    fulfillmentPeriodDuration: Scalars["BigInt"];
+    id: Scalars["ID"];
+    metadata?: Maybe<MetadataInterface>;
+    metadataHash: Scalars["String"];
+    metadataUri: Scalars["String"];
+    price: Scalars["BigInt"];
+    protocolFee: Scalars["BigInt"];
+    quantityAvailable: Scalars["BigInt"];
+    quantityInitial: Scalars["BigInt"];
+    resolutionPeriodDuration: Scalars["BigInt"];
+    seller: Seller;
+    sellerDeposit: Scalars["BigInt"];
+    sellerId: Scalars["BigInt"];
+    validFromDate: Scalars["BigInt"];
+    validUntilDate: Scalars["BigInt"];
+    voided: Scalars["Boolean"];
+    voidedAt?: Maybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate: Scalars["BigInt"];
+    voucherRedeemableUntilDate: Scalars["BigInt"];
+    voucherValidDuration: Scalars["BigInt"];
+};
+
+// @public (undocumented)
+type Offer_Filter = {
+    agentFee?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_gt?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_gte?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    agentFee_lt?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_lte?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_not?: InputMaybe<Scalars["BigInt"]>;
+    agentFee_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    agentId?: InputMaybe<Scalars["BigInt"]>;
+    agentId_gt?: InputMaybe<Scalars["BigInt"]>;
+    agentId_gte?: InputMaybe<Scalars["BigInt"]>;
+    agentId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    agentId_lt?: InputMaybe<Scalars["BigInt"]>;
+    agentId_lte?: InputMaybe<Scalars["BigInt"]>;
+    agentId_not?: InputMaybe<Scalars["BigInt"]>;
+    agentId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    buyerCancelPenalty?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_gt?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_gte?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    buyerCancelPenalty_lt?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_lte?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_not?: InputMaybe<Scalars["BigInt"]>;
+    buyerCancelPenalty_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    createdAt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    createdAt_lt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_lte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolutionTerms?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_gt?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_gte?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolutionTerms_lt?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_lte?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolutionTerms_not_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolutionTerms_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver?: InputMaybe<Scalars["String"]>;
+    disputeResolverId?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_gt?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_gte?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolverId_lt?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_lte?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_not?: InputMaybe<Scalars["BigInt"]>;
+    disputeResolverId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputeResolver_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolver_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_gt?: InputMaybe<Scalars["String"]>;
+    disputeResolver_gte?: InputMaybe<Scalars["String"]>;
+    disputeResolver_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolver_lt?: InputMaybe<Scalars["String"]>;
+    disputeResolver_lte?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_contains?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_ends_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    disputeResolver_not_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    disputeResolver_starts_with?: InputMaybe<Scalars["String"]>;
+    disputeResolver_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_lt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_lte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    fulfillmentPeriodDuration?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_gt?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_gte?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    fulfillmentPeriodDuration_lt?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_lte?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_not?: InputMaybe<Scalars["BigInt"]>;
+    fulfillmentPeriodDuration_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    metadata?: InputMaybe<Scalars["String"]>;
+    metadataHash?: InputMaybe<Scalars["String"]>;
+    metadataHash_contains?: InputMaybe<Scalars["String"]>;
+    metadataHash_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataHash_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataHash_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataHash_gt?: InputMaybe<Scalars["String"]>;
+    metadataHash_gte?: InputMaybe<Scalars["String"]>;
+    metadataHash_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataHash_lt?: InputMaybe<Scalars["String"]>;
+    metadataHash_lte?: InputMaybe<Scalars["String"]>;
+    metadataHash_not?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_contains?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataHash_not_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataHash_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataHash_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataHash_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri?: InputMaybe<Scalars["String"]>;
+    metadataUri_contains?: InputMaybe<Scalars["String"]>;
+    metadataUri_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_gt?: InputMaybe<Scalars["String"]>;
+    metadataUri_gte?: InputMaybe<Scalars["String"]>;
+    metadataUri_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataUri_lt?: InputMaybe<Scalars["String"]>;
+    metadataUri_lte?: InputMaybe<Scalars["String"]>;
+    metadataUri_not?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_contains?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_ends_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadataUri_not_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadataUri_starts_with?: InputMaybe<Scalars["String"]>;
+    metadataUri_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_contains?: InputMaybe<Scalars["String"]>;
+    metadata_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_ends_with?: InputMaybe<Scalars["String"]>;
+    metadata_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_gt?: InputMaybe<Scalars["String"]>;
+    metadata_gte?: InputMaybe<Scalars["String"]>;
+    metadata_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadata_lt?: InputMaybe<Scalars["String"]>;
+    metadata_lte?: InputMaybe<Scalars["String"]>;
+    metadata_not?: InputMaybe<Scalars["String"]>;
+    metadata_not_contains?: InputMaybe<Scalars["String"]>;
+    metadata_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_not_ends_with?: InputMaybe<Scalars["String"]>;
+    metadata_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    metadata_not_starts_with?: InputMaybe<Scalars["String"]>;
+    metadata_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    metadata_starts_with?: InputMaybe<Scalars["String"]>;
+    metadata_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    price?: InputMaybe<Scalars["BigInt"]>;
+    price_gt?: InputMaybe<Scalars["BigInt"]>;
+    price_gte?: InputMaybe<Scalars["BigInt"]>;
+    price_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    price_lt?: InputMaybe<Scalars["BigInt"]>;
+    price_lte?: InputMaybe<Scalars["BigInt"]>;
+    price_not?: InputMaybe<Scalars["BigInt"]>;
+    price_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    protocolFee?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_gt?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_gte?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    protocolFee_lt?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_lte?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_not?: InputMaybe<Scalars["BigInt"]>;
+    protocolFee_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityAvailable?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityAvailable_lt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_lte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityInitial?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_gt?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_gte?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityInitial_lt?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_lte?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_not?: InputMaybe<Scalars["BigInt"]>;
+    quantityInitial_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    resolutionPeriodDuration?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_gt?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_gte?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    resolutionPeriodDuration_lt?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_lte?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_not?: InputMaybe<Scalars["BigInt"]>;
+    resolutionPeriodDuration_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    seller?: InputMaybe<Scalars["String"]>;
+    sellerDeposit?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_gt?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_gte?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerDeposit_lt?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_lte?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_not?: InputMaybe<Scalars["BigInt"]>;
+    sellerDeposit_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerId?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_gt?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_gte?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerId_lt?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_lte?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_not?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    validFromDate?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validFromDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voided?: InputMaybe<Scalars["Boolean"]>;
+    voidedAt?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_gt?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_gte?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voidedAt_lt?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_lte?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_not?: InputMaybe<Scalars["BigInt"]>;
+    voidedAt_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voided_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    voided_not?: InputMaybe<Scalars["Boolean"]>;
+    voided_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    voucherRedeemableFromDate?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voucherRedeemableFromDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_not?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableFromDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voucherRedeemableUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voucherRedeemableUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    voucherRedeemableUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voucherValidDuration?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_gt?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_gte?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    voucherValidDuration_lt?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_lte?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_not?: InputMaybe<Scalars["BigInt"]>;
+    voucherValidDuration_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+};
+
+// @public (undocumented)
+enum Offer_OrderBy {
+    // (undocumented)
+    AgentFee = "agentFee",
+    // (undocumented)
+    AgentId = "agentId",
+    // (undocumented)
+    BuyerCancelPenalty = "buyerCancelPenalty",
+    // (undocumented)
+    CreatedAt = "createdAt",
+    // (undocumented)
+    DisputeResolutionTerms = "disputeResolutionTerms",
+    // (undocumented)
+    DisputeResolver = "disputeResolver",
+    // (undocumented)
+    DisputeResolverId = "disputeResolverId",
+    // (undocumented)
+    Exchanges = "exchanges",
+    // (undocumented)
+    ExchangeToken = "exchangeToken",
+    // (undocumented)
+    FulfillmentPeriodDuration = "fulfillmentPeriodDuration",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Metadata = "metadata",
+    // (undocumented)
+    MetadataHash = "metadataHash",
+    // (undocumented)
+    MetadataUri = "metadataUri",
+    // (undocumented)
+    Price = "price",
+    // (undocumented)
+    ProtocolFee = "protocolFee",
+    // (undocumented)
+    QuantityAvailable = "quantityAvailable",
+    // (undocumented)
+    QuantityInitial = "quantityInitial",
+    // (undocumented)
+    ResolutionPeriodDuration = "resolutionPeriodDuration",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    SellerDeposit = "sellerDeposit",
+    // (undocumented)
+    SellerId = "sellerId",
+    // (undocumented)
+    ValidFromDate = "validFromDate",
+    // (undocumented)
+    ValidUntilDate = "validUntilDate",
+    // (undocumented)
+    Voided = "voided",
+    // (undocumented)
+    VoidedAt = "voidedAt",
+    // (undocumented)
+    VoucherRedeemableFromDate = "voucherRedeemableFromDate",
+    // (undocumented)
+    VoucherRedeemableUntilDate = "voucherRedeemableUntilDate",
+    // (undocumented)
+    VoucherValidDuration = "voucherValidDuration"
+}
+
+// @public
+type OfferExchangesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Exchange_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Exchange_Filter>;
+};
+
+// @public (undocumented)
+type OfferFieldsFragment = {
+    __typename?: "Offer";
+    id: string;
+    createdAt: string;
+    price: string;
+    sellerDeposit: string;
+    protocolFee: string;
+    agentFee: string;
+    agentId: string;
+    buyerCancelPenalty: string;
+    quantityAvailable: string;
+    quantityInitial: string;
+    validFromDate: string;
+    validUntilDate: string;
+    voucherRedeemableFromDate: string;
+    voucherRedeemableUntilDate: string;
+    fulfillmentPeriodDuration: string;
+    voucherValidDuration: string;
+    resolutionPeriodDuration: string;
+    metadataUri: string;
+    metadataHash: string;
+    voidedAt?: string | null;
+    disputeResolverId: string;
+    exchanges?: Array<{
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+    }>;
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+    disputeResolver: {
+        __typename?: "DisputeResolver";
+        id: string;
+        escalationResponsePeriod: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        operator: string;
+        metadataUri: string;
+        active: boolean;
+        sellerAllowList: Array<string>;
+        fees: Array<{
+            __typename?: "DisputeResolverFee";
+            id: string;
+            tokenAddress: string;
+            tokenName: string;
+            feeAmount: string;
+            token: {
+                __typename?: "ExchangeToken";
+                id: string;
+                address: string;
+                decimals: string;
+                symbol: string;
+                name: string;
+            };
+        }>;
+    };
+    disputeResolutionTerms: {
+        __typename?: "DisputeResolutionTermsEntity";
+        id: string;
+        disputeResolverId: string;
+        escalationResponsePeriod: string;
+        feeAmount: string;
+        buyerEscalationDeposit: string;
+    };
+    metadata?: {
+        __typename?: "BaseMetadataEntity";
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+    } | {
+        __typename?: "ProductV1MetadataEntity";
+        image: string;
+        createdAt: string;
+        voided: boolean;
+        validFromDate: string;
+        validUntilDate: string;
+        quantityAvailable: string;
+        uuid: string;
+        name: string;
+        description: string;
+        externalUrl: string;
+        schemaUrl: string;
+        type: MetadataType;
+        attributes?: Array<{
+            __typename?: "MetadataAttribute";
+            traitType: string;
+            value: string;
+            displayType: string;
+        }> | null;
+        product: {
+            __typename?: "ProductV1Product";
+            id: string;
+            uuid: string;
+            version: number;
+            title: string;
+            description: string;
+            identification_sKU?: string | null;
+            identification_productId?: string | null;
+            identification_productIdType?: string | null;
+            productionInformation_brandName: string;
+            productionInformation_manufacturer?: string | null;
+            productionInformation_manufacturerPartNumber?: string | null;
+            productionInformation_modelNumber?: string | null;
+            productionInformation_materials?: Array<string> | null;
+            details_category?: string | null;
+            details_subCategory?: string | null;
+            details_subCategory2?: string | null;
+            details_offerCategory: string;
+            offerCategory: ProductV1OfferCategory;
+            details_tags?: Array<string> | null;
+            details_sections?: Array<string> | null;
+            details_personalisation?: Array<string> | null;
+            packaging_packageQuantity?: string | null;
+            packaging_dimensions_length?: string | null;
+            packaging_dimensions_width?: string | null;
+            packaging_dimensions_height?: string | null;
+            packaging_dimensions_unit?: string | null;
+            packaging_weight_value?: string | null;
+            packaging_weight_unit?: string | null;
+            brand: {
+                __typename?: "ProductV1Brand";
+                id: string;
+                name: string;
+            };
+            category?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            subCategory2?: {
+                __typename?: "ProductV1Category";
+                id: string;
+                name: string;
+            } | null;
+            tags?: Array<{
+                __typename?: "ProductV1Tag";
+                id: string;
+                name: string;
+            }> | null;
+            sections?: Array<{
+                __typename?: "ProductV1Section";
+                id: string;
+                name: string;
+            }> | null;
+            personalisation?: Array<{
+                __typename?: "ProductV1Personalisation";
+                id: string;
+                name: string;
+            }> | null;
+            visuals_images: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }>;
+            visuals_videos?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+        };
+        variations?: Array<{
+            __typename?: "ProductV1Variation";
+            id: string;
+            type: string;
+            option: string;
+        }> | null;
+        productV1Seller: {
+            __typename?: "ProductV1Seller";
+            id: string;
+            defaultVersion?: number | null;
+            name?: string | null;
+            description?: string | null;
+            externalUrl?: string | null;
+            tokenId?: string | null;
+            images?: Array<{
+                __typename?: "ProductV1Media";
+                id: string;
+                url: string;
+                tag?: string | null;
+                type: ProductV1MediaType;
+            }> | null;
+            contactLinks?: Array<{
+                __typename?: "ProductV1SellerContactLink";
+                id: string;
+                url: string;
+                tag: string;
+            }> | null;
+            seller: {
+                __typename?: "Seller";
+                id: string;
+                operator: string;
+                admin: string;
+                clerk: string;
+                treasury: string;
+                authTokenId: string;
+                authTokenType: number;
+                voucherCloneAddress: string;
+                active: boolean;
+            };
+        };
+        exchangePolicy: {
+            __typename?: "ProductV1ExchangePolicy";
+            id: string;
+            uuid: string;
+            version: number;
+            label?: string | null;
+            template: string;
+        };
+        shipping?: {
+            __typename?: "ProductV1ShippingOption";
+            id: string;
+            defaultVersion?: number | null;
+            countryOfOrigin?: string | null;
+            redemptionPoint?: string | null;
+            supportedJurisdictions?: Array<{
+                __typename?: "ProductV1ShippingJurisdiction";
+                id: string;
+                label: string;
+                deliveryTime: string;
+            }> | null;
+        } | null;
+    } | null;
+};
+
+// @public (undocumented)
+const OfferFieldsFragmentDoc: string;
+
+// @public
+enum OrderDirection {
+    // (undocumented)
+    Asc = "asc",
+    // (undocumented)
+    Desc = "desc"
+}
+
+// @public (undocumented)
+type ProductV1Brand = {
+    __typename?: "ProductV1Brand";
+    id: Scalars["ID"];
+    name: Scalars["String"];
+    products: Array<ProductV1Product>;
+};
+
+// @public (undocumented)
+type ProductV1Brand_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Brand_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Products = "products"
+}
+
+// @public (undocumented)
+type ProductV1BrandProductsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Product_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Product_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1Category = {
+    __typename?: "ProductV1Category";
+    id: Scalars["ID"];
+    name: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Category_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Category_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name"
+}
+
+// @public (undocumented)
+type ProductV1ExchangePolicy = {
+    __typename?: "ProductV1ExchangePolicy";
+    id: Scalars["ID"];
+    label?: Maybe<Scalars["String"]>;
+    template: Scalars["String"];
+    uuid: Scalars["String"];
+    version: Scalars["Int"];
+};
+
+// @public (undocumented)
+type ProductV1ExchangePolicy_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    label?: InputMaybe<Scalars["String"]>;
+    label_contains?: InputMaybe<Scalars["String"]>;
+    label_contains_nocase?: InputMaybe<Scalars["String"]>;
+    label_ends_with?: InputMaybe<Scalars["String"]>;
+    label_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_gt?: InputMaybe<Scalars["String"]>;
+    label_gte?: InputMaybe<Scalars["String"]>;
+    label_in?: InputMaybe<Array<Scalars["String"]>>;
+    label_lt?: InputMaybe<Scalars["String"]>;
+    label_lte?: InputMaybe<Scalars["String"]>;
+    label_not?: InputMaybe<Scalars["String"]>;
+    label_not_contains?: InputMaybe<Scalars["String"]>;
+    label_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    label_not_ends_with?: InputMaybe<Scalars["String"]>;
+    label_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    label_not_starts_with?: InputMaybe<Scalars["String"]>;
+    label_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_starts_with?: InputMaybe<Scalars["String"]>;
+    label_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    template?: InputMaybe<Scalars["String"]>;
+    template_contains?: InputMaybe<Scalars["String"]>;
+    template_contains_nocase?: InputMaybe<Scalars["String"]>;
+    template_ends_with?: InputMaybe<Scalars["String"]>;
+    template_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    template_gt?: InputMaybe<Scalars["String"]>;
+    template_gte?: InputMaybe<Scalars["String"]>;
+    template_in?: InputMaybe<Array<Scalars["String"]>>;
+    template_lt?: InputMaybe<Scalars["String"]>;
+    template_lte?: InputMaybe<Scalars["String"]>;
+    template_not?: InputMaybe<Scalars["String"]>;
+    template_not_contains?: InputMaybe<Scalars["String"]>;
+    template_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    template_not_ends_with?: InputMaybe<Scalars["String"]>;
+    template_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    template_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    template_not_starts_with?: InputMaybe<Scalars["String"]>;
+    template_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    template_starts_with?: InputMaybe<Scalars["String"]>;
+    template_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid?: InputMaybe<Scalars["String"]>;
+    uuid_contains?: InputMaybe<Scalars["String"]>;
+    uuid_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_gt?: InputMaybe<Scalars["String"]>;
+    uuid_gte?: InputMaybe<Scalars["String"]>;
+    uuid_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_lt?: InputMaybe<Scalars["String"]>;
+    uuid_lte?: InputMaybe<Scalars["String"]>;
+    uuid_not?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_not_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    version?: InputMaybe<Scalars["Int"]>;
+    version_gt?: InputMaybe<Scalars["Int"]>;
+    version_gte?: InputMaybe<Scalars["Int"]>;
+    version_in?: InputMaybe<Array<Scalars["Int"]>>;
+    version_lt?: InputMaybe<Scalars["Int"]>;
+    version_lte?: InputMaybe<Scalars["Int"]>;
+    version_not?: InputMaybe<Scalars["Int"]>;
+    version_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+};
+
+// @public (undocumented)
+enum ProductV1ExchangePolicy_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Label = "label",
+    // (undocumented)
+    Template = "template",
+    // (undocumented)
+    Uuid = "uuid",
+    // (undocumented)
+    Version = "version"
+}
+
+// @public (undocumented)
+type ProductV1Media = {
+    __typename?: "ProductV1Media";
+    id: Scalars["ID"];
+    tag?: Maybe<Scalars["String"]>;
+    type: ProductV1MediaType;
+    url: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Media_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    tag?: InputMaybe<Scalars["String"]>;
+    tag_contains?: InputMaybe<Scalars["String"]>;
+    tag_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tag_ends_with?: InputMaybe<Scalars["String"]>;
+    tag_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_gt?: InputMaybe<Scalars["String"]>;
+    tag_gte?: InputMaybe<Scalars["String"]>;
+    tag_in?: InputMaybe<Array<Scalars["String"]>>;
+    tag_lt?: InputMaybe<Scalars["String"]>;
+    tag_lte?: InputMaybe<Scalars["String"]>;
+    tag_not?: InputMaybe<Scalars["String"]>;
+    tag_not_contains?: InputMaybe<Scalars["String"]>;
+    tag_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tag_not_ends_with?: InputMaybe<Scalars["String"]>;
+    tag_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    tag_not_starts_with?: InputMaybe<Scalars["String"]>;
+    tag_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_starts_with?: InputMaybe<Scalars["String"]>;
+    tag_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type?: InputMaybe<ProductV1MediaType>;
+    type_in?: InputMaybe<Array<ProductV1MediaType>>;
+    type_not?: InputMaybe<ProductV1MediaType>;
+    type_not_in?: InputMaybe<Array<ProductV1MediaType>>;
+    url?: InputMaybe<Scalars["String"]>;
+    url_contains?: InputMaybe<Scalars["String"]>;
+    url_contains_nocase?: InputMaybe<Scalars["String"]>;
+    url_ends_with?: InputMaybe<Scalars["String"]>;
+    url_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_gt?: InputMaybe<Scalars["String"]>;
+    url_gte?: InputMaybe<Scalars["String"]>;
+    url_in?: InputMaybe<Array<Scalars["String"]>>;
+    url_lt?: InputMaybe<Scalars["String"]>;
+    url_lte?: InputMaybe<Scalars["String"]>;
+    url_not?: InputMaybe<Scalars["String"]>;
+    url_not_contains?: InputMaybe<Scalars["String"]>;
+    url_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    url_not_ends_with?: InputMaybe<Scalars["String"]>;
+    url_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    url_not_starts_with?: InputMaybe<Scalars["String"]>;
+    url_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_starts_with?: InputMaybe<Scalars["String"]>;
+    url_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Media_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Tag = "tag",
+    // (undocumented)
+    Type = "type",
+    // (undocumented)
+    Url = "url"
+}
+
+// @public (undocumented)
+enum ProductV1MediaType {
+    // (undocumented)
+    Image = "IMAGE",
+    // (undocumented)
+    Video = "VIDEO"
+}
+
+// @public (undocumented)
+type ProductV1MetadataEntity = MetadataInterface & {
+    __typename?: "ProductV1MetadataEntity";
+    attributes?: Maybe<Array<MetadataAttribute>>;
+    createdAt: Scalars["BigInt"];
+    description: Scalars["String"];
+    exchangePolicy: ProductV1ExchangePolicy;
+    exchangeToken: ExchangeToken;
+    externalUrl: Scalars["String"];
+    id: Scalars["ID"];
+    image: Scalars["String"];
+    name: Scalars["String"];
+    offer: Offer;
+    product: ProductV1Product;
+    productOverrides?: Maybe<ProductV1ProductOverrides>;
+    productV1Seller: ProductV1Seller;
+    quantityAvailable: Scalars["BigInt"];
+    schemaUrl: Scalars["String"];
+    seller: Seller;
+    shipping?: Maybe<ProductV1ShippingOption>;
+    type: MetadataType;
+    uuid: Scalars["String"];
+    validFromDate: Scalars["BigInt"];
+    validUntilDate: Scalars["BigInt"];
+    variations?: Maybe<Array<ProductV1Variation>>;
+    voided: Scalars["Boolean"];
+};
+
+// @public (undocumented)
+type ProductV1MetadataEntity_Filter = {
+    attributes?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    attributes_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    createdAt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_gte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    createdAt_lt?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_lte?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not?: InputMaybe<Scalars["BigInt"]>;
+    createdAt_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_contains?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_gt?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_gte?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangePolicy_lt?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_lte?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_contains?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangePolicy_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangePolicy_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_gte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_lt?: InputMaybe<Scalars["String"]>;
+    exchangeToken_lte?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    exchangeToken_not_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with?: InputMaybe<Scalars["String"]>;
+    exchangeToken_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_gt?: InputMaybe<Scalars["String"]>;
+    externalUrl_gte?: InputMaybe<Scalars["String"]>;
+    externalUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_lt?: InputMaybe<Scalars["String"]>;
+    externalUrl_lte?: InputMaybe<Scalars["String"]>;
+    externalUrl_not?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    image?: InputMaybe<Scalars["String"]>;
+    image_contains?: InputMaybe<Scalars["String"]>;
+    image_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_ends_with?: InputMaybe<Scalars["String"]>;
+    image_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_gt?: InputMaybe<Scalars["String"]>;
+    image_gte?: InputMaybe<Scalars["String"]>;
+    image_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_lt?: InputMaybe<Scalars["String"]>;
+    image_lte?: InputMaybe<Scalars["String"]>;
+    image_not?: InputMaybe<Scalars["String"]>;
+    image_not_contains?: InputMaybe<Scalars["String"]>;
+    image_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with?: InputMaybe<Scalars["String"]>;
+    image_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    image_not_starts_with?: InputMaybe<Scalars["String"]>;
+    image_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    image_starts_with?: InputMaybe<Scalars["String"]>;
+    image_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer?: InputMaybe<Scalars["String"]>;
+    offer_contains?: InputMaybe<Scalars["String"]>;
+    offer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_gt?: InputMaybe<Scalars["String"]>;
+    offer_gte?: InputMaybe<Scalars["String"]>;
+    offer_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_lt?: InputMaybe<Scalars["String"]>;
+    offer_lte?: InputMaybe<Scalars["String"]>;
+    offer_not?: InputMaybe<Scalars["String"]>;
+    offer_not_contains?: InputMaybe<Scalars["String"]>;
+    offer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    offer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    offer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offer_starts_with?: InputMaybe<Scalars["String"]>;
+    offer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    product?: InputMaybe<Scalars["String"]>;
+    productOverrides?: InputMaybe<Scalars["String"]>;
+    productOverrides_contains?: InputMaybe<Scalars["String"]>;
+    productOverrides_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productOverrides_ends_with?: InputMaybe<Scalars["String"]>;
+    productOverrides_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productOverrides_gt?: InputMaybe<Scalars["String"]>;
+    productOverrides_gte?: InputMaybe<Scalars["String"]>;
+    productOverrides_in?: InputMaybe<Array<Scalars["String"]>>;
+    productOverrides_lt?: InputMaybe<Scalars["String"]>;
+    productOverrides_lte?: InputMaybe<Scalars["String"]>;
+    productOverrides_not?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_contains?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productOverrides_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productOverrides_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productOverrides_starts_with?: InputMaybe<Scalars["String"]>;
+    productOverrides_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller?: InputMaybe<Scalars["String"]>;
+    productV1Seller_contains?: InputMaybe<Scalars["String"]>;
+    productV1Seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller_ends_with?: InputMaybe<Scalars["String"]>;
+    productV1Seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller_gt?: InputMaybe<Scalars["String"]>;
+    productV1Seller_gte?: InputMaybe<Scalars["String"]>;
+    productV1Seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    productV1Seller_lt?: InputMaybe<Scalars["String"]>;
+    productV1Seller_lte?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_contains?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productV1Seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productV1Seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productV1Seller_starts_with?: InputMaybe<Scalars["String"]>;
+    productV1Seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    product_contains?: InputMaybe<Scalars["String"]>;
+    product_contains_nocase?: InputMaybe<Scalars["String"]>;
+    product_ends_with?: InputMaybe<Scalars["String"]>;
+    product_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    product_gt?: InputMaybe<Scalars["String"]>;
+    product_gte?: InputMaybe<Scalars["String"]>;
+    product_in?: InputMaybe<Array<Scalars["String"]>>;
+    product_lt?: InputMaybe<Scalars["String"]>;
+    product_lte?: InputMaybe<Scalars["String"]>;
+    product_not?: InputMaybe<Scalars["String"]>;
+    product_not_contains?: InputMaybe<Scalars["String"]>;
+    product_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    product_not_ends_with?: InputMaybe<Scalars["String"]>;
+    product_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    product_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    product_not_starts_with?: InputMaybe<Scalars["String"]>;
+    product_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    product_starts_with?: InputMaybe<Scalars["String"]>;
+    product_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    quantityAvailable?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_gte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    quantityAvailable_lt?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_lte?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not?: InputMaybe<Scalars["BigInt"]>;
+    quantityAvailable_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    schemaUrl?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_gte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_lt?: InputMaybe<Scalars["String"]>;
+    schemaUrl_lte?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    schemaUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    schemaUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    shipping?: InputMaybe<Scalars["String"]>;
+    shipping_contains?: InputMaybe<Scalars["String"]>;
+    shipping_contains_nocase?: InputMaybe<Scalars["String"]>;
+    shipping_ends_with?: InputMaybe<Scalars["String"]>;
+    shipping_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    shipping_gt?: InputMaybe<Scalars["String"]>;
+    shipping_gte?: InputMaybe<Scalars["String"]>;
+    shipping_in?: InputMaybe<Array<Scalars["String"]>>;
+    shipping_lt?: InputMaybe<Scalars["String"]>;
+    shipping_lte?: InputMaybe<Scalars["String"]>;
+    shipping_not?: InputMaybe<Scalars["String"]>;
+    shipping_not_contains?: InputMaybe<Scalars["String"]>;
+    shipping_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    shipping_not_ends_with?: InputMaybe<Scalars["String"]>;
+    shipping_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    shipping_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    shipping_not_starts_with?: InputMaybe<Scalars["String"]>;
+    shipping_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    shipping_starts_with?: InputMaybe<Scalars["String"]>;
+    shipping_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type?: InputMaybe<MetadataType>;
+    type_in?: InputMaybe<Array<MetadataType>>;
+    type_not?: InputMaybe<MetadataType>;
+    type_not_in?: InputMaybe<Array<MetadataType>>;
+    uuid?: InputMaybe<Scalars["String"]>;
+    uuid_contains?: InputMaybe<Scalars["String"]>;
+    uuid_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_gt?: InputMaybe<Scalars["String"]>;
+    uuid_gte?: InputMaybe<Scalars["String"]>;
+    uuid_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_lt?: InputMaybe<Scalars["String"]>;
+    uuid_lte?: InputMaybe<Scalars["String"]>;
+    uuid_not?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_not_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    validFromDate?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validFromDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validFromDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    validUntilDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not?: InputMaybe<Scalars["BigInt"]>;
+    validUntilDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    variations?: InputMaybe<Array<Scalars["String"]>>;
+    variations_contains?: InputMaybe<Array<Scalars["String"]>>;
+    variations_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    variations_not?: InputMaybe<Array<Scalars["String"]>>;
+    variations_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    variations_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    voided?: InputMaybe<Scalars["Boolean"]>;
+    voided_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    voided_not?: InputMaybe<Scalars["Boolean"]>;
+    voided_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+};
+
+// @public (undocumented)
+enum ProductV1MetadataEntity_OrderBy {
+    // (undocumented)
+    Attributes = "attributes",
+    // (undocumented)
+    CreatedAt = "createdAt",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    ExchangePolicy = "exchangePolicy",
+    // (undocumented)
+    ExchangeToken = "exchangeToken",
+    // (undocumented)
+    ExternalUrl = "externalUrl",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Image = "image",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Offer = "offer",
+    // (undocumented)
+    Product = "product",
+    // (undocumented)
+    ProductOverrides = "productOverrides",
+    // (undocumented)
+    ProductV1Seller = "productV1Seller",
+    // (undocumented)
+    QuantityAvailable = "quantityAvailable",
+    // (undocumented)
+    SchemaUrl = "schemaUrl",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    Shipping = "shipping",
+    // (undocumented)
+    Type = "type",
+    // (undocumented)
+    Uuid = "uuid",
+    // (undocumented)
+    ValidFromDate = "validFromDate",
+    // (undocumented)
+    ValidUntilDate = "validUntilDate",
+    // (undocumented)
+    Variations = "variations",
+    // (undocumented)
+    Voided = "voided"
+}
+
+// @public (undocumented)
+type ProductV1MetadataEntityAttributesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataAttribute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<MetadataAttribute_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1MetadataEntityFieldsFragment = {
+    __typename?: "ProductV1MetadataEntity";
+    id: string;
+    name: string;
+    description: string;
+    externalUrl: string;
+    schemaUrl: string;
+    type: MetadataType;
+    image: string;
+    createdAt: string;
+    voided: boolean;
+    validFromDate: string;
+    validUntilDate: string;
+    quantityAvailable: string;
+    uuid: string;
+    attributes?: Array<{
+        __typename?: "MetadataAttribute";
+        traitType: string;
+        value: string;
+        displayType: string;
+    }> | null;
+    offer: {
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    };
+    seller: {
+        __typename?: "Seller";
+        id: string;
+        operator: string;
+        admin: string;
+        clerk: string;
+        treasury: string;
+        authTokenId: string;
+        authTokenType: number;
+        voucherCloneAddress: string;
+        active: boolean;
+    };
+    exchangeToken: {
+        __typename?: "ExchangeToken";
+        id: string;
+        address: string;
+        decimals: string;
+        symbol: string;
+        name: string;
+    };
+    product: {
+        __typename?: "ProductV1Product";
+        id: string;
+        uuid: string;
+        version: number;
+        title: string;
+        description: string;
+        identification_sKU?: string | null;
+        identification_productId?: string | null;
+        identification_productIdType?: string | null;
+        productionInformation_brandName: string;
+        productionInformation_manufacturer?: string | null;
+        productionInformation_manufacturerPartNumber?: string | null;
+        productionInformation_modelNumber?: string | null;
+        productionInformation_materials?: Array<string> | null;
+        details_category?: string | null;
+        details_subCategory?: string | null;
+        details_subCategory2?: string | null;
+        details_offerCategory: string;
+        offerCategory: ProductV1OfferCategory;
+        details_tags?: Array<string> | null;
+        details_sections?: Array<string> | null;
+        details_personalisation?: Array<string> | null;
+        packaging_packageQuantity?: string | null;
+        packaging_dimensions_length?: string | null;
+        packaging_dimensions_width?: string | null;
+        packaging_dimensions_height?: string | null;
+        packaging_dimensions_unit?: string | null;
+        packaging_weight_value?: string | null;
+        packaging_weight_unit?: string | null;
+        brand: {
+            __typename?: "ProductV1Brand";
+            id: string;
+            name: string;
+        };
+        category?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        subCategory?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        subCategory2?: {
+            __typename?: "ProductV1Category";
+            id: string;
+            name: string;
+        } | null;
+        tags?: Array<{
+            __typename?: "ProductV1Tag";
+            id: string;
+            name: string;
+        }> | null;
+        sections?: Array<{
+            __typename?: "ProductV1Section";
+            id: string;
+            name: string;
+        }> | null;
+        personalisation?: Array<{
+            __typename?: "ProductV1Personalisation";
+            id: string;
+            name: string;
+        }> | null;
+        visuals_images: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }>;
+        visuals_videos?: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }> | null;
+    };
+    variations?: Array<{
+        __typename?: "ProductV1Variation";
+        id: string;
+        type: string;
+        option: string;
+    }> | null;
+    productV1Seller: {
+        __typename?: "ProductV1Seller";
+        id: string;
+        defaultVersion?: number | null;
+        name?: string | null;
+        description?: string | null;
+        externalUrl?: string | null;
+        tokenId?: string | null;
+        images?: Array<{
+            __typename?: "ProductV1Media";
+            id: string;
+            url: string;
+            tag?: string | null;
+            type: ProductV1MediaType;
+        }> | null;
+        contactLinks?: Array<{
+            __typename?: "ProductV1SellerContactLink";
+            id: string;
+            url: string;
+            tag: string;
+        }> | null;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+    };
+    exchangePolicy: {
+        __typename?: "ProductV1ExchangePolicy";
+        id: string;
+        uuid: string;
+        version: number;
+        label?: string | null;
+        template: string;
+    };
+};
+
+// @public (undocumented)
+const ProductV1MetadataEntityFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type ProductV1MetadataEntityVariationsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Variation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Variation_Filter>;
+};
+
+// @public (undocumented)
+enum ProductV1OfferCategory {
+    // (undocumented)
+    Digital = "DIGITAL",
+    // (undocumented)
+    Phygital = "PHYGITAL",
+    // (undocumented)
+    Physical = "PHYSICAL"
+}
+
+// @public (undocumented)
+type ProductV1Personalisation = {
+    __typename?: "ProductV1Personalisation";
+    id: Scalars["ID"];
+    name: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Personalisation_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Personalisation_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name"
+}
+
+// @public (undocumented)
+type ProductV1Product = {
+    __typename?: "ProductV1Product";
+    brand: ProductV1Brand;
+    category?: Maybe<ProductV1Category>;
+    description: Scalars["String"];
+    details_category?: Maybe<Scalars["String"]>;
+    details_offerCategory: Scalars["String"];
+    details_personalisation?: Maybe<Array<Scalars["String"]>>;
+    details_sections?: Maybe<Array<Scalars["String"]>>;
+    details_subCategory?: Maybe<Scalars["String"]>;
+    details_subCategory2?: Maybe<Scalars["String"]>;
+    details_tags?: Maybe<Array<Scalars["String"]>>;
+    id: Scalars["ID"];
+    identification_productId?: Maybe<Scalars["String"]>;
+    identification_productIdType?: Maybe<Scalars["String"]>;
+    identification_sKU?: Maybe<Scalars["String"]>;
+    offerCategory: ProductV1OfferCategory;
+    packaging_dimensions_height?: Maybe<Scalars["String"]>;
+    packaging_dimensions_length?: Maybe<Scalars["String"]>;
+    packaging_dimensions_unit?: Maybe<Scalars["String"]>;
+    packaging_dimensions_width?: Maybe<Scalars["String"]>;
+    packaging_packageQuantity?: Maybe<Scalars["String"]>;
+    packaging_weight_unit?: Maybe<Scalars["String"]>;
+    packaging_weight_value?: Maybe<Scalars["String"]>;
+    personalisation?: Maybe<Array<ProductV1Personalisation>>;
+    productionInformation_brandName: Scalars["String"];
+    productionInformation_manufacturer?: Maybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber?: Maybe<Scalars["String"]>;
+    productionInformation_materials?: Maybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber?: Maybe<Scalars["String"]>;
+    sections?: Maybe<Array<ProductV1Section>>;
+    subCategory?: Maybe<ProductV1Category>;
+    subCategory2?: Maybe<ProductV1Category>;
+    tags?: Maybe<Array<ProductV1Tag>>;
+    title: Scalars["String"];
+    uuid: Scalars["String"];
+    version: Scalars["Int"];
+    visuals_images: Array<ProductV1Media>;
+    visuals_videos?: Maybe<Array<ProductV1Media>>;
+};
+
+// @public (undocumented)
+type ProductV1Product_Filter = {
+    brand?: InputMaybe<Scalars["String"]>;
+    brand_contains?: InputMaybe<Scalars["String"]>;
+    brand_contains_nocase?: InputMaybe<Scalars["String"]>;
+    brand_ends_with?: InputMaybe<Scalars["String"]>;
+    brand_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_gt?: InputMaybe<Scalars["String"]>;
+    brand_gte?: InputMaybe<Scalars["String"]>;
+    brand_in?: InputMaybe<Array<Scalars["String"]>>;
+    brand_lt?: InputMaybe<Scalars["String"]>;
+    brand_lte?: InputMaybe<Scalars["String"]>;
+    brand_not?: InputMaybe<Scalars["String"]>;
+    brand_not_contains?: InputMaybe<Scalars["String"]>;
+    brand_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    brand_not_ends_with?: InputMaybe<Scalars["String"]>;
+    brand_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    brand_not_starts_with?: InputMaybe<Scalars["String"]>;
+    brand_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_starts_with?: InputMaybe<Scalars["String"]>;
+    brand_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    category?: InputMaybe<Scalars["String"]>;
+    category_contains?: InputMaybe<Scalars["String"]>;
+    category_contains_nocase?: InputMaybe<Scalars["String"]>;
+    category_ends_with?: InputMaybe<Scalars["String"]>;
+    category_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    category_gt?: InputMaybe<Scalars["String"]>;
+    category_gte?: InputMaybe<Scalars["String"]>;
+    category_in?: InputMaybe<Array<Scalars["String"]>>;
+    category_lt?: InputMaybe<Scalars["String"]>;
+    category_lte?: InputMaybe<Scalars["String"]>;
+    category_not?: InputMaybe<Scalars["String"]>;
+    category_not_contains?: InputMaybe<Scalars["String"]>;
+    category_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    category_not_ends_with?: InputMaybe<Scalars["String"]>;
+    category_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    category_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    category_not_starts_with?: InputMaybe<Scalars["String"]>;
+    category_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    category_starts_with?: InputMaybe<Scalars["String"]>;
+    category_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_category?: InputMaybe<Scalars["String"]>;
+    details_category_contains?: InputMaybe<Scalars["String"]>;
+    details_category_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_category_ends_with?: InputMaybe<Scalars["String"]>;
+    details_category_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_category_gt?: InputMaybe<Scalars["String"]>;
+    details_category_gte?: InputMaybe<Scalars["String"]>;
+    details_category_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_category_lt?: InputMaybe<Scalars["String"]>;
+    details_category_lte?: InputMaybe<Scalars["String"]>;
+    details_category_not?: InputMaybe<Scalars["String"]>;
+    details_category_not_contains?: InputMaybe<Scalars["String"]>;
+    details_category_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_category_not_ends_with?: InputMaybe<Scalars["String"]>;
+    details_category_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_category_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_category_not_starts_with?: InputMaybe<Scalars["String"]>;
+    details_category_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_category_starts_with?: InputMaybe<Scalars["String"]>;
+    details_category_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_contains?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_ends_with?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_gt?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_gte?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_offerCategory_lt?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_lte?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_contains?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_ends_with?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_offerCategory_not_starts_with?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_starts_with?: InputMaybe<Scalars["String"]>;
+    details_offerCategory_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_personalisation?: InputMaybe<Array<Scalars["String"]>>;
+    details_personalisation_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_personalisation_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    details_personalisation_not?: InputMaybe<Array<Scalars["String"]>>;
+    details_personalisation_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_personalisation_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections_not?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_sections_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    details_subCategory?: InputMaybe<Scalars["String"]>;
+    details_subCategory2?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_contains?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_ends_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_gt?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_gte?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_subCategory2_lt?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_lte?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_contains?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_ends_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_subCategory2_not_starts_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_starts_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory2_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_contains?: InputMaybe<Scalars["String"]>;
+    details_subCategory_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_ends_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_gt?: InputMaybe<Scalars["String"]>;
+    details_subCategory_gte?: InputMaybe<Scalars["String"]>;
+    details_subCategory_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_subCategory_lt?: InputMaybe<Scalars["String"]>;
+    details_subCategory_lte?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_contains?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_ends_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    details_subCategory_not_starts_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_subCategory_starts_with?: InputMaybe<Scalars["String"]>;
+    details_subCategory_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    details_tags?: InputMaybe<Array<Scalars["String"]>>;
+    details_tags_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_tags_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    details_tags_not?: InputMaybe<Array<Scalars["String"]>>;
+    details_tags_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    details_tags_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    identification_productId?: InputMaybe<Scalars["String"]>;
+    identification_productIdType?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_contains?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_gt?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_gte?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productIdType_lt?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_lte?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productIdType_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_contains?: InputMaybe<Scalars["String"]>;
+    identification_productId_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_gt?: InputMaybe<Scalars["String"]>;
+    identification_productId_gte?: InputMaybe<Scalars["String"]>;
+    identification_productId_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productId_lt?: InputMaybe<Scalars["String"]>;
+    identification_productId_lte?: InputMaybe<Scalars["String"]>;
+    identification_productId_not?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productId_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU?: InputMaybe<Scalars["String"]>;
+    identification_sKU_contains?: InputMaybe<Scalars["String"]>;
+    identification_sKU_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_gt?: InputMaybe<Scalars["String"]>;
+    identification_sKU_gte?: InputMaybe<Scalars["String"]>;
+    identification_sKU_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_sKU_lt?: InputMaybe<Scalars["String"]>;
+    identification_sKU_lte?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_sKU_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    offerCategory?: InputMaybe<ProductV1OfferCategory>;
+    offerCategory_in?: InputMaybe<Array<ProductV1OfferCategory>>;
+    offerCategory_not?: InputMaybe<ProductV1OfferCategory>;
+    offerCategory_not_in?: InputMaybe<Array<ProductV1OfferCategory>>;
+    packaging_dimensions_height?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_height_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_height_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_length_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_length_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_unit_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_unit_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_width_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_width_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_contains?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_gt?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_gte?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_packageQuantity_lt?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_lte?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_packageQuantity_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_gt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_gte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_unit_lt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_lte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_unit_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_gt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_gte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_value_lt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_lte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_value_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    personalisation?: InputMaybe<Array<Scalars["String"]>>;
+    personalisation_contains?: InputMaybe<Array<Scalars["String"]>>;
+    personalisation_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    personalisation_not?: InputMaybe<Array<Scalars["String"]>>;
+    personalisation_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    personalisation_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_brandName?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_brandName_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_brandName_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturerPartNumber_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturerPartNumber_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturer_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_materials?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_contains?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    sections?: InputMaybe<Array<Scalars["String"]>>;
+    sections_contains?: InputMaybe<Array<Scalars["String"]>>;
+    sections_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    sections_not?: InputMaybe<Array<Scalars["String"]>>;
+    sections_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    sections_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    subCategory?: InputMaybe<Scalars["String"]>;
+    subCategory2?: InputMaybe<Scalars["String"]>;
+    subCategory2_contains?: InputMaybe<Scalars["String"]>;
+    subCategory2_contains_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory2_ends_with?: InputMaybe<Scalars["String"]>;
+    subCategory2_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory2_gt?: InputMaybe<Scalars["String"]>;
+    subCategory2_gte?: InputMaybe<Scalars["String"]>;
+    subCategory2_in?: InputMaybe<Array<Scalars["String"]>>;
+    subCategory2_lt?: InputMaybe<Scalars["String"]>;
+    subCategory2_lte?: InputMaybe<Scalars["String"]>;
+    subCategory2_not?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_contains?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_ends_with?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    subCategory2_not_starts_with?: InputMaybe<Scalars["String"]>;
+    subCategory2_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory2_starts_with?: InputMaybe<Scalars["String"]>;
+    subCategory2_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_contains?: InputMaybe<Scalars["String"]>;
+    subCategory_contains_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_ends_with?: InputMaybe<Scalars["String"]>;
+    subCategory_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_gt?: InputMaybe<Scalars["String"]>;
+    subCategory_gte?: InputMaybe<Scalars["String"]>;
+    subCategory_in?: InputMaybe<Array<Scalars["String"]>>;
+    subCategory_lt?: InputMaybe<Scalars["String"]>;
+    subCategory_lte?: InputMaybe<Scalars["String"]>;
+    subCategory_not?: InputMaybe<Scalars["String"]>;
+    subCategory_not_contains?: InputMaybe<Scalars["String"]>;
+    subCategory_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_not_ends_with?: InputMaybe<Scalars["String"]>;
+    subCategory_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    subCategory_not_starts_with?: InputMaybe<Scalars["String"]>;
+    subCategory_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    subCategory_starts_with?: InputMaybe<Scalars["String"]>;
+    subCategory_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tags?: InputMaybe<Array<Scalars["String"]>>;
+    tags_contains?: InputMaybe<Array<Scalars["String"]>>;
+    tags_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    tags_not?: InputMaybe<Array<Scalars["String"]>>;
+    tags_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    tags_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    title?: InputMaybe<Scalars["String"]>;
+    title_contains?: InputMaybe<Scalars["String"]>;
+    title_contains_nocase?: InputMaybe<Scalars["String"]>;
+    title_ends_with?: InputMaybe<Scalars["String"]>;
+    title_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_gt?: InputMaybe<Scalars["String"]>;
+    title_gte?: InputMaybe<Scalars["String"]>;
+    title_in?: InputMaybe<Array<Scalars["String"]>>;
+    title_lt?: InputMaybe<Scalars["String"]>;
+    title_lte?: InputMaybe<Scalars["String"]>;
+    title_not?: InputMaybe<Scalars["String"]>;
+    title_not_contains?: InputMaybe<Scalars["String"]>;
+    title_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    title_not_ends_with?: InputMaybe<Scalars["String"]>;
+    title_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    title_not_starts_with?: InputMaybe<Scalars["String"]>;
+    title_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_starts_with?: InputMaybe<Scalars["String"]>;
+    title_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid?: InputMaybe<Scalars["String"]>;
+    uuid_contains?: InputMaybe<Scalars["String"]>;
+    uuid_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_gt?: InputMaybe<Scalars["String"]>;
+    uuid_gte?: InputMaybe<Scalars["String"]>;
+    uuid_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_lt?: InputMaybe<Scalars["String"]>;
+    uuid_lte?: InputMaybe<Scalars["String"]>;
+    uuid_not?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains?: InputMaybe<Scalars["String"]>;
+    uuid_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    uuid_not_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with?: InputMaybe<Scalars["String"]>;
+    uuid_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    version?: InputMaybe<Scalars["Int"]>;
+    version_gt?: InputMaybe<Scalars["Int"]>;
+    version_gte?: InputMaybe<Scalars["Int"]>;
+    version_in?: InputMaybe<Array<Scalars["Int"]>>;
+    version_lt?: InputMaybe<Scalars["Int"]>;
+    version_lte?: InputMaybe<Scalars["Int"]>;
+    version_not?: InputMaybe<Scalars["Int"]>;
+    version_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+    visuals_images?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+};
+
+// @public (undocumented)
+enum ProductV1Product_OrderBy {
+    // (undocumented)
+    Brand = "brand",
+    // (undocumented)
+    Category = "category",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    DetailsCategory = "details_category",
+    // (undocumented)
+    DetailsOfferCategory = "details_offerCategory",
+    // (undocumented)
+    DetailsPersonalisation = "details_personalisation",
+    // (undocumented)
+    DetailsSections = "details_sections",
+    // (undocumented)
+    DetailsSubCategory = "details_subCategory",
+    // (undocumented)
+    DetailsSubCategory2 = "details_subCategory2",
+    // (undocumented)
+    DetailsTags = "details_tags",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    IdentificationProductId = "identification_productId",
+    // (undocumented)
+    IdentificationProductIdType = "identification_productIdType",
+    // (undocumented)
+    IdentificationSKu = "identification_sKU",
+    // (undocumented)
+    OfferCategory = "offerCategory",
+    // (undocumented)
+    PackagingDimensionsHeight = "packaging_dimensions_height",
+    // (undocumented)
+    PackagingDimensionsLength = "packaging_dimensions_length",
+    // (undocumented)
+    PackagingDimensionsUnit = "packaging_dimensions_unit",
+    // (undocumented)
+    PackagingDimensionsWidth = "packaging_dimensions_width",
+    // (undocumented)
+    PackagingPackageQuantity = "packaging_packageQuantity",
+    // (undocumented)
+    PackagingWeightUnit = "packaging_weight_unit",
+    // (undocumented)
+    PackagingWeightValue = "packaging_weight_value",
+    // (undocumented)
+    Personalisation = "personalisation",
+    // (undocumented)
+    ProductionInformationBrandName = "productionInformation_brandName",
+    // (undocumented)
+    ProductionInformationManufacturer = "productionInformation_manufacturer",
+    // (undocumented)
+    ProductionInformationManufacturerPartNumber = "productionInformation_manufacturerPartNumber",
+    // (undocumented)
+    ProductionInformationMaterials = "productionInformation_materials",
+    // (undocumented)
+    ProductionInformationModelNumber = "productionInformation_modelNumber",
+    // (undocumented)
+    Sections = "sections",
+    // (undocumented)
+    SubCategory = "subCategory",
+    // (undocumented)
+    SubCategory2 = "subCategory2",
+    // (undocumented)
+    Tags = "tags",
+    // (undocumented)
+    Title = "title",
+    // (undocumented)
+    Uuid = "uuid",
+    // (undocumented)
+    Version = "version",
+    // (undocumented)
+    VisualsImages = "visuals_images",
+    // (undocumented)
+    VisualsVideos = "visuals_videos"
+}
+
+// @public (undocumented)
+type ProductV1ProductOverrides = {
+    __typename?: "ProductV1ProductOverrides";
+    brand: ProductV1Brand;
+    description: Scalars["String"];
+    id: Scalars["ID"];
+    identification_productId?: Maybe<Scalars["String"]>;
+    identification_productIdType?: Maybe<Scalars["String"]>;
+    identification_sKU?: Maybe<Scalars["String"]>;
+    packaging_dimensions_height?: Maybe<Scalars["String"]>;
+    packaging_dimensions_length?: Maybe<Scalars["String"]>;
+    packaging_dimensions_unit?: Maybe<Scalars["String"]>;
+    packaging_dimensions_width?: Maybe<Scalars["String"]>;
+    packaging_packageQuantity?: Maybe<Scalars["String"]>;
+    packaging_weight_unit?: Maybe<Scalars["String"]>;
+    packaging_weight_value?: Maybe<Scalars["String"]>;
+    productionInformation_brandName: Scalars["String"];
+    productionInformation_manufacturer?: Maybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber?: Maybe<Scalars["String"]>;
+    productionInformation_materials?: Maybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber?: Maybe<Scalars["String"]>;
+    title: Scalars["String"];
+    version: Scalars["Int"];
+    visuals_images: Array<ProductV1Media>;
+    visuals_videos?: Maybe<Array<ProductV1Media>>;
+};
+
+// @public (undocumented)
+type ProductV1ProductOverrides_Filter = {
+    brand?: InputMaybe<Scalars["String"]>;
+    brand_contains?: InputMaybe<Scalars["String"]>;
+    brand_contains_nocase?: InputMaybe<Scalars["String"]>;
+    brand_ends_with?: InputMaybe<Scalars["String"]>;
+    brand_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_gt?: InputMaybe<Scalars["String"]>;
+    brand_gte?: InputMaybe<Scalars["String"]>;
+    brand_in?: InputMaybe<Array<Scalars["String"]>>;
+    brand_lt?: InputMaybe<Scalars["String"]>;
+    brand_lte?: InputMaybe<Scalars["String"]>;
+    brand_not?: InputMaybe<Scalars["String"]>;
+    brand_not_contains?: InputMaybe<Scalars["String"]>;
+    brand_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    brand_not_ends_with?: InputMaybe<Scalars["String"]>;
+    brand_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    brand_not_starts_with?: InputMaybe<Scalars["String"]>;
+    brand_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    brand_starts_with?: InputMaybe<Scalars["String"]>;
+    brand_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    identification_productId?: InputMaybe<Scalars["String"]>;
+    identification_productIdType?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_contains?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_gt?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_gte?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productIdType_lt?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_lte?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productIdType_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productIdType_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_contains?: InputMaybe<Scalars["String"]>;
+    identification_productId_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_gt?: InputMaybe<Scalars["String"]>;
+    identification_productId_gte?: InputMaybe<Scalars["String"]>;
+    identification_productId_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productId_lt?: InputMaybe<Scalars["String"]>;
+    identification_productId_lte?: InputMaybe<Scalars["String"]>;
+    identification_productId_not?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_productId_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_productId_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_productId_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU?: InputMaybe<Scalars["String"]>;
+    identification_sKU_contains?: InputMaybe<Scalars["String"]>;
+    identification_sKU_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_gt?: InputMaybe<Scalars["String"]>;
+    identification_sKU_gte?: InputMaybe<Scalars["String"]>;
+    identification_sKU_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_sKU_lt?: InputMaybe<Scalars["String"]>;
+    identification_sKU_lte?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_contains?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_ends_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    identification_sKU_not_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    identification_sKU_starts_with?: InputMaybe<Scalars["String"]>;
+    identification_sKU_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_height_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_height_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_height_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_length_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_length_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_length_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_unit_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_unit_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_unit_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_gt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_gte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_width_lt?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_lte?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_dimensions_width_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_dimensions_width_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_contains?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_gt?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_gte?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_packageQuantity_lt?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_lte?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_packageQuantity_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_packageQuantity_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_gt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_gte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_unit_lt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_lte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_unit_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_unit_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_gt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_gte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_value_lt?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_lte?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_contains?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_ends_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    packaging_weight_value_not_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_starts_with?: InputMaybe<Scalars["String"]>;
+    packaging_weight_value_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_brandName_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_brandName_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_brandName_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturerPartNumber_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturerPartNumber_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturerPartNumber_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturer_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_manufacturer_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_manufacturer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_materials?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_contains?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_materials_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_gt?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_gte?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber_lt?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_lte?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_contains?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_ends_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    productionInformation_modelNumber_not_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_starts_with?: InputMaybe<Scalars["String"]>;
+    productionInformation_modelNumber_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    title?: InputMaybe<Scalars["String"]>;
+    title_contains?: InputMaybe<Scalars["String"]>;
+    title_contains_nocase?: InputMaybe<Scalars["String"]>;
+    title_ends_with?: InputMaybe<Scalars["String"]>;
+    title_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_gt?: InputMaybe<Scalars["String"]>;
+    title_gte?: InputMaybe<Scalars["String"]>;
+    title_in?: InputMaybe<Array<Scalars["String"]>>;
+    title_lt?: InputMaybe<Scalars["String"]>;
+    title_lte?: InputMaybe<Scalars["String"]>;
+    title_not?: InputMaybe<Scalars["String"]>;
+    title_not_contains?: InputMaybe<Scalars["String"]>;
+    title_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    title_not_ends_with?: InputMaybe<Scalars["String"]>;
+    title_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    title_not_starts_with?: InputMaybe<Scalars["String"]>;
+    title_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    title_starts_with?: InputMaybe<Scalars["String"]>;
+    title_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    version?: InputMaybe<Scalars["Int"]>;
+    version_gt?: InputMaybe<Scalars["Int"]>;
+    version_gte?: InputMaybe<Scalars["Int"]>;
+    version_in?: InputMaybe<Array<Scalars["Int"]>>;
+    version_lt?: InputMaybe<Scalars["Int"]>;
+    version_lte?: InputMaybe<Scalars["Int"]>;
+    version_not?: InputMaybe<Scalars["Int"]>;
+    version_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+    visuals_images?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_images_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    visuals_videos_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+};
+
+// @public (undocumented)
+enum ProductV1ProductOverrides_OrderBy {
+    // (undocumented)
+    Brand = "brand",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    IdentificationProductId = "identification_productId",
+    // (undocumented)
+    IdentificationProductIdType = "identification_productIdType",
+    // (undocumented)
+    IdentificationSKu = "identification_sKU",
+    // (undocumented)
+    PackagingDimensionsHeight = "packaging_dimensions_height",
+    // (undocumented)
+    PackagingDimensionsLength = "packaging_dimensions_length",
+    // (undocumented)
+    PackagingDimensionsUnit = "packaging_dimensions_unit",
+    // (undocumented)
+    PackagingDimensionsWidth = "packaging_dimensions_width",
+    // (undocumented)
+    PackagingPackageQuantity = "packaging_packageQuantity",
+    // (undocumented)
+    PackagingWeightUnit = "packaging_weight_unit",
+    // (undocumented)
+    PackagingWeightValue = "packaging_weight_value",
+    // (undocumented)
+    ProductionInformationBrandName = "productionInformation_brandName",
+    // (undocumented)
+    ProductionInformationManufacturer = "productionInformation_manufacturer",
+    // (undocumented)
+    ProductionInformationManufacturerPartNumber = "productionInformation_manufacturerPartNumber",
+    // (undocumented)
+    ProductionInformationMaterials = "productionInformation_materials",
+    // (undocumented)
+    ProductionInformationModelNumber = "productionInformation_modelNumber",
+    // (undocumented)
+    Title = "title",
+    // (undocumented)
+    Version = "version",
+    // (undocumented)
+    VisualsImages = "visuals_images",
+    // (undocumented)
+    VisualsVideos = "visuals_videos"
+}
+
+// @public (undocumented)
+type ProductV1ProductOverridesVisuals_ImagesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductOverridesVisuals_VideosArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductPersonalisationArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Personalisation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Personalisation_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductSectionsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Section_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Section_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductTagsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Tag_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Tag_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductVisuals_ImagesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ProductVisuals_VideosArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1Section = {
+    __typename?: "ProductV1Section";
+    id: Scalars["ID"];
+    name: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Section_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Section_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name"
+}
+
+// @public (undocumented)
+type ProductV1Seller = {
+    __typename?: "ProductV1Seller";
+    contactLinks?: Maybe<Array<ProductV1SellerContactLink>>;
+    defaultVersion?: Maybe<Scalars["Int"]>;
+    description?: Maybe<Scalars["String"]>;
+    externalUrl?: Maybe<Scalars["String"]>;
+    id: Scalars["ID"];
+    images?: Maybe<Array<ProductV1Media>>;
+    name?: Maybe<Scalars["String"]>;
+    seller: Seller;
+    tokenId?: Maybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+type ProductV1Seller_Filter = {
+    contactLinks?: InputMaybe<Array<Scalars["String"]>>;
+    contactLinks_contains?: InputMaybe<Array<Scalars["String"]>>;
+    contactLinks_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    contactLinks_not?: InputMaybe<Array<Scalars["String"]>>;
+    contactLinks_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    contactLinks_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    defaultVersion?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_gt?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_gte?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_in?: InputMaybe<Array<Scalars["Int"]>>;
+    defaultVersion_lt?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_lte?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_not?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+    description?: InputMaybe<Scalars["String"]>;
+    description_contains?: InputMaybe<Scalars["String"]>;
+    description_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_ends_with?: InputMaybe<Scalars["String"]>;
+    description_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_gt?: InputMaybe<Scalars["String"]>;
+    description_gte?: InputMaybe<Scalars["String"]>;
+    description_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_lt?: InputMaybe<Scalars["String"]>;
+    description_lte?: InputMaybe<Scalars["String"]>;
+    description_not?: InputMaybe<Scalars["String"]>;
+    description_not_contains?: InputMaybe<Scalars["String"]>;
+    description_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with?: InputMaybe<Scalars["String"]>;
+    description_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    description_not_starts_with?: InputMaybe<Scalars["String"]>;
+    description_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    description_starts_with?: InputMaybe<Scalars["String"]>;
+    description_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_gt?: InputMaybe<Scalars["String"]>;
+    externalUrl_gte?: InputMaybe<Scalars["String"]>;
+    externalUrl_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_lt?: InputMaybe<Scalars["String"]>;
+    externalUrl_lte?: InputMaybe<Scalars["String"]>;
+    externalUrl_not?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    externalUrl_not_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with?: InputMaybe<Scalars["String"]>;
+    externalUrl_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    images?: InputMaybe<Array<Scalars["String"]>>;
+    images_contains?: InputMaybe<Array<Scalars["String"]>>;
+    images_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    images_not?: InputMaybe<Array<Scalars["String"]>>;
+    images_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    images_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller?: InputMaybe<Scalars["String"]>;
+    seller_contains?: InputMaybe<Scalars["String"]>;
+    seller_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_gt?: InputMaybe<Scalars["String"]>;
+    seller_gte?: InputMaybe<Scalars["String"]>;
+    seller_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_lt?: InputMaybe<Scalars["String"]>;
+    seller_lte?: InputMaybe<Scalars["String"]>;
+    seller_not?: InputMaybe<Scalars["String"]>;
+    seller_not_contains?: InputMaybe<Scalars["String"]>;
+    seller_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with?: InputMaybe<Scalars["String"]>;
+    seller_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    seller_not_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    seller_starts_with?: InputMaybe<Scalars["String"]>;
+    seller_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId?: InputMaybe<Scalars["String"]>;
+    tokenId_contains?: InputMaybe<Scalars["String"]>;
+    tokenId_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId_ends_with?: InputMaybe<Scalars["String"]>;
+    tokenId_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId_gt?: InputMaybe<Scalars["String"]>;
+    tokenId_gte?: InputMaybe<Scalars["String"]>;
+    tokenId_in?: InputMaybe<Array<Scalars["String"]>>;
+    tokenId_lt?: InputMaybe<Scalars["String"]>;
+    tokenId_lte?: InputMaybe<Scalars["String"]>;
+    tokenId_not?: InputMaybe<Scalars["String"]>;
+    tokenId_not_contains?: InputMaybe<Scalars["String"]>;
+    tokenId_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId_not_ends_with?: InputMaybe<Scalars["String"]>;
+    tokenId_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    tokenId_not_starts_with?: InputMaybe<Scalars["String"]>;
+    tokenId_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tokenId_starts_with?: InputMaybe<Scalars["String"]>;
+    tokenId_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Seller_OrderBy {
+    // (undocumented)
+    ContactLinks = "contactLinks",
+    // (undocumented)
+    DefaultVersion = "defaultVersion",
+    // (undocumented)
+    Description = "description",
+    // (undocumented)
+    ExternalUrl = "externalUrl",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Images = "images",
+    // (undocumented)
+    Name = "name",
+    // (undocumented)
+    Seller = "seller",
+    // (undocumented)
+    TokenId = "tokenId"
+}
+
+// @public (undocumented)
+type ProductV1SellerContactLink = {
+    __typename?: "ProductV1SellerContactLink";
+    id: Scalars["ID"];
+    tag: Scalars["String"];
+    url: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1SellerContactLink_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    tag?: InputMaybe<Scalars["String"]>;
+    tag_contains?: InputMaybe<Scalars["String"]>;
+    tag_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tag_ends_with?: InputMaybe<Scalars["String"]>;
+    tag_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_gt?: InputMaybe<Scalars["String"]>;
+    tag_gte?: InputMaybe<Scalars["String"]>;
+    tag_in?: InputMaybe<Array<Scalars["String"]>>;
+    tag_lt?: InputMaybe<Scalars["String"]>;
+    tag_lte?: InputMaybe<Scalars["String"]>;
+    tag_not?: InputMaybe<Scalars["String"]>;
+    tag_not_contains?: InputMaybe<Scalars["String"]>;
+    tag_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    tag_not_ends_with?: InputMaybe<Scalars["String"]>;
+    tag_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    tag_not_starts_with?: InputMaybe<Scalars["String"]>;
+    tag_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    tag_starts_with?: InputMaybe<Scalars["String"]>;
+    tag_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    url?: InputMaybe<Scalars["String"]>;
+    url_contains?: InputMaybe<Scalars["String"]>;
+    url_contains_nocase?: InputMaybe<Scalars["String"]>;
+    url_ends_with?: InputMaybe<Scalars["String"]>;
+    url_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_gt?: InputMaybe<Scalars["String"]>;
+    url_gte?: InputMaybe<Scalars["String"]>;
+    url_in?: InputMaybe<Array<Scalars["String"]>>;
+    url_lt?: InputMaybe<Scalars["String"]>;
+    url_lte?: InputMaybe<Scalars["String"]>;
+    url_not?: InputMaybe<Scalars["String"]>;
+    url_not_contains?: InputMaybe<Scalars["String"]>;
+    url_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    url_not_ends_with?: InputMaybe<Scalars["String"]>;
+    url_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    url_not_starts_with?: InputMaybe<Scalars["String"]>;
+    url_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    url_starts_with?: InputMaybe<Scalars["String"]>;
+    url_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1SellerContactLink_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Tag = "tag",
+    // (undocumented)
+    Url = "url"
+}
+
+// @public (undocumented)
+type ProductV1SellerContactLinksArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1SellerContactLink_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1SellerContactLink_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1SellerImagesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1ShippingJurisdiction = {
+    __typename?: "ProductV1ShippingJurisdiction";
+    deliveryTime: Scalars["String"];
+    id: Scalars["ID"];
+    label: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1ShippingJurisdiction_Filter = {
+    deliveryTime?: InputMaybe<Scalars["String"]>;
+    deliveryTime_contains?: InputMaybe<Scalars["String"]>;
+    deliveryTime_contains_nocase?: InputMaybe<Scalars["String"]>;
+    deliveryTime_ends_with?: InputMaybe<Scalars["String"]>;
+    deliveryTime_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    deliveryTime_gt?: InputMaybe<Scalars["String"]>;
+    deliveryTime_gte?: InputMaybe<Scalars["String"]>;
+    deliveryTime_in?: InputMaybe<Array<Scalars["String"]>>;
+    deliveryTime_lt?: InputMaybe<Scalars["String"]>;
+    deliveryTime_lte?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_contains?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_ends_with?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    deliveryTime_not_starts_with?: InputMaybe<Scalars["String"]>;
+    deliveryTime_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    deliveryTime_starts_with?: InputMaybe<Scalars["String"]>;
+    deliveryTime_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    label?: InputMaybe<Scalars["String"]>;
+    label_contains?: InputMaybe<Scalars["String"]>;
+    label_contains_nocase?: InputMaybe<Scalars["String"]>;
+    label_ends_with?: InputMaybe<Scalars["String"]>;
+    label_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_gt?: InputMaybe<Scalars["String"]>;
+    label_gte?: InputMaybe<Scalars["String"]>;
+    label_in?: InputMaybe<Array<Scalars["String"]>>;
+    label_lt?: InputMaybe<Scalars["String"]>;
+    label_lte?: InputMaybe<Scalars["String"]>;
+    label_not?: InputMaybe<Scalars["String"]>;
+    label_not_contains?: InputMaybe<Scalars["String"]>;
+    label_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    label_not_ends_with?: InputMaybe<Scalars["String"]>;
+    label_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    label_not_starts_with?: InputMaybe<Scalars["String"]>;
+    label_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    label_starts_with?: InputMaybe<Scalars["String"]>;
+    label_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1ShippingJurisdiction_OrderBy {
+    // (undocumented)
+    DeliveryTime = "deliveryTime",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Label = "label"
+}
+
+// @public (undocumented)
+type ProductV1ShippingOption = {
+    __typename?: "ProductV1ShippingOption";
+    countryOfOrigin?: Maybe<Scalars["String"]>;
+    defaultVersion?: Maybe<Scalars["Int"]>;
+    id: Scalars["ID"];
+    redemptionPoint?: Maybe<Scalars["String"]>;
+    supportedJurisdictions?: Maybe<Array<ProductV1ShippingJurisdiction>>;
+};
+
+// @public (undocumented)
+type ProductV1ShippingOption_Filter = {
+    countryOfOrigin?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_contains?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_contains_nocase?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_ends_with?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_gt?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_gte?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_in?: InputMaybe<Array<Scalars["String"]>>;
+    countryOfOrigin_lt?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_lte?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_contains?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_ends_with?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    countryOfOrigin_not_starts_with?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_starts_with?: InputMaybe<Scalars["String"]>;
+    countryOfOrigin_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    defaultVersion?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_gt?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_gte?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_in?: InputMaybe<Array<Scalars["Int"]>>;
+    defaultVersion_lt?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_lte?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_not?: InputMaybe<Scalars["Int"]>;
+    defaultVersion_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    redemptionPoint?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_contains?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_contains_nocase?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_ends_with?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_gt?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_gte?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_in?: InputMaybe<Array<Scalars["String"]>>;
+    redemptionPoint_lt?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_lte?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_contains?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_ends_with?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    redemptionPoint_not_starts_with?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_starts_with?: InputMaybe<Scalars["String"]>;
+    redemptionPoint_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    supportedJurisdictions?: InputMaybe<Array<Scalars["String"]>>;
+    supportedJurisdictions_contains?: InputMaybe<Array<Scalars["String"]>>;
+    supportedJurisdictions_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+    supportedJurisdictions_not?: InputMaybe<Array<Scalars["String"]>>;
+    supportedJurisdictions_not_contains?: InputMaybe<Array<Scalars["String"]>>;
+    supportedJurisdictions_not_contains_nocase?: InputMaybe<Array<Scalars["String"]>>;
+};
+
+// @public (undocumented)
+enum ProductV1ShippingOption_OrderBy {
+    // (undocumented)
+    CountryOfOrigin = "countryOfOrigin",
+    // (undocumented)
+    DefaultVersion = "defaultVersion",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    RedemptionPoint = "redemptionPoint",
+    // (undocumented)
+    SupportedJurisdictions = "supportedJurisdictions"
+}
+
+// @public (undocumented)
+type ProductV1ShippingOptionSupportedJurisdictionsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ShippingJurisdiction_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<ProductV1ShippingJurisdiction_Filter>;
+};
+
+// @public (undocumented)
+type ProductV1Tag = {
+    __typename?: "ProductV1Tag";
+    id: Scalars["ID"];
+    name: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Tag_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    name?: InputMaybe<Scalars["String"]>;
+    name_contains?: InputMaybe<Scalars["String"]>;
+    name_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_ends_with?: InputMaybe<Scalars["String"]>;
+    name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_gt?: InputMaybe<Scalars["String"]>;
+    name_gte?: InputMaybe<Scalars["String"]>;
+    name_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_lt?: InputMaybe<Scalars["String"]>;
+    name_lte?: InputMaybe<Scalars["String"]>;
+    name_not?: InputMaybe<Scalars["String"]>;
+    name_not_contains?: InputMaybe<Scalars["String"]>;
+    name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with?: InputMaybe<Scalars["String"]>;
+    name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    name_not_starts_with?: InputMaybe<Scalars["String"]>;
+    name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    name_starts_with?: InputMaybe<Scalars["String"]>;
+    name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Tag_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Name = "name"
+}
+
+// @public (undocumented)
+type ProductV1Variation = {
+    __typename?: "ProductV1Variation";
+    id: Scalars["ID"];
+    option: Scalars["String"];
+    type: Scalars["String"];
+};
+
+// @public (undocumented)
+type ProductV1Variation_Filter = {
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    option?: InputMaybe<Scalars["String"]>;
+    option_contains?: InputMaybe<Scalars["String"]>;
+    option_contains_nocase?: InputMaybe<Scalars["String"]>;
+    option_ends_with?: InputMaybe<Scalars["String"]>;
+    option_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    option_gt?: InputMaybe<Scalars["String"]>;
+    option_gte?: InputMaybe<Scalars["String"]>;
+    option_in?: InputMaybe<Array<Scalars["String"]>>;
+    option_lt?: InputMaybe<Scalars["String"]>;
+    option_lte?: InputMaybe<Scalars["String"]>;
+    option_not?: InputMaybe<Scalars["String"]>;
+    option_not_contains?: InputMaybe<Scalars["String"]>;
+    option_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    option_not_ends_with?: InputMaybe<Scalars["String"]>;
+    option_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    option_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    option_not_starts_with?: InputMaybe<Scalars["String"]>;
+    option_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    option_starts_with?: InputMaybe<Scalars["String"]>;
+    option_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type?: InputMaybe<Scalars["String"]>;
+    type_contains?: InputMaybe<Scalars["String"]>;
+    type_contains_nocase?: InputMaybe<Scalars["String"]>;
+    type_ends_with?: InputMaybe<Scalars["String"]>;
+    type_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    type_gt?: InputMaybe<Scalars["String"]>;
+    type_gte?: InputMaybe<Scalars["String"]>;
+    type_in?: InputMaybe<Array<Scalars["String"]>>;
+    type_lt?: InputMaybe<Scalars["String"]>;
+    type_lte?: InputMaybe<Scalars["String"]>;
+    type_not?: InputMaybe<Scalars["String"]>;
+    type_not_contains?: InputMaybe<Scalars["String"]>;
+    type_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    type_not_ends_with?: InputMaybe<Scalars["String"]>;
+    type_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    type_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    type_not_starts_with?: InputMaybe<Scalars["String"]>;
+    type_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    type_starts_with?: InputMaybe<Scalars["String"]>;
+    type_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+};
+
+// @public (undocumented)
+enum ProductV1Variation_OrderBy {
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Option = "option",
+    // (undocumented)
+    Type = "type"
+}
+
+// @public (undocumented)
+type Query = {
+    __typename?: "Query";
+    _meta?: Maybe<_Meta_>;
+    account?: Maybe<Account>;
+    accounts: Array<Account>;
+    baseMetadataEntities: Array<BaseMetadataEntity>;
+    baseMetadataEntity?: Maybe<BaseMetadataEntity>;
+    buyer?: Maybe<Buyer>;
+    buyers: Array<Buyer>;
+    dispute?: Maybe<Dispute>;
+    disputeResolutionTermsEntities: Array<DisputeResolutionTermsEntity>;
+    disputeResolutionTermsEntity?: Maybe<DisputeResolutionTermsEntity>;
+    disputeResolver?: Maybe<DisputeResolver>;
+    disputeResolverFee?: Maybe<DisputeResolverFee>;
+    disputeResolverFees: Array<DisputeResolverFee>;
+    disputeResolvers: Array<DisputeResolver>;
+    disputes: Array<Dispute>;
+    exchange?: Maybe<Exchange>;
+    exchangeToken?: Maybe<ExchangeToken>;
+    exchangeTokens: Array<ExchangeToken>;
+    exchanges: Array<Exchange>;
+    fundsEntities: Array<FundsEntity>;
+    fundsEntity?: Maybe<FundsEntity>;
+    metadataAttribute?: Maybe<MetadataAttribute>;
+    metadataAttributes: Array<MetadataAttribute>;
+    metadataInterface?: Maybe<MetadataInterface>;
+    metadataInterfaces: Array<MetadataInterface>;
+    offer?: Maybe<Offer>;
+    offers: Array<Offer>;
+    productV1Brand?: Maybe<ProductV1Brand>;
+    productV1Brands: Array<ProductV1Brand>;
+    productV1Categories: Array<ProductV1Category>;
+    productV1Category?: Maybe<ProductV1Category>;
+    productV1ExchangePolicies: Array<ProductV1ExchangePolicy>;
+    productV1ExchangePolicy?: Maybe<ProductV1ExchangePolicy>;
+    productV1Media?: Maybe<ProductV1Media>;
+    productV1Medias: Array<ProductV1Media>;
+    productV1MetadataEntities: Array<ProductV1MetadataEntity>;
+    productV1MetadataEntity?: Maybe<ProductV1MetadataEntity>;
+    productV1Personalisation?: Maybe<ProductV1Personalisation>;
+    productV1Personalisations: Array<ProductV1Personalisation>;
+    productV1Product?: Maybe<ProductV1Product>;
+    productV1ProductOverrides: Array<ProductV1ProductOverrides>;
+    productV1Products: Array<ProductV1Product>;
+    productV1Section?: Maybe<ProductV1Section>;
+    productV1Sections: Array<ProductV1Section>;
+    productV1Seller?: Maybe<ProductV1Seller>;
+    productV1SellerContactLink?: Maybe<ProductV1SellerContactLink>;
+    productV1SellerContactLinks: Array<ProductV1SellerContactLink>;
+    productV1Sellers: Array<ProductV1Seller>;
+    productV1ShippingJurisdiction?: Maybe<ProductV1ShippingJurisdiction>;
+    productV1ShippingJurisdictions: Array<ProductV1ShippingJurisdiction>;
+    productV1ShippingOption?: Maybe<ProductV1ShippingOption>;
+    productV1ShippingOptions: Array<ProductV1ShippingOption>;
+    productV1Tag?: Maybe<ProductV1Tag>;
+    productV1Tags: Array<ProductV1Tag>;
+    productV1Variation?: Maybe<ProductV1Variation>;
+    productV1Variations: Array<ProductV1Variation>;
+    seller?: Maybe<Seller>;
+    sellers: Array<Seller>;
+};
+
+// @public (undocumented)
+type Query_MetaArgs = {
+    block?: InputMaybe<Block_Height>;
+};
+
+// @public (undocumented)
+type QueryAccountArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryAccountsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Account_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Account_Filter>;
+};
+
+// @public (undocumented)
+type QueryBaseMetadataEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<BaseMetadataEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<BaseMetadataEntity_Filter>;
+};
+
+// @public (undocumented)
+type QueryBaseMetadataEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryBuyerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryBuyersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Buyer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Buyer_Filter>;
+};
+
+// @public (undocumented)
+type QueryDisputeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryDisputeResolutionTermsEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolutionTermsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolutionTermsEntity_Filter>;
+};
+
+// @public (undocumented)
+type QueryDisputeResolutionTermsEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryDisputeResolverArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryDisputeResolverFeeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryDisputeResolverFeesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolverFee_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolverFee_Filter>;
+};
+
+// @public (undocumented)
+type QueryDisputeResolversArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolver_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolver_Filter>;
+};
+
+// @public (undocumented)
+type QueryDisputesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Dispute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Dispute_Filter>;
+};
+
+// @public (undocumented)
+type QueryExchangeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryExchangesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Exchange_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Exchange_Filter>;
+};
+
+// @public (undocumented)
+type QueryExchangeTokenArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryExchangeTokensArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ExchangeToken_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ExchangeToken_Filter>;
+};
+
+// @public (undocumented)
+type QueryFundsEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
+
+// @public (undocumented)
+type QueryFundsEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryMetadataAttributeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryMetadataAttributesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataAttribute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<MetadataAttribute_Filter>;
+};
+
+// @public (undocumented)
+type QueryMetadataInterfaceArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryMetadataInterfacesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataInterface_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<MetadataInterface_Filter>;
+};
+
+// @public (undocumented)
+type QueryOfferArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryOffersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Offer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Offer_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1BrandArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1BrandsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Brand_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Brand_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1CategoriesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Category_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Category_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1CategoryArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1ExchangePoliciesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ExchangePolicy_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ExchangePolicy_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1ExchangePolicyArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1MediaArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1MediasArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1MetadataEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1MetadataEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1MetadataEntity_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1MetadataEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1PersonalisationArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1PersonalisationsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Personalisation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Personalisation_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1ProductArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1ProductOverridesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ProductOverrides_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ProductOverrides_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1ProductsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Product_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Product_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1SectionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1SectionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Section_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Section_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1SellerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1SellerContactLinkArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1SellerContactLinksArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1SellerContactLink_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1SellerContactLink_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1SellersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Seller_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Seller_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1ShippingJurisdictionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1ShippingJurisdictionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ShippingJurisdiction_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ShippingJurisdiction_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1ShippingOptionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1ShippingOptionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ShippingOption_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ShippingOption_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1TagArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1TagsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Tag_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Tag_Filter>;
+};
+
+// @public (undocumented)
+type QueryProductV1VariationArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QueryProductV1VariationsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Variation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Variation_Filter>;
+};
+
+// @public (undocumented)
+type QuerySellerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type QuerySellersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Seller_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Seller_Filter>;
+};
+
+// Warning: (ae-forgotten-export) The symbol "Body" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+interface Request extends Body {
+    // Warning: (ae-forgotten-export) The symbol "RequestCache" needs to be exported by the entry point index.d.ts
+    readonly cache: RequestCache;
+    // (undocumented)
+    clone(): Request;
+    // Warning: (ae-forgotten-export) The symbol "RequestCredentials" needs to be exported by the entry point index.d.ts
+    readonly credentials: RequestCredentials;
+    // Warning: (ae-forgotten-export) The symbol "RequestDestination" needs to be exported by the entry point index.d.ts
+    readonly destination: RequestDestination;
+    readonly headers: Headers;
+    readonly integrity: string;
+    readonly isHistoryNavigation: boolean;
+    readonly isReloadNavigation: boolean;
+    readonly keepalive: boolean;
+    readonly method: string;
+    // Warning: (ae-forgotten-export) The symbol "RequestMode" needs to be exported by the entry point index.d.ts
+    readonly mode: RequestMode;
+    // Warning: (ae-forgotten-export) The symbol "RequestRedirect" needs to be exported by the entry point index.d.ts
+    readonly redirect: RequestRedirect_2;
+    readonly referrer: string;
+    // Warning: (ae-forgotten-export) The symbol "ReferrerPolicy" needs to be exported by the entry point index.d.ts
+    readonly referrerPolicy: ReferrerPolicy;
+    // Warning: (ae-forgotten-export) The symbol "AbortSignal" needs to be exported by the entry point index.d.ts
+    readonly signal: AbortSignal;
+    readonly url: string;
+}
+
+// @public (undocumented)
+interface RequestInit_2 {
+    // Warning: (ae-forgotten-export) The symbol "BodyInit" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    body?: BodyInit | null;
+    // (undocumented)
+    cache?: RequestCache;
+    // (undocumented)
+    credentials?: RequestCredentials;
+    errorPolicy?: ErrorPolicy;
+    // (undocumented)
+    fetch?: any;
+    // Warning: (ae-forgotten-export) The symbol "HeadersInit" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    headers?: HeadersInit;
+    // (undocumented)
+    integrity?: string;
+    // (undocumented)
+    jsonSerializer?: JsonSerializer;
+    // (undocumented)
+    keepalive?: boolean;
+    // (undocumented)
+    method?: string;
+    // (undocumented)
+    mode?: RequestMode;
+    // (undocumented)
+    redirect?: RequestRedirect_2;
+    // (undocumented)
+    referrer?: string;
+    // (undocumented)
+    referrerPolicy?: ReferrerPolicy;
+    // (undocumented)
+    signal?: AbortSignal | null;
+    // (undocumented)
+    timeout?: number;
+    // (undocumented)
+    window?: any;
+}
+
+// @public (undocumented)
+interface Response_2 extends Body {
+    // (undocumented)
+    clone(): Response_2;
+    // (undocumented)
+    readonly headers: Headers;
+    // (undocumented)
+    readonly ok: boolean;
+    // (undocumented)
+    readonly redirected: boolean;
+    // (undocumented)
+    readonly status: number;
+    // (undocumented)
+    readonly statusText: string;
+    // (undocumented)
+    readonly trailer: Promise<Headers>;
+    // Warning: (ae-forgotten-export) The symbol "ResponseType" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly type: ResponseType_2;
+    // (undocumented)
+    readonly url: string;
+}
+
+// @public
+type Scalars = {
+    ID: string;
+    String: string;
+    Boolean: boolean;
+    Int: number;
+    Float: number;
+    BigDecimal: any;
+    BigInt: string;
+    Bytes: string;
+};
+
+// @public (undocumented)
+type Sdk = ReturnType<typeof getSdk>;
+
+// @public (undocumented)
+type SdkFunctionWrapper = <T>(action: (requestHeaders?: Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
+
+// @public (undocumented)
+type Seller = Account & {
+    __typename?: "Seller";
+    active: Scalars["Boolean"];
+    admin: Scalars["Bytes"];
+    authTokenId: Scalars["BigInt"];
+    authTokenType: Scalars["Int"];
+    clerk: Scalars["Bytes"];
+    exchanges: Array<Exchange>;
+    funds: Array<FundsEntity>;
+    id: Scalars["ID"];
+    offers: Array<Offer>;
+    operator: Scalars["Bytes"];
+    sellerId: Scalars["BigInt"];
+    treasury: Scalars["Bytes"];
+    voucherCloneAddress: Scalars["Bytes"];
+};
+
+// @public (undocumented)
+type Seller_Filter = {
+    active?: InputMaybe<Scalars["Boolean"]>;
+    active_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    active_not?: InputMaybe<Scalars["Boolean"]>;
+    active_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
+    admin?: InputMaybe<Scalars["Bytes"]>;
+    admin_contains?: InputMaybe<Scalars["Bytes"]>;
+    admin_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    admin_not?: InputMaybe<Scalars["Bytes"]>;
+    admin_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    admin_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    authTokenId?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_gt?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_gte?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    authTokenId_lt?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_lte?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_not?: InputMaybe<Scalars["BigInt"]>;
+    authTokenId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    authTokenType?: InputMaybe<Scalars["Int"]>;
+    authTokenType_gt?: InputMaybe<Scalars["Int"]>;
+    authTokenType_gte?: InputMaybe<Scalars["Int"]>;
+    authTokenType_in?: InputMaybe<Array<Scalars["Int"]>>;
+    authTokenType_lt?: InputMaybe<Scalars["Int"]>;
+    authTokenType_lte?: InputMaybe<Scalars["Int"]>;
+    authTokenType_not?: InputMaybe<Scalars["Int"]>;
+    authTokenType_not_in?: InputMaybe<Array<Scalars["Int"]>>;
+    clerk?: InputMaybe<Scalars["Bytes"]>;
+    clerk_contains?: InputMaybe<Scalars["Bytes"]>;
+    clerk_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    clerk_not?: InputMaybe<Scalars["Bytes"]>;
+    clerk_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    clerk_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    id?: InputMaybe<Scalars["ID"]>;
+    id_gt?: InputMaybe<Scalars["ID"]>;
+    id_gte?: InputMaybe<Scalars["ID"]>;
+    id_in?: InputMaybe<Array<Scalars["ID"]>>;
+    id_lt?: InputMaybe<Scalars["ID"]>;
+    id_lte?: InputMaybe<Scalars["ID"]>;
+    id_not?: InputMaybe<Scalars["ID"]>;
+    id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    operator?: InputMaybe<Scalars["Bytes"]>;
+    operator_contains?: InputMaybe<Scalars["Bytes"]>;
+    operator_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    operator_not?: InputMaybe<Scalars["Bytes"]>;
+    operator_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    operator_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    sellerId?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_gt?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_gte?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    sellerId_lt?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_lte?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_not?: InputMaybe<Scalars["BigInt"]>;
+    sellerId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    treasury?: InputMaybe<Scalars["Bytes"]>;
+    treasury_contains?: InputMaybe<Scalars["Bytes"]>;
+    treasury_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    treasury_not?: InputMaybe<Scalars["Bytes"]>;
+    treasury_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    treasury_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    voucherCloneAddress?: InputMaybe<Scalars["Bytes"]>;
+    voucherCloneAddress_contains?: InputMaybe<Scalars["Bytes"]>;
+    voucherCloneAddress_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+    voucherCloneAddress_not?: InputMaybe<Scalars["Bytes"]>;
+    voucherCloneAddress_not_contains?: InputMaybe<Scalars["Bytes"]>;
+    voucherCloneAddress_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+};
+
+// @public (undocumented)
+enum Seller_OrderBy {
+    // (undocumented)
+    Active = "active",
+    // (undocumented)
+    Admin = "admin",
+    // (undocumented)
+    AuthTokenId = "authTokenId",
+    // (undocumented)
+    AuthTokenType = "authTokenType",
+    // (undocumented)
+    Clerk = "clerk",
+    // (undocumented)
+    Exchanges = "exchanges",
+    // (undocumented)
+    Funds = "funds",
+    // (undocumented)
+    Id = "id",
+    // (undocumented)
+    Offers = "offers",
+    // (undocumented)
+    Operator = "operator",
+    // (undocumented)
+    SellerId = "sellerId",
+    // (undocumented)
+    Treasury = "treasury",
+    // (undocumented)
+    VoucherCloneAddress = "voucherCloneAddress"
+}
+
+// @public (undocumented)
+type SellerExchangesArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Exchange_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Exchange_Filter>;
+};
+
+// @public (undocumented)
+type SellerFieldsFragment = {
+    __typename?: "Seller";
+    id: string;
+    operator: string;
+    admin: string;
+    clerk: string;
+    treasury: string;
+    authTokenId: string;
+    authTokenType: number;
+    voucherCloneAddress: string;
+    active: boolean;
+    funds?: Array<{
+        __typename?: "FundsEntity";
+        id: string;
+        availableAmount: string;
+        accountId: string;
+        token: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+    }>;
+    offers?: Array<{
+        __typename?: "Offer";
+        id: string;
+        createdAt: string;
+        price: string;
+        sellerDeposit: string;
+        protocolFee: string;
+        agentFee: string;
+        agentId: string;
+        buyerCancelPenalty: string;
+        quantityAvailable: string;
+        quantityInitial: string;
+        validFromDate: string;
+        validUntilDate: string;
+        voucherRedeemableFromDate: string;
+        voucherRedeemableUntilDate: string;
+        fulfillmentPeriodDuration: string;
+        voucherValidDuration: string;
+        resolutionPeriodDuration: string;
+        metadataUri: string;
+        metadataHash: string;
+        voidedAt?: string | null;
+        disputeResolverId: string;
+        seller: {
+            __typename?: "Seller";
+            id: string;
+            operator: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            authTokenId: string;
+            authTokenType: number;
+            voucherCloneAddress: string;
+            active: boolean;
+        };
+        exchangeToken: {
+            __typename?: "ExchangeToken";
+            id: string;
+            address: string;
+            decimals: string;
+            symbol: string;
+            name: string;
+        };
+        disputeResolver: {
+            __typename?: "DisputeResolver";
+            id: string;
+            escalationResponsePeriod: string;
+            admin: string;
+            clerk: string;
+            treasury: string;
+            operator: string;
+            metadataUri: string;
+            active: boolean;
+            sellerAllowList: Array<string>;
+            fees: Array<{
+                __typename?: "DisputeResolverFee";
+                id: string;
+                tokenAddress: string;
+                tokenName: string;
+                feeAmount: string;
+                token: {
+                    __typename?: "ExchangeToken";
+                    id: string;
+                    address: string;
+                    decimals: string;
+                    symbol: string;
+                    name: string;
+                };
+            }>;
+        };
+        disputeResolutionTerms: {
+            __typename?: "DisputeResolutionTermsEntity";
+            id: string;
+            disputeResolverId: string;
+            escalationResponsePeriod: string;
+            feeAmount: string;
+            buyerEscalationDeposit: string;
+        };
+        metadata?: {
+            __typename?: "BaseMetadataEntity";
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+        } | {
+            __typename?: "ProductV1MetadataEntity";
+            image: string;
+            createdAt: string;
+            voided: boolean;
+            validFromDate: string;
+            validUntilDate: string;
+            quantityAvailable: string;
+            uuid: string;
+            name: string;
+            description: string;
+            externalUrl: string;
+            schemaUrl: string;
+            type: MetadataType;
+            attributes?: Array<{
+                __typename?: "MetadataAttribute";
+                traitType: string;
+                value: string;
+                displayType: string;
+            }> | null;
+            product: {
+                __typename?: "ProductV1Product";
+                id: string;
+                uuid: string;
+                version: number;
+                title: string;
+                description: string;
+                identification_sKU?: string | null;
+                identification_productId?: string | null;
+                identification_productIdType?: string | null;
+                productionInformation_brandName: string;
+                productionInformation_manufacturer?: string | null;
+                productionInformation_manufacturerPartNumber?: string | null;
+                productionInformation_modelNumber?: string | null;
+                productionInformation_materials?: Array<string> | null;
+                details_category?: string | null;
+                details_subCategory?: string | null;
+                details_subCategory2?: string | null;
+                details_offerCategory: string;
+                offerCategory: ProductV1OfferCategory;
+                details_tags?: Array<string> | null;
+                details_sections?: Array<string> | null;
+                details_personalisation?: Array<string> | null;
+                packaging_packageQuantity?: string | null;
+                packaging_dimensions_length?: string | null;
+                packaging_dimensions_width?: string | null;
+                packaging_dimensions_height?: string | null;
+                packaging_dimensions_unit?: string | null;
+                packaging_weight_value?: string | null;
+                packaging_weight_unit?: string | null;
+                brand: {
+                    __typename?: "ProductV1Brand";
+                    id: string;
+                    name: string;
+                };
+                category?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                subCategory2?: {
+                    __typename?: "ProductV1Category";
+                    id: string;
+                    name: string;
+                } | null;
+                tags?: Array<{
+                    __typename?: "ProductV1Tag";
+                    id: string;
+                    name: string;
+                }> | null;
+                sections?: Array<{
+                    __typename?: "ProductV1Section";
+                    id: string;
+                    name: string;
+                }> | null;
+                personalisation?: Array<{
+                    __typename?: "ProductV1Personalisation";
+                    id: string;
+                    name: string;
+                }> | null;
+                visuals_images: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }>;
+                visuals_videos?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+            };
+            variations?: Array<{
+                __typename?: "ProductV1Variation";
+                id: string;
+                type: string;
+                option: string;
+            }> | null;
+            productV1Seller: {
+                __typename?: "ProductV1Seller";
+                id: string;
+                defaultVersion?: number | null;
+                name?: string | null;
+                description?: string | null;
+                externalUrl?: string | null;
+                tokenId?: string | null;
+                images?: Array<{
+                    __typename?: "ProductV1Media";
+                    id: string;
+                    url: string;
+                    tag?: string | null;
+                    type: ProductV1MediaType;
+                }> | null;
+                contactLinks?: Array<{
+                    __typename?: "ProductV1SellerContactLink";
+                    id: string;
+                    url: string;
+                    tag: string;
+                }> | null;
+                seller: {
+                    __typename?: "Seller";
+                    id: string;
+                    operator: string;
+                    admin: string;
+                    clerk: string;
+                    treasury: string;
+                    authTokenId: string;
+                    authTokenType: number;
+                    voucherCloneAddress: string;
+                    active: boolean;
+                };
+            };
+            exchangePolicy: {
+                __typename?: "ProductV1ExchangePolicy";
+                id: string;
+                uuid: string;
+                version: number;
+                label?: string | null;
+                template: string;
+            };
+            shipping?: {
+                __typename?: "ProductV1ShippingOption";
+                id: string;
+                defaultVersion?: number | null;
+                countryOfOrigin?: string | null;
+                redemptionPoint?: string | null;
+                supportedJurisdictions?: Array<{
+                    __typename?: "ProductV1ShippingJurisdiction";
+                    id: string;
+                    label: string;
+                    deliveryTime: string;
+                }> | null;
+            } | null;
+        } | null;
+    }>;
+    exchanges?: Array<{
+        __typename?: "Exchange";
+        id: string;
+        disputed: boolean;
+        state: ExchangeState;
+        committedDate: string;
+        finalizedDate?: string | null;
+        validUntilDate: string;
+        redeemedDate?: string | null;
+        revokedDate?: string | null;
+        cancelledDate?: string | null;
+        completedDate?: string | null;
+        expired: boolean;
+    }>;
+};
+
+// @public (undocumented)
+const SellerFieldsFragmentDoc: string;
+
+// @public (undocumented)
+type SellerFundsArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
+
+// @public (undocumented)
+type SellerOffersArgs = {
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Offer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    where?: InputMaybe<Offer_Filter>;
+};
+
+// @public (undocumented)
 export function someFn(): string;
+
+// @public (undocumented)
+enum _SubgraphErrorPolicy_ {
+    Allow = "allow",
+    Deny = "deny"
+}
+
+// @public (undocumented)
+type Subscription_2 = {
+    __typename?: "Subscription";
+    _meta?: Maybe<_Meta_>;
+    account?: Maybe<Account>;
+    accounts: Array<Account>;
+    baseMetadataEntities: Array<BaseMetadataEntity>;
+    baseMetadataEntity?: Maybe<BaseMetadataEntity>;
+    buyer?: Maybe<Buyer>;
+    buyers: Array<Buyer>;
+    dispute?: Maybe<Dispute>;
+    disputeResolutionTermsEntities: Array<DisputeResolutionTermsEntity>;
+    disputeResolutionTermsEntity?: Maybe<DisputeResolutionTermsEntity>;
+    disputeResolver?: Maybe<DisputeResolver>;
+    disputeResolverFee?: Maybe<DisputeResolverFee>;
+    disputeResolverFees: Array<DisputeResolverFee>;
+    disputeResolvers: Array<DisputeResolver>;
+    disputes: Array<Dispute>;
+    exchange?: Maybe<Exchange>;
+    exchangeToken?: Maybe<ExchangeToken>;
+    exchangeTokens: Array<ExchangeToken>;
+    exchanges: Array<Exchange>;
+    fundsEntities: Array<FundsEntity>;
+    fundsEntity?: Maybe<FundsEntity>;
+    metadataAttribute?: Maybe<MetadataAttribute>;
+    metadataAttributes: Array<MetadataAttribute>;
+    metadataInterface?: Maybe<MetadataInterface>;
+    metadataInterfaces: Array<MetadataInterface>;
+    offer?: Maybe<Offer>;
+    offers: Array<Offer>;
+    productV1Brand?: Maybe<ProductV1Brand>;
+    productV1Brands: Array<ProductV1Brand>;
+    productV1Categories: Array<ProductV1Category>;
+    productV1Category?: Maybe<ProductV1Category>;
+    productV1ExchangePolicies: Array<ProductV1ExchangePolicy>;
+    productV1ExchangePolicy?: Maybe<ProductV1ExchangePolicy>;
+    productV1Media?: Maybe<ProductV1Media>;
+    productV1Medias: Array<ProductV1Media>;
+    productV1MetadataEntities: Array<ProductV1MetadataEntity>;
+    productV1MetadataEntity?: Maybe<ProductV1MetadataEntity>;
+    productV1Personalisation?: Maybe<ProductV1Personalisation>;
+    productV1Personalisations: Array<ProductV1Personalisation>;
+    productV1Product?: Maybe<ProductV1Product>;
+    productV1ProductOverrides: Array<ProductV1ProductOverrides>;
+    productV1Products: Array<ProductV1Product>;
+    productV1Section?: Maybe<ProductV1Section>;
+    productV1Sections: Array<ProductV1Section>;
+    productV1Seller?: Maybe<ProductV1Seller>;
+    productV1SellerContactLink?: Maybe<ProductV1SellerContactLink>;
+    productV1SellerContactLinks: Array<ProductV1SellerContactLink>;
+    productV1Sellers: Array<ProductV1Seller>;
+    productV1ShippingJurisdiction?: Maybe<ProductV1ShippingJurisdiction>;
+    productV1ShippingJurisdictions: Array<ProductV1ShippingJurisdiction>;
+    productV1ShippingOption?: Maybe<ProductV1ShippingOption>;
+    productV1ShippingOptions: Array<ProductV1ShippingOption>;
+    productV1Tag?: Maybe<ProductV1Tag>;
+    productV1Tags: Array<ProductV1Tag>;
+    productV1Variation?: Maybe<ProductV1Variation>;
+    productV1Variations: Array<ProductV1Variation>;
+    seller?: Maybe<Seller>;
+    sellers: Array<Seller>;
+};
+
+// @public (undocumented)
+type Subscription_MetaArgs = {
+    block?: InputMaybe<Block_Height>;
+};
+
+// @public (undocumented)
+type SubscriptionAccountArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionAccountsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Account_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Account_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionBaseMetadataEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<BaseMetadataEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<BaseMetadataEntity_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionBaseMetadataEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionBuyerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionBuyersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Buyer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Buyer_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolutionTermsEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolutionTermsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolutionTermsEntity_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolutionTermsEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolverArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolverFeeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolverFeesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolverFee_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolverFee_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionDisputeResolversArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<DisputeResolver_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<DisputeResolver_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionDisputesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Dispute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Dispute_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionExchangeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionExchangesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Exchange_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Exchange_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionExchangeTokenArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionExchangeTokensArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ExchangeToken_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ExchangeToken_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionFundsEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<FundsEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<FundsEntity_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionFundsEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionMetadataAttributeArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionMetadataAttributesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataAttribute_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<MetadataAttribute_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionMetadataInterfaceArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionMetadataInterfacesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<MetadataInterface_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<MetadataInterface_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionOfferArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionOffersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Offer_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Offer_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1BrandArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1BrandsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Brand_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Brand_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1CategoriesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Category_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Category_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1CategoryArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ExchangePoliciesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ExchangePolicy_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ExchangePolicy_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ExchangePolicyArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1MediaArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1MediasArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Media_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Media_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1MetadataEntitiesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1MetadataEntity_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1MetadataEntity_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1MetadataEntityArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1PersonalisationArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1PersonalisationsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Personalisation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Personalisation_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ProductArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ProductOverridesArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ProductOverrides_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ProductOverrides_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ProductsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Product_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Product_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SectionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SectionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Section_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Section_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SellerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SellerContactLinkArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SellerContactLinksArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1SellerContactLink_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1SellerContactLink_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1SellersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Seller_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Seller_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ShippingJurisdictionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ShippingJurisdictionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ShippingJurisdiction_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ShippingJurisdiction_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ShippingOptionArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1ShippingOptionsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1ShippingOption_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1ShippingOption_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1TagArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1TagsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Tag_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Tag_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1VariationArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionProductV1VariationsArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<ProductV1Variation_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<ProductV1Variation_Filter>;
+};
+
+// @public (undocumented)
+type SubscriptionSellerArgs = {
+    block?: InputMaybe<Block_Height>;
+    id: Scalars["ID"];
+    subgraphError?: _SubgraphErrorPolicy_;
+};
+
+// @public (undocumented)
+type SubscriptionSellersArgs = {
+    block?: InputMaybe<Block_Height>;
+    first?: InputMaybe<Scalars["Int"]>;
+    orderBy?: InputMaybe<Seller_OrderBy>;
+    orderDirection?: InputMaybe<OrderDirection>;
+    skip?: InputMaybe<Scalars["Int"]>;
+    subgraphError?: _SubgraphErrorPolicy_;
+    where?: InputMaybe<Seller_Filter>;
+};
 
 // @public (undocumented)
 export class TimeSystem implements ISystem {
@@ -26,6 +14805,10 @@ export class TimeSystem implements ISystem {
     // (undocumented)
     update(dt: number): void;
 }
+
+// Warnings were encountered during analysis:
+//
+// node_modules/@bosonprotocol/core-sdk/src/subgraph.ts:15354:51 - (ae-forgotten-export) The symbol "Dom" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
