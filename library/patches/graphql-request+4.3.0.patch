@@ -1,0 +1,14 @@
+diff --git a/node_modules/graphql-request/dist/index.js b/node_modules/graphql-request/dist/index.js
+index 5f79a5f..db40855 100644
+--- a/node_modules/graphql-request/dist/index.js
++++ b/node_modules/graphql-request/dist/index.js
+@@ -483,6 +483,6 @@ function HeadersInstanceToPlainObject(headers) {
+     });
+     return o;
+ }
+-var graphql_ws_1 = require("./graphql-ws");
+-Object.defineProperty(exports, "GraphQLWebSocketClient", { enumerable: true, get: function () { return graphql_ws_1.GraphQLWebSocketClient; } });
++// var graphql_ws_1 = require("./graphql-ws");
++// Object.defineProperty(exports, "GraphQLWebSocketClient", { enumerable: true, get: function () { return graphql_ws_1.GraphQLWebSocketClient; } });
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
