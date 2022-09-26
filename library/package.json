@@ -33,8 +33,8 @@
     "!dist/types"
   ],
   "devDependencies": {
-    "@bosonprotocol/core-sdk": "^1.12.0-alpha.14",
-    "@bosonprotocol/eth-connect-sdk": "^1.2.3-alpha.16",
+    "@bosonprotocol/core-sdk": "^1.16.0-alpha.18",
+    "@bosonprotocol/eth-connect-sdk": "^1.2.12-alpha.20",
     "@microsoft/api-documenter": "^7.17.11",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.1.0",

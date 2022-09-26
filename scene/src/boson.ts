@@ -6,7 +6,7 @@ import {
 } from "@bosonprotocol/boson-dcl";
 import { getUserAccount } from "@decentraland/EthereumController";
 
-const targetChainId = 1234;
+const targetEnv = "testing";
 
 export async function useBoson() {
   const userAccount = await getUserAccount();
@@ -19,7 +19,7 @@ export async function useBoson() {
     exampleComponent.testing
   );
 
-  const coreSDK = await initCoreSdk(targetChainId);
+  const coreSDK = await initCoreSdk(targetEnv);
 
   return { coreSDK, userAccount };
 }

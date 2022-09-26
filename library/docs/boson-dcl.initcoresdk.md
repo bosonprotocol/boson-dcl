@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(chainId: number): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: string): Promise<CoreSDK>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  chainId | number |  |
+|  envName | string | Name of the environment to run with ("testing", "staging", or "production") |
 
 <b>Returns:</b>
 
