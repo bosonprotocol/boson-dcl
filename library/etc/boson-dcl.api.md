@@ -11,11 +11,14 @@ import * as accounts from './accounts';
 import { AnyMetadata } from '@bosonprotocol/common';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { BytesLike } from '@ethersproject/bytes';
+import { ContractTransaction } from 'ethers';
 import * as disputes from './disputes';
+import { EnvironmentType } from '@bosonprotocol/common/src/types';
 import { GraphQLClient } from 'graphql-request';
 import { Log } from '@bosonprotocol/common';
 import { MetadataStorage } from '@bosonprotocol/common';
 import * as metaTx from './meta-tx';
+import { MetaTxConfig } from '@bosonprotocol/common';
 import * as offers from './offers';
 import { TransactionResponse } from '@bosonprotocol/common';
 import { Web3LibAdapter } from '@bosonprotocol/common';
@@ -270,7 +273,7 @@ type BaseBaseMetadataEntityFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -365,45 +368,16 @@ type BaseDisputeFieldsFragment = {
     __typename?: "Dispute";
     id: string;
     exchangeId: string;
-    complaint: string;
     state: DisputeState;
     buyerPercent: string;
     disputedDate: string;
     escalatedDate?: string | null;
     finalizedDate?: string | null;
+    retractedDate?: string | null;
+    resolvedDate?: string | null;
+    decidedDate?: string | null;
+    refusedDate?: string | null;
     timeout: string;
-    exchange: {
-        __typename?: "Exchange";
-        id: string;
-        disputed: boolean;
-        state: ExchangeState;
-        committedDate: string;
-        finalizedDate?: string | null;
-        validUntilDate: string;
-        redeemedDate?: string | null;
-        revokedDate?: string | null;
-        cancelledDate?: string | null;
-        completedDate?: string | null;
-        expired: boolean;
-    };
-    seller: {
-        __typename?: "Seller";
-        id: string;
-        operator: string;
-        admin: string;
-        clerk: string;
-        treasury: string;
-        authTokenId: string;
-        authTokenType: number;
-        voucherCloneAddress: string;
-        active: boolean;
-    };
-    buyer: {
-        __typename?: "Buyer";
-        id: string;
-        wallet: string;
-        active: boolean;
-    };
 };
 
 // @public (undocumented)
@@ -487,7 +461,23 @@ type BaseExchangeFieldsFragment = {
     revokedDate?: string | null;
     cancelledDate?: string | null;
     completedDate?: string | null;
+    disputedDate?: string | null;
     expired: boolean;
+    dispute?: {
+        __typename?: "Dispute";
+        id: string;
+        exchangeId: string;
+        state: DisputeState;
+        buyerPercent: string;
+        disputedDate: string;
+        escalatedDate?: string | null;
+        finalizedDate?: string | null;
+        retractedDate?: string | null;
+        resolvedDate?: string | null;
+        decidedDate?: string | null;
+        refusedDate?: string | null;
+        timeout: string;
+    } | null;
 };
 
 // @public (undocumented)
@@ -1016,7 +1006,7 @@ type BaseMetadataEntityFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -1290,7 +1280,7 @@ type BaseOfferFieldsFragment = {
         productV1Seller: {
             __typename?: "ProductV1Seller";
             id: string;
-            defaultVersion?: number | null;
+            defaultVersion: number;
             name?: string | null;
             description?: string | null;
             externalUrl?: string | null;
@@ -1609,7 +1599,7 @@ type BaseProductV1MetadataEntityFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -1772,7 +1762,7 @@ type BaseProductV1MetadataEntityFieldsFragment = {
     productV1Seller: {
         __typename?: "ProductV1Seller";
         id: string;
-        defaultVersion?: number | null;
+        defaultVersion: number;
         name?: string | null;
         description?: string | null;
         externalUrl?: string | null;
@@ -1982,7 +1972,7 @@ const BaseProductV1SellerContactLinkFieldsFragmentDoc: string;
 type BaseProductV1SellerFieldsFragment = {
     __typename?: "ProductV1Seller";
     id: string;
-    defaultVersion?: number | null;
+    defaultVersion: number;
     name?: string | null;
     description?: string | null;
     externalUrl?: string | null;
@@ -2185,7 +2175,23 @@ type BuyerFieldsFragment = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     }>;
 };
 
@@ -2209,13 +2215,16 @@ type Dispute = {
     __typename?: "Dispute";
     buyer: Buyer;
     buyerPercent: Scalars["BigInt"];
-    complaint: Scalars["String"];
+    decidedDate?: Maybe<Scalars["BigInt"]>;
     disputedDate: Scalars["BigInt"];
     escalatedDate?: Maybe<Scalars["BigInt"]>;
     exchange: Exchange;
     exchangeId: Scalars["BigInt"];
     finalizedDate?: Maybe<Scalars["BigInt"]>;
     id: Scalars["ID"];
+    refusedDate?: Maybe<Scalars["BigInt"]>;
+    resolvedDate?: Maybe<Scalars["BigInt"]>;
+    retractedDate?: Maybe<Scalars["BigInt"]>;
     seller: Seller;
     state: DisputeState;
     timeout: Scalars["BigInt"];
@@ -2251,26 +2260,14 @@ type Dispute_Filter = {
     buyer_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
     buyer_starts_with?: InputMaybe<Scalars["String"]>;
     buyer_starts_with_nocase?: InputMaybe<Scalars["String"]>;
-    complaint?: InputMaybe<Scalars["String"]>;
-    complaint_contains?: InputMaybe<Scalars["String"]>;
-    complaint_contains_nocase?: InputMaybe<Scalars["String"]>;
-    complaint_ends_with?: InputMaybe<Scalars["String"]>;
-    complaint_ends_with_nocase?: InputMaybe<Scalars["String"]>;
-    complaint_gt?: InputMaybe<Scalars["String"]>;
-    complaint_gte?: InputMaybe<Scalars["String"]>;
-    complaint_in?: InputMaybe<Array<Scalars["String"]>>;
-    complaint_lt?: InputMaybe<Scalars["String"]>;
-    complaint_lte?: InputMaybe<Scalars["String"]>;
-    complaint_not?: InputMaybe<Scalars["String"]>;
-    complaint_not_contains?: InputMaybe<Scalars["String"]>;
-    complaint_not_contains_nocase?: InputMaybe<Scalars["String"]>;
-    complaint_not_ends_with?: InputMaybe<Scalars["String"]>;
-    complaint_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
-    complaint_not_in?: InputMaybe<Array<Scalars["String"]>>;
-    complaint_not_starts_with?: InputMaybe<Scalars["String"]>;
-    complaint_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
-    complaint_starts_with?: InputMaybe<Scalars["String"]>;
-    complaint_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    decidedDate?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    decidedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    decidedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
     disputedDate?: InputMaybe<Scalars["BigInt"]>;
     disputedDate_gt?: InputMaybe<Scalars["BigInt"]>;
     disputedDate_gte?: InputMaybe<Scalars["BigInt"]>;
@@ -2331,6 +2328,30 @@ type Dispute_Filter = {
     id_lte?: InputMaybe<Scalars["ID"]>;
     id_not?: InputMaybe<Scalars["ID"]>;
     id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+    refusedDate?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    refusedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    refusedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    resolvedDate?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    resolvedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    resolvedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    retractedDate?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    retractedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    retractedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
     seller?: InputMaybe<Scalars["String"]>;
     seller_contains?: InputMaybe<Scalars["String"]>;
     seller_contains_nocase?: InputMaybe<Scalars["String"]>;
@@ -2372,7 +2393,7 @@ enum Dispute_OrderBy {
     // (undocumented)
     BuyerPercent = "buyerPercent",
     // (undocumented)
-    Complaint = "complaint",
+    DecidedDate = "decidedDate",
     // (undocumented)
     DisputedDate = "disputedDate",
     // (undocumented)
@@ -2386,6 +2407,12 @@ enum Dispute_OrderBy {
     // (undocumented)
     Id = "id",
     // (undocumented)
+    RefusedDate = "refusedDate",
+    // (undocumented)
+    ResolvedDate = "resolvedDate",
+    // (undocumented)
+    RetractedDate = "retractedDate",
+    // (undocumented)
     Seller = "seller",
     // (undocumented)
     State = "state",
@@ -2398,12 +2425,15 @@ type DisputeFieldsFragment = {
     __typename?: "Dispute";
     id: string;
     exchangeId: string;
-    complaint: string;
     state: DisputeState;
     buyerPercent: string;
     disputedDate: string;
     escalatedDate?: string | null;
     finalizedDate?: string | null;
+    retractedDate?: string | null;
+    resolvedDate?: string | null;
+    decidedDate?: string | null;
+    refusedDate?: string | null;
     timeout: string;
     exchange: {
         __typename?: "Exchange";
@@ -2417,7 +2447,23 @@ type DisputeFieldsFragment = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     };
     seller: {
         __typename?: "Seller";
@@ -2983,7 +3029,7 @@ type DisputeResolverFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -3106,7 +3152,9 @@ type Exchange = {
     cancelledDate?: Maybe<Scalars["BigInt"]>;
     committedDate: Scalars["BigInt"];
     completedDate?: Maybe<Scalars["BigInt"]>;
+    dispute?: Maybe<Dispute>;
     disputed: Scalars["Boolean"];
+    disputedDate?: Maybe<Scalars["BigInt"]>;
     expired: Scalars["Boolean"];
     finalizedDate?: Maybe<Scalars["BigInt"]>;
     id: Scalars["ID"];
@@ -3164,7 +3212,35 @@ type Exchange_Filter = {
     completedDate_lte?: InputMaybe<Scalars["BigInt"]>;
     completedDate_not?: InputMaybe<Scalars["BigInt"]>;
     completedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    dispute?: InputMaybe<Scalars["String"]>;
+    dispute_contains?: InputMaybe<Scalars["String"]>;
+    dispute_contains_nocase?: InputMaybe<Scalars["String"]>;
+    dispute_ends_with?: InputMaybe<Scalars["String"]>;
+    dispute_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    dispute_gt?: InputMaybe<Scalars["String"]>;
+    dispute_gte?: InputMaybe<Scalars["String"]>;
+    dispute_in?: InputMaybe<Array<Scalars["String"]>>;
+    dispute_lt?: InputMaybe<Scalars["String"]>;
+    dispute_lte?: InputMaybe<Scalars["String"]>;
+    dispute_not?: InputMaybe<Scalars["String"]>;
+    dispute_not_contains?: InputMaybe<Scalars["String"]>;
+    dispute_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+    dispute_not_ends_with?: InputMaybe<Scalars["String"]>;
+    dispute_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+    dispute_not_in?: InputMaybe<Array<Scalars["String"]>>;
+    dispute_not_starts_with?: InputMaybe<Scalars["String"]>;
+    dispute_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+    dispute_starts_with?: InputMaybe<Scalars["String"]>;
+    dispute_starts_with_nocase?: InputMaybe<Scalars["String"]>;
     disputed?: InputMaybe<Scalars["Boolean"]>;
+    disputedDate?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_gt?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_gte?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+    disputedDate_lt?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_lte?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_not?: InputMaybe<Scalars["BigInt"]>;
+    disputedDate_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
     disputed_in?: InputMaybe<Array<Scalars["Boolean"]>>;
     disputed_not?: InputMaybe<Scalars["Boolean"]>;
     disputed_not_in?: InputMaybe<Array<Scalars["Boolean"]>>;
@@ -3269,7 +3345,11 @@ enum Exchange_OrderBy {
     // (undocumented)
     CompletedDate = "completedDate",
     // (undocumented)
+    Dispute = "dispute",
+    // (undocumented)
     Disputed = "disputed",
+    // (undocumented)
+    DisputedDate = "disputedDate",
     // (undocumented)
     Expired = "expired",
     // (undocumented)
@@ -3303,6 +3383,7 @@ type ExchangeFieldsFragment = {
     revokedDate?: string | null;
     cancelledDate?: string | null;
     completedDate?: string | null;
+    disputedDate?: string | null;
     expired: boolean;
     buyer: {
         __typename?: "Buyer";
@@ -3516,7 +3597,7 @@ type ExchangeFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -3570,6 +3651,21 @@ type ExchangeFieldsFragment = {
             } | null;
         } | null;
     };
+    dispute?: {
+        __typename?: "Dispute";
+        id: string;
+        exchangeId: string;
+        state: DisputeState;
+        buyerPercent: string;
+        disputedDate: string;
+        escalatedDate?: string | null;
+        finalizedDate?: string | null;
+        retractedDate?: string | null;
+        resolvedDate?: string | null;
+        decidedDate?: string | null;
+        refusedDate?: string | null;
+        timeout: string;
+    } | null;
 };
 
 // @public (undocumented)
@@ -3889,7 +3985,7 @@ type ExchangeTokenFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -4312,7 +4408,7 @@ type GetBaseMetadataEntitiesQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -4618,7 +4714,7 @@ type GetBaseMetadataEntityByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -4742,7 +4838,23 @@ type GetBuyerByIdQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
     } | null;
 };
@@ -4801,7 +4913,23 @@ type GetBuyersQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
     }>;
 };
@@ -4843,12 +4971,15 @@ type GetDisputeByIdQueryQuery = {
         __typename?: "Dispute";
         id: string;
         exchangeId: string;
-        complaint: string;
         state: DisputeState;
         buyerPercent: string;
         disputedDate: string;
         escalatedDate?: string | null;
         finalizedDate?: string | null;
+        retractedDate?: string | null;
+        resolvedDate?: string | null;
+        decidedDate?: string | null;
+        refusedDate?: string | null;
         timeout: string;
         exchange: {
             __typename?: "Exchange";
@@ -4862,7 +4993,23 @@ type GetDisputeByIdQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         };
         seller: {
             __typename?: "Seller";
@@ -5107,7 +5254,7 @@ type GetDisputeResolverByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -5401,7 +5548,7 @@ type GetDisputeResolversQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -5498,12 +5645,15 @@ type GetDisputesQueryQuery = {
         __typename?: "Dispute";
         id: string;
         exchangeId: string;
-        complaint: string;
         state: DisputeState;
         buyerPercent: string;
         disputedDate: string;
         escalatedDate?: string | null;
         finalizedDate?: string | null;
+        retractedDate?: string | null;
+        resolvedDate?: string | null;
+        decidedDate?: string | null;
+        refusedDate?: string | null;
         timeout: string;
         exchange: {
             __typename?: "Exchange";
@@ -5517,7 +5667,23 @@ type GetDisputesQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         };
         seller: {
             __typename?: "Seller";
@@ -5567,6 +5733,7 @@ type GetExchangeByIdQueryQuery = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
         buyer: {
             __typename?: "Buyer";
@@ -5780,7 +5947,7 @@ type GetExchangeByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -5834,6 +6001,21 @@ type GetExchangeByIdQueryQuery = {
                 } | null;
             } | null;
         };
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     } | null;
 };
 
@@ -5860,6 +6042,7 @@ type GetExchangesQueryQuery = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
         buyer: {
             __typename?: "Buyer";
@@ -6073,7 +6256,7 @@ type GetExchangesQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -6127,6 +6310,21 @@ type GetExchangesQueryQuery = {
                 } | null;
             } | null;
         };
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     }>;
 };
 
@@ -6346,7 +6544,7 @@ type GetExchangeTokenByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -6638,7 +6836,7 @@ type GetExchangeTokensQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -6821,7 +7019,23 @@ type GetOfferByIdQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
         seller: {
             __typename?: "Seller";
@@ -6994,7 +7208,7 @@ type GetOfferByIdQueryQuery = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -7102,7 +7316,23 @@ type GetOffersQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
         seller: {
             __typename?: "Seller";
@@ -7275,7 +7505,7 @@ type GetOffersQueryQuery = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -7611,7 +7841,7 @@ type GetProductV1MetadataEntitiesQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -7774,7 +8004,7 @@ type GetProductV1MetadataEntitiesQueryQuery = {
         productV1Seller: {
             __typename?: "ProductV1Seller";
             id: string;
-            defaultVersion?: number | null;
+            defaultVersion: number;
             name?: string | null;
             description?: string | null;
             externalUrl?: string | null;
@@ -8046,7 +8276,7 @@ type GetProductV1MetadataEntityByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -8209,7 +8439,7 @@ type GetProductV1MetadataEntityByIdQueryQuery = {
         productV1Seller: {
             __typename?: "ProductV1Seller";
             id: string;
-            defaultVersion?: number | null;
+            defaultVersion: number;
             name?: string | null;
             description?: string | null;
             externalUrl?: string | null;
@@ -8512,7 +8742,7 @@ type GetSellerByIdQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -8578,7 +8808,23 @@ type GetSellerByIdQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
     } | null;
 };
@@ -8831,7 +9077,7 @@ type GetSellersQueryQuery = {
                 productV1Seller: {
                     __typename?: "ProductV1Seller";
                     id: string;
-                    defaultVersion?: number | null;
+                    defaultVersion: number;
                     name?: string | null;
                     description?: string | null;
                     externalUrl?: string | null;
@@ -8897,7 +9143,23 @@ type GetSellersQueryQuery = {
             revokedDate?: string | null;
             cancelledDate?: string | null;
             completedDate?: string | null;
+            disputedDate?: string | null;
             expired: boolean;
+            dispute?: {
+                __typename?: "Dispute";
+                id: string;
+                exchangeId: string;
+                state: DisputeState;
+                buyerPercent: string;
+                disputedDate: string;
+                escalatedDate?: string | null;
+                finalizedDate?: string | null;
+                retractedDate?: string | null;
+                resolvedDate?: string | null;
+                decidedDate?: string | null;
+                refusedDate?: string | null;
+                timeout: string;
+            } | null;
         }>;
     }>;
 };
@@ -8948,7 +9210,7 @@ interface Headers {
 // Warning: (ae-forgotten-export) The symbol "CoreSDK" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function initCoreSdk(chainId: number): Promise<CoreSDK>;
+export function initCoreSdk(envName: string): Promise<CoreSDK>;
 
 // @public (undocumented)
 type InputMaybe<T> = Maybe<T>;
@@ -9815,7 +10077,23 @@ type OfferFieldsFragment = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     }>;
     seller: {
         __typename?: "Seller";
@@ -9988,7 +10266,7 @@ type OfferFieldsFragment = {
         productV1Seller: {
             __typename?: "ProductV1Seller";
             id: string;
-            defaultVersion?: number | null;
+            defaultVersion: number;
             name?: string | null;
             description?: string | null;
             externalUrl?: string | null;
@@ -10996,7 +11274,7 @@ type ProductV1MetadataEntityFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -11159,7 +11437,7 @@ type ProductV1MetadataEntityFieldsFragment = {
     productV1Seller: {
         __typename?: "ProductV1Seller";
         id: string;
-        defaultVersion?: number | null;
+        defaultVersion: number;
         name?: string | null;
         description?: string | null;
         externalUrl?: string | null;
@@ -12534,7 +12812,7 @@ enum ProductV1Section_OrderBy {
 type ProductV1Seller = {
     __typename?: "ProductV1Seller";
     contactLinks?: Maybe<Array<ProductV1SellerContactLink>>;
-    defaultVersion?: Maybe<Scalars["Int"]>;
+    defaultVersion: Scalars["Int"];
     description?: Maybe<Scalars["String"]>;
     externalUrl?: Maybe<Scalars["String"]>;
     id: Scalars["ID"];
@@ -14115,7 +14393,7 @@ type SellerFieldsFragment = {
             productV1Seller: {
                 __typename?: "ProductV1Seller";
                 id: string;
-                defaultVersion?: number | null;
+                defaultVersion: number;
                 name?: string | null;
                 description?: string | null;
                 externalUrl?: string | null;
@@ -14181,7 +14459,23 @@ type SellerFieldsFragment = {
         revokedDate?: string | null;
         cancelledDate?: string | null;
         completedDate?: string | null;
+        disputedDate?: string | null;
         expired: boolean;
+        dispute?: {
+            __typename?: "Dispute";
+            id: string;
+            exchangeId: string;
+            state: DisputeState;
+            buyerPercent: string;
+            disputedDate: string;
+            escalatedDate?: string | null;
+            finalizedDate?: string | null;
+            retractedDate?: string | null;
+            resolvedDate?: string | null;
+            decidedDate?: string | null;
+            refusedDate?: string | null;
+            timeout: string;
+        } | null;
     }>;
 };
 
@@ -14808,7 +15102,7 @@ export class TimeSystem implements ISystem {
 
 // Warnings were encountered during analysis:
 //
-// node_modules/@bosonprotocol/core-sdk/src/subgraph.ts:15354:51 - (ae-forgotten-export) The symbol "Dom" needs to be exported by the entry point index.d.ts
+// node_modules/@bosonprotocol/core-sdk/src/subgraph.ts:15653:51 - (ae-forgotten-export) The symbol "Dom" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
