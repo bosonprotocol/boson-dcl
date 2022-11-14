@@ -14,7 +14,7 @@ export declare function initCoreSdk(envName: string): Promise<CoreSDK>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  envName | string | Name of the environment to run with ("testing", "staging", or "production") |
+|  envName | string |  |
 
 <b>Returns:</b>
 
