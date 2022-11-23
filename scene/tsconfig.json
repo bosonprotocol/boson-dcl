@@ -9,7 +9,8 @@
         "../library/dist/index.d.ts"
       ],
       "eth-connect": [
-        "node_modules/eth-connect/eth-connect.d.ts"
+        "node_modules/eth-connect/eth-connect.d.ts",
+        "node_modules\\eth-connect\\eth-connect.d.ts"
       ]
     },
     "baseUrl": "."
