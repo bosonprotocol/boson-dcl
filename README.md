@@ -18,9 +18,10 @@
 
 ## Index
 
+- [Index](#index)
 - [Getting started](#getting-started)
-- [API docs](./library/docs/index.md)
-- [Example scene](./scene/README.md)
+  - [Install](#install)
+  - [Usage](#usage)
 
 ## Getting started
 
@@ -43,7 +44,7 @@ import { getUserAccount } from "@decentraland/EthereumController";
 async function init() {
   const userAccount = await getUserAccount();
 
-  const coreSDK = await initCoreSdk(targetChainId);
+  const coreSDK = await initCoreSdk(targetEnv);
 
   return { coreSDK, userAccount };
 }

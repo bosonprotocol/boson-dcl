@@ -45,13 +45,17 @@ useBoson().then(async ({ coreSDK, userAccount }) => {
   log("initialized core-sdk", coreSDK);
 
   // query valid offers from subgraph
+  const onlyErc20Offers = false;
+  const targetDate = Math.floor(Date.now() / 1000)
   const offers = await coreSDK.getOffers({
     offersOrderBy: "createdAt",
     offersOrderDirection: "desc",
     offersFirst: 10,
     offersFilter: {
-      validFromDate_lte: Math.floor(Date.now() / 1000),
+      validFromDate_lte: targetDate,
+      validUntilDate_gte: targetDate,
       quantityAvailable_gt: 0,
+      exchangeToken_not: onlyErc20Offers ? "0x0000000000000000000000000000000000000000" : undefined
     },
   });
   log("offers", offers);
@@ -66,6 +70,8 @@ useBoson().then(async ({ coreSDK, userAccount }) => {
             buyer: userAccount,
           });
           log("commitToOffer - txResponse", txResponse);
+          const txReceipt = await txResponse.wait();
+          log("commitToOffer - txReceipt", txReceipt);
         },
         {
           button: ActionButton.POINTER,
