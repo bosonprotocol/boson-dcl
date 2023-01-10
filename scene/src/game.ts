@@ -1,6 +1,7 @@
 /// --- Set up a system ---
 
-import { useBoson } from "./boson";
+import { ADDRESS_ZERO, useBoson } from "./boson";
+import { BigNumber, toBigNumber } from 'eth-connect';
 
 class RotatorSystem {
   // this group will contain every entity that has a Transform component
@@ -48,27 +49,86 @@ useBoson().then(async ({ coreSDK, userAccount }) => {
   const onlyErc20Offers = false;
   const targetDate = Math.floor(Date.now() / 1000)
   const offers = await coreSDK.getOffers({
-    offersOrderBy: "createdAt",
-    offersOrderDirection: "desc",
+    offersOrderBy: "createdAt" as any,
+    offersOrderDirection: "desc" as any,
     offersFirst: 10,
     offersFilter: {
-      validFromDate_lte: targetDate,
-      validUntilDate_gte: targetDate,
-      quantityAvailable_gt: 0,
-      exchangeToken_not: onlyErc20Offers ? "0x0000000000000000000000000000000000000000" : undefined
+      validFromDate_lte: String(targetDate),
+      validUntilDate_gte: String(targetDate),
+      quantityAvailable_gt: String(0),
+      exchangeToken_not: onlyErc20Offers ? ADDRESS_ZERO : undefined
     },
   });
   log("offers", offers);
 
-  for (const [i, offer] of offers.entries()) {
+  for (const [i, offer] of (offers as any).entries()) {
     const cube = spawnCube(i + 1, 1, 1);
+    const exchangeTokenAddress = offer.exchangeToken.address;
+    const nativeOffer = exchangeTokenAddress === ADDRESS_ZERO;
 
     cube.addComponent(
       new OnPointerDown(
         async () => {
-          const txResponse = await coreSDK.commitToOffer(offer.id, {
-            buyer: userAccount,
-          });
+          let txResponse;
+          const canUseMetaTx = coreSDK.isMetaTxConfigSet;
+          if (!nativeOffer && canUseMetaTx) {
+            log("getProtocolAllowance()", exchangeTokenAddress, offer.price);
+            const currentAllowance = await coreSDK.getProtocolAllowance(
+              exchangeTokenAddress
+            );
+            const approveNeeded = toBigNumber(currentAllowance).lt(offer.price);
+            log("approveNeeded", approveNeeded);
+            if (approveNeeded) {
+              let approveTx;
+              if (coreSDK.checkMetaTxConfigSet({ contractAddress: exchangeTokenAddress })) {
+                // Use meta-transaction for approval, if needed
+                log("signNativeMetaTxApproveExchangeToken()", exchangeTokenAddress);
+                const { r, s, v, functionName, functionSignature } =
+                  await coreSDK.signNativeMetaTxApproveExchangeToken(
+                    exchangeTokenAddress,
+                    offer.price
+                  );
+                log("relayNativeMetaTransaction()", exchangeTokenAddress, functionSignature);
+                approveTx = await coreSDK.relayNativeMetaTransaction(
+                  exchangeTokenAddress,
+                  {
+                    functionSignature,
+                    sigR: r,
+                    sigS: s,
+                    sigV: v
+                  }
+                )
+              } else {
+                approveTx = await coreSDK.approveExchangeToken(
+                  exchangeTokenAddress,
+                  offer.price
+                );
+              }
+              await approveTx.wait();
+            }
+            log("signMetaTxCommitToOffer()", offer.id);
+            const nonce = Date.now();
+            const { r, s, v, functionName, functionSignature } =
+              await coreSDK.signMetaTxCommitToOffer({
+                offerId: offer.id,
+                nonce
+              }
+            );
+            txResponse = await coreSDK.relayMetaTransaction(
+              {
+                functionName,
+                functionSignature,
+                sigR: r,
+                sigS: s,
+                sigV: v,
+                nonce
+              }
+            );
+          } else {
+            txResponse = await coreSDK.commitToOffer(offer.id, {
+              buyer: userAccount,
+            });
+          }
           log("commitToOffer - txResponse", txResponse);
           const txReceipt = await txResponse.wait();
           log("commitToOffer - txReceipt", txReceipt);

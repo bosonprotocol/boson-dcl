@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: string): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: string, metaTx?: MetaTxConfig): Promise<CoreSDK>;
 ```
 
 ## Parameters
@@ -15,6 +15,7 @@ export declare function initCoreSdk(envName: string): Promise<CoreSDK>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  envName | string |  |
+|  metaTx | MetaTxConfig | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
