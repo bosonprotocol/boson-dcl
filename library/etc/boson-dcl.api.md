@@ -15315,7 +15315,7 @@ interface Headers {
 // Warning: (ae-forgotten-export) The symbol "CoreSDK" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function initCoreSdk(envName: string): Promise<CoreSDK>;
+export function initCoreSdk(envName: string, metaTx?: MetaTxConfig): Promise<CoreSDK>;
 
 // @public (undocumented)
 type InputMaybe<T> = Maybe<T>;

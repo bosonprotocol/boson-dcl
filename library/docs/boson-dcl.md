@@ -15,7 +15,7 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [initCoreSdk(envName)](./boson-dcl.initcoresdk.md) |  |
+|  [initCoreSdk(envName, metaTx)](./boson-dcl.initcoresdk.md) |  |
 |  [someFn()](./boson-dcl.somefn.md) |  |
 
 ## Variables
