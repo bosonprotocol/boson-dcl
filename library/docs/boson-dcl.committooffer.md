@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function commitToOffer(coreSDK: CoreSDK, offer: OfferFieldsFragment, userAccount: string): Promise<void>;
+export declare function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<void>;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ export declare function commitToOffer(coreSDK: CoreSDK, offer: OfferFieldsFragme
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  coreSDK | CoreSDK |  |
-|  offer | OfferFieldsFragment |  |
+|  offer | subgraph.OfferFieldsFragment |  |
 |  userAccount | string |  |
 
 <b>Returns:</b>

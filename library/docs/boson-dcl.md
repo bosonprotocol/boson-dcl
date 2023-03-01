@@ -12,7 +12,7 @@
 |  [checkUserCanCommitToOffer(coreSDK, offer, userAccount)](./boson-dcl.checkusercancommittooffer.md) |  |
 |  [commitToOffer(coreSDK, offer, userAccount)](./boson-dcl.committooffer.md) |  |
 |  [getBalance(address)](./boson-dcl.getbalance.md) |  |
-|  [initCoreSdk(envName, providerUrl, metaTx)](./boson-dcl.initcoresdk.md) |  |
+|  [initCoreSdk(envName, bosonConfigs)](./boson-dcl.initcoresdk.md) |  |
 |  [processBiconomyConfig(envName, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
 
 ## Variables
