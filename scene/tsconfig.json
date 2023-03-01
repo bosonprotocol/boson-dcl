@@ -3,6 +3,10 @@
     "outFile": "./bin/game.js",
     "allowJs": true,
     "strict": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ES6",
     "paths": {
       "@bosonprotocol/boson-dcl": [
         "..\\library\\dist\\index.d.ts",
@@ -13,7 +17,7 @@
         "node_modules\\eth-connect\\eth-connect.d.ts"
       ]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
   },
   "include": [
     "src/**/*.ts"
