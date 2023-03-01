@@ -1,25 +1,12 @@
-import {
-  constant,
-  someFn,
-  ExampleComponent,
-  initCoreSdk,
-} from "@bosonprotocol/boson-dcl";
-import { getUserAccount } from "@decentraland/EthereumController";
+import { initCoreSdk } from '@bosonprotocol/boson-dcl'
+import { getUserAccount } from '@decentraland/EthereumController'
+import { bosonConfig } from './bosonConfig'
 
-const targetEnv = "testing";
+const targetEnv = 'testing'
 
 export async function useBoson() {
-  const userAccount = await getUserAccount();
+  const userAccount = await getUserAccount()
 
-  const exampleComponent = new ExampleComponent(true);
-  log(
-    "Hello Boson Protocol World",
-    constant,
-    someFn(),
-    exampleComponent.testing
-  );
-
-  const coreSDK = await initCoreSdk(targetEnv);
-
-  return { coreSDK, userAccount };
+  const coreSDK = await initCoreSdk(targetEnv, bosonConfig);
+  return { coreSDK, userAccount }
 }

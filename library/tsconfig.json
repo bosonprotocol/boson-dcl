@@ -7,6 +7,11 @@
     "declarationDir": "./types",
     "declarationMap": true,
     "outDir": "dist",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ES6",
     "paths": {
       "eth-connect": ["./node_modules/eth-connect/eth-connect.d.ts"],
       "@dcl/ui-scene-utils": [
