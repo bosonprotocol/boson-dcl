@@ -7,14 +7,15 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: string): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  envName | string |  |
+|  envName | EnvironmentType |  |
+|  bosonConfigs | [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
 
 <b>Returns:</b>
 

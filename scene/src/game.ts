@@ -1,83 +1,96 @@
 /// --- Set up a system ---
 
-import { useBoson } from "./boson";
-
-class RotatorSystem {
-  // this group will contain every entity that has a Transform component
-  group = engine.getComponentGroup(Transform);
-
-  update(dt: number) {
-    // iterate over the entities of the group
-    for (const entity of this.group.entities) {
-      // get the Transform component of the entity
-      const transform = entity.getComponent(Transform);
-
-      // mutate the rotation
-      transform.rotate(Vector3.Up(), dt * 10);
-    }
-  }
-}
-
-// Add a new instance of the system to the engine
-engine.addSystem(new RotatorSystem());
+import { ADDRESS_ZERO, checkOfferCommittable, commitToOffer, checkUserCanCommitToOffer } from '@bosonprotocol/boson-dcl'
+import { useBoson } from './boson'
 
 /// --- Spawner function ---
 
 function spawnCube(x: number, y: number, z: number) {
   // create the entity
-  const cube = new Entity();
+  const cube = new Entity()
 
   // add a transform to the entity
-  cube.addComponent(new Transform({ position: new Vector3(x, y, z) }));
+  cube.addComponent(new Transform({ position: new Vector3(x, y, z) }))
 
   // add a shape to the entity
-  cube.addComponent(new BoxShape());
+  cube.addComponent(new BoxShape())
 
   // add the entity to the engine
-  engine.addEntity(cube);
+  engine.addEntity(cube)
 
-  return cube;
+  return cube
 }
 
 /// --- Spawn a cube ---
 
-useBoson().then(async ({ coreSDK, userAccount }) => {
-  log("initialized core-sdk", coreSDK);
+useBoson()
+  .then(async ({ coreSDK, userAccount }) => {
+    log('initialized core-sdk', coreSDK)
 
-  // query valid offers from subgraph
-  const onlyErc20Offers = false;
-  const targetDate = Math.floor(Date.now() / 1000)
-  const offers = await coreSDK.getOffers({
-    offersOrderBy: "createdAt",
-    offersOrderDirection: "desc",
-    offersFirst: 10,
-    offersFilter: {
-      validFromDate_lte: targetDate,
-      validUntilDate_gte: targetDate,
-      quantityAvailable_gt: 0,
-      exchangeToken_not: onlyErc20Offers ? "0x0000000000000000000000000000000000000000" : undefined
-    },
-  });
-  log("offers", offers);
+    // query valid offers from subgraph
+    const onlyErc20Offers = true
+    const targetDate = Math.floor(Date.now() / 1000)
+    const offers = await coreSDK.getOffers({
+      offersOrderBy: 'createdAt' as any,
+      offersOrderDirection: 'desc' as any,
+      offersFirst: 10,
+      offersFilter: {
+        validFromDate_lte: String(targetDate),
+        validUntilDate_gte: String(targetDate),
+        quantityAvailable_gt: String(0),
+        exchangeToken_not: onlyErc20Offers ? ADDRESS_ZERO : undefined,
+        voided: false
+      }
+    })
+    log('offers', offers)
 
-  for (const [i, offer] of offers.entries()) {
-    const cube = spawnCube(i + 1, 1, 1);
+    for (const [i, offer] of (offers as any).entries()) {
+      const cube = spawnCube(i*1.1 + 1, 1, 1)
 
-    cube.addComponent(
-      new OnPointerDown(
-        async () => {
-          const txResponse = await coreSDK.commitToOffer(offer.id, {
-            buyer: userAccount,
-          });
-          log("commitToOffer - txResponse", txResponse);
-          const txReceipt = await txResponse.wait();
-          log("commitToOffer - txReceipt", txReceipt);
-        },
-        {
-          button: ActionButton.POINTER,
-          hoverText: `Commit to offer: ${offer.id}`,
-        }
+      cube.addComponent(
+        new OnPointerDown(
+          async () => {
+            try {
+              const { isCommittable, voided, notYetValid, expired, soldOut, missingSellerDeposit } = await checkOfferCommittable(coreSDK, offer)
+              if (!isCommittable) {
+                log(`Offer ${offer.id} can not be committed`)
+                if (voided) {
+                  log(`Offer ${offer.id} has been voided`)
+                  return
+                }
+                if (notYetValid) {
+                  log(`Offer ${offer.id} is not valid yet`)
+                  return
+                }
+                if (expired) {
+                  log(`Offer ${offer.id} has expired`)
+                  return
+                }
+                if (soldOut) {
+                  log(`Offer ${offer.id} is sold out`)
+                  return
+                }
+                if (missingSellerDeposit) {
+                  log(`Seller deposit can not be secured now (seller id: ${offer.seller.id})`)
+                  return
+                }
+              }
+              const { canCommit, approveNeeded } = await checkUserCanCommitToOffer(coreSDK, offer, userAccount)
+              log('canCommit', canCommit)
+              log('approveNeeded', !!approveNeeded)
+              await commitToOffer(coreSDK, offer, userAccount)
+            } catch (e) {
+              log(`ERROR when committing to offer ${offer.id}`, e)
+            }
+          },
+          {
+            button: ActionButton.POINTER,
+            hoverText: `Commit to offer: ${offer.id}`
+          }
+        )
       )
-    );
-  }
-});
+    }
+  })
+  .catch((e) => {
+    log('ERROR - Unable to initialize BOSON', e)
+  })
