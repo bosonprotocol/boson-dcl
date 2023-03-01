@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: OfferFieldsFragment, userAccount: string): Promise<{
+export declare function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<{
     canCommit: boolean;
     approveNeeded?: boolean;
 }>;
@@ -18,7 +18,7 @@ export declare function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: Offer
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  coreSDK | CoreSDK |  |
-|  offer | OfferFieldsFragment |  |
+|  offer | subgraph.OfferFieldsFragment |  |
 |  userAccount | string |  |
 
 <b>Returns:</b>

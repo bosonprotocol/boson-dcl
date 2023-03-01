@@ -10,7 +10,7 @@ import { BigNumber } from 'eth-connect';
 import { CoreSDK } from '@bosonprotocol/core-sdk';
 import { EnvironmentType } from '@bosonprotocol/core-sdk';
 import { MetaTxConfig } from '@bosonprotocol/core-sdk';
-import { OfferFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
+import { subgraph } from '@bosonprotocol/core-sdk';
 
 // @public (undocumented)
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
@@ -50,22 +50,23 @@ export type BosonEnvConfig = {
 };
 
 // @public (undocumented)
-export function checkOfferCommittable(coreSDK: CoreSDK, offer: OfferFieldsFragment): {
+export function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment): Promise<{
     isCommittable: boolean;
     voided: boolean;
     notYetValid: boolean;
     expired: boolean;
     soldOut: boolean;
-};
+    missingSellerDeposit: boolean;
+}>;
 
 // @public (undocumented)
-export function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: OfferFieldsFragment, userAccount: string): Promise<{
+export function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<{
     canCommit: boolean;
     approveNeeded?: boolean;
 }>;
 
 // @public (undocumented)
-export function commitToOffer(coreSDK: CoreSDK, offer: OfferFieldsFragment, userAccount: string): Promise<void>;
+export function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<void>;
 
 export { CoreSDK }
 
@@ -73,7 +74,7 @@ export { CoreSDK }
 export function getBalance(address: string): Promise<BigNumber>;
 
 // @public (undocumented)
-export function initCoreSdk(envName: EnvironmentType, providerUrl: string, metaTx?: Partial<MetaTxConfig>): Promise<CoreSDK>;
+export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK>;
 
 export { MetaTxConfig }
 

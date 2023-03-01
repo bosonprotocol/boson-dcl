@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: EnvironmentType, providerUrl: string, metaTx?: Partial<MetaTxConfig>): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK>;
 ```
 
 ## Parameters
@@ -15,8 +15,7 @@ export declare function initCoreSdk(envName: EnvironmentType, providerUrl: strin
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  envName | EnvironmentType |  |
-|  providerUrl | string |  |
-|  metaTx | Partial&lt;MetaTxConfig&gt; | <i>(Optional)</i> |
+|  bosonConfigs | [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
 
 <b>Returns:</b>
 

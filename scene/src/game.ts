@@ -51,9 +51,9 @@ useBoson()
         new OnPointerDown(
           async () => {
             try {
-              const { isCommittable, voided, notYetValid, expired, soldOut } = checkOfferCommittable(coreSDK, offer)
+              const { isCommittable, voided, notYetValid, expired, soldOut, missingSellerDeposit } = await checkOfferCommittable(coreSDK, offer)
               if (!isCommittable) {
-                log(`Offer ${offer.id} can be committed`)
+                log(`Offer ${offer.id} can not be committed`)
                 if (voided) {
                   log(`Offer ${offer.id} has been voided`)
                   return
@@ -68,6 +68,10 @@ useBoson()
                 }
                 if (soldOut) {
                   log(`Offer ${offer.id} is sold out`)
+                  return
+                }
+                if (missingSellerDeposit) {
+                  log(`Seller deposit can not be secured now (seller id: ${offer.seller.id})`)
                   return
                 }
               }

@@ -7,13 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function checkOfferCommittable(coreSDK: CoreSDK, offer: OfferFieldsFragment): {
+export declare function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment): Promise<{
     isCommittable: boolean;
     voided: boolean;
     notYetValid: boolean;
     expired: boolean;
     soldOut: boolean;
-};
+    missingSellerDeposit: boolean;
+}>;
 ```
 
 ## Parameters
@@ -21,9 +22,9 @@ export declare function checkOfferCommittable(coreSDK: CoreSDK, offer: OfferFiel
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  coreSDK | CoreSDK |  |
-|  offer | OfferFieldsFragment |  |
+|  offer | subgraph.OfferFieldsFragment |  |
 
 <b>Returns:</b>
 
-{ isCommittable: boolean; voided: boolean; notYetValid: boolean; expired: boolean; soldOut: boolean; }
+Promise&lt;{ isCommittable: boolean; voided: boolean; notYetValid: boolean; expired: boolean; soldOut: boolean; missingSellerDeposit: boolean; }&gt;
 

@@ -4,12 +4,19 @@ import { EthConnectAdapter } from "@bosonprotocol/eth-connect-sdk";
 import { CoreSDK, EnvironmentType, MetaTxConfig, subgraph } from "@bosonprotocol/core-sdk";
 import { getUserAccount } from "@decentraland/EthereumController";
 import { Delay } from "./ecs-utils-clone/delay";
+import { BosonConfigs, processBiconomyConfig } from "./config";
 
 let httpRM: RequestManager;
 
 export const ADDRESS_ZERO=`0x0000000000000000000000000000000000000000`;
 
-export async function initCoreSdk(envName: EnvironmentType, providerUrl: string, metaTx?: Partial<MetaTxConfig>): Promise<CoreSDK> {
+export async function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK> {
+  if (!bosonConfigs[envName]) {
+    throw `Missing BOSON configuration for target environment ${envName}`
+  }
+  const providerUrl = bosonConfigs[envName]!.providerUrl;
+  const metaTx = processBiconomyConfig(envName, bosonConfigs[envName]!.biconomy!);
+
   const signer = await getProvider();
   const metamaskRM = new RequestManager(signer);
   const provider: HTTPProvider = new HTTPProvider(providerUrl);
@@ -43,24 +50,36 @@ export async function getBalance(address: string) {
   return httpRM.eth_getBalance(address, "latest");
 }
 
-export function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment): {
+export async function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment): Promise<{
   isCommittable: boolean;
   voided: boolean;
   notYetValid: boolean;
   expired: boolean;
   soldOut: boolean;
-} {
+  missingSellerDeposit: boolean;
+}> {
   const targetDate = Math.floor(Date.now() / 1000)
   const voided = offer.voided;
   const notYetValid = parseInt(offer.validFromDate) > targetDate;
   const expired = parseInt(offer.validUntilDate) < targetDate;
   const soldOut = parseInt(offer.quantityAvailable) === 0;
+  log("Seller deposit needed:", offer.sellerDeposit, offer.exchangeToken.symbol);
+  const sellerFunds = (await coreSDK.getFunds({
+    fundsFilter: {
+      account: offer.seller.id,
+      token: offer.exchangeToken.address
+    }
+  }))[0]
+  log("sellerFunds", sellerFunds);
+  const availableSellerFunds = sellerFunds?.availableAmount || "0";
+  const missingSellerDeposit = toBigNumber(offer.sellerDeposit).gt(availableSellerFunds);
   return {
-    isCommittable: !voided && !notYetValid && !expired && !soldOut,
+    isCommittable: !voided && !notYetValid && !expired && !soldOut && !missingSellerDeposit,
     voided,
     notYetValid,
     expired,
-    soldOut
+    soldOut,
+    missingSellerDeposit
   }
 }
 
