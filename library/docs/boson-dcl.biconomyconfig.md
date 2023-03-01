@@ -4,6 +4,7 @@
 
 ## BiconomyConfig type
 
+
 <b>Signature:</b>
 
 ```typescript

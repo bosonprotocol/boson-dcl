@@ -4,6 +4,21 @@
 
 ## boson-dcl package
 
+## Classes
+
+|  Class | Description |
+|  --- | --- |
+|  [DisplayProduct](./boson-dcl.displayproduct.md) |  |
+|  [Kiosk](./boson-dcl.kiosk.md) |  |
+
+## Enumerations
+
+|  Enumeration | Description |
+|  --- | --- |
+|  [eCurrency](./boson-dcl.ecurrency.md) |  |
+|  [eGateStateEnum](./boson-dcl.egatestateenum.md) |  |
+|  [eGateTokenType](./boson-dcl.egatetokentype.md) |  |
+
 ## Functions
 
 |  Function | Description |
@@ -11,8 +26,14 @@
 |  [checkOfferCommittable(coreSDK, offer)](./boson-dcl.checkoffercommittable.md) |  |
 |  [checkUserCanCommitToOffer(coreSDK, offer, userAccount)](./boson-dcl.checkusercancommittooffer.md) |  |
 |  [commitToOffer(coreSDK, offer, userAccount)](./boson-dcl.committooffer.md) |  |
+|  [getAllBalances(walletAddress)](./boson-dcl.getallbalances.md) |  |
 |  [getBalance(address)](./boson-dcl.getbalance.md) |  |
-|  [initCoreSdk(envName, bosonConfigs)](./boson-dcl.initcoresdk.md) |  |
+|  [getBalanceByCurrency(currency, walletAddress)](./boson-dcl.getbalancebycurrency.md) |  |
+|  [getBalanceDecimalised(address)](./boson-dcl.getbalancedecimalised.md) |  |
+|  [getEthPrice(\_query)](./boson-dcl.getethprice.md) |  |
+|  [getTokenData(\_query, \_tokenID)](./boson-dcl.gettokendata.md) |  |
+|  [hasNft(walletAddress, contractId, tokenId, nftType)](./boson-dcl.hasnft.md) |  |
+|  [initCoreSdk(envName, bosonConfigs, getUserAccount, inventory)](./boson-dcl.initcoresdk.md) |  |
 |  [processBiconomyConfig(envName, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
 
 ## Variables
@@ -30,4 +51,5 @@
 |  [BiconomyTokenApiId](./boson-dcl.biconomytokenapiid.md) |  |
 |  [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
 |  [BosonEnvConfig](./boson-dcl.bosonenvconfig.md) |  |
+|  [NamedToken](./boson-dcl.namedtoken.md) |  |
 
