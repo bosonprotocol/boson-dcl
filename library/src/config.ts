@@ -1,14 +1,30 @@
 import { EnvironmentType, getDefaultConfig, MetaTxConfig } from '@bosonprotocol/core-sdk';
 
+/**
+ * @public
+ */
 export type BiconomyBaseApiId = {
   method: string;
   apiId: string;
 }
 
-export type BiconomyTokenApiId = BiconomyBaseApiId & {
+/**
+ * @public
+ */
+export type NamedToken = {
+  name: string;
+}
+
+/**
+ * @public
+ */
+export type BiconomyTokenApiId = BiconomyBaseApiId & NamedToken & {
   address: string;
 }
 
+/**
+ * @public
+ */
 export type BiconomyConfig = {
   apiKey: string;
   apiIds: {
@@ -17,11 +33,17 @@ export type BiconomyConfig = {
   }
 }
 
+/**
+ * @public
+ */
 export type BosonEnvConfig = {
   biconomy?: BiconomyConfig;
   providerUrl: string;
 }
 
+/**
+ * @public
+ */
 export type BosonConfigs = {
   local?: BosonEnvConfig,
   testing?: BosonEnvConfig,
@@ -29,6 +51,9 @@ export type BosonConfigs = {
   production?: BosonEnvConfig
 }
 
+/**
+ * @public
+ */
 export function processBiconomyConfig(envName: EnvironmentType, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig> {
   const defaultConfig = getDefaultConfig(envName);
   const protocolApiId: any = {};

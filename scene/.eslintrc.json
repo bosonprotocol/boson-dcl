@@ -1,6 +1,6 @@
 {
   "extends": "@dcl/eslint-config/sdk",
   "parserOptions": {
-    "project": ["tsconfig.json"]
+    "project": ["scene/tsconfig.json"]
   }
 }

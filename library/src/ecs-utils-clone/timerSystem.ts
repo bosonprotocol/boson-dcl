@@ -20,7 +20,8 @@ export class TimerSystem implements ISystem {
   }
 
   public addComponentType(component: ComponentConstructor<ITimerComponent>) {
-    for (let comp of this._components) {
+    for(let i = 0; i < this._components.length; i++) {
+      let comp = this._components[i]
       if (component == comp) {
         return
       }

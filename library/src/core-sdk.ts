@@ -1,16 +1,28 @@
-import { RequestManager, toBigNumber, HTTPProvider } from "eth-connect";
+import { RequestManager, toBigNumber, HTTPProvider, ContractFactory } from "eth-connect";
 import { getProvider } from "@decentraland/web3-provider";
 import { EthConnectAdapter } from "@bosonprotocol/eth-connect-sdk";
 import { CoreSDK, EnvironmentType, MetaTxConfig, subgraph } from "@bosonprotocol/core-sdk";
-import { getUserAccount } from "@decentraland/EthereumController";
 import { Delay } from "./ecs-utils-clone/delay";
 import { BosonConfigs, processBiconomyConfig } from "./config";
+import { abis } from "@bosonprotocol/common"
+import { hasNft as helperHasNft, NFTType } from "./nft-helper";
+import request, { gql, Variables } from "graphql-request";
+import {TransactionReceipt} from "@bosonprotocol/common"
+
 
 let httpRM: RequestManager;
+let specifiedConfigs: BosonConfigs
+let specifiedEnv: EnvironmentType
+let specifiedInventory: any
+/**
+ * @public
+ */
+export const ADDRESS_ZERO = `0x0000000000000000000000000000000000000000`;
 
-export const ADDRESS_ZERO=`0x0000000000000000000000000000000000000000`;
-
-export async function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK> {
+/**
+ * @public
+ */
+export async function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount:() => Promise<string>, inventory:any): Promise<CoreSDK> {
   if (!bosonConfigs[envName]) {
     throw `Missing BOSON configuration for target environment ${envName}`
   }
@@ -21,7 +33,10 @@ export async function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonC
   const metamaskRM = new RequestManager(signer);
   const provider: HTTPProvider = new HTTPProvider(providerUrl);
   httpRM = new RequestManager(provider);
-  const ethConnectAdapter = new EthConnectAdapter(httpRM, {getSignerAddress: getUserAccount, delay}, metamaskRM);
+  specifiedConfigs = bosonConfigs
+  specifiedEnv = envName
+  specifiedInventory = inventory
+  const ethConnectAdapter = new EthConnectAdapter(httpRM, { getSignerAddress: getUserAccount, delay }, metamaskRM);
   const coreSDK = CoreSDK.fromDefaultConfig({
     envName,
     web3Lib: ethConnectAdapter,
@@ -43,6 +58,9 @@ async function delay(ms: number): Promise<undefined> {
   })
 }
 
+/**
+ * @public
+ */
 export async function getBalance(address: string) {
   if (!httpRM) {
     throw "no http requestManager";
@@ -50,6 +68,85 @@ export async function getBalance(address: string) {
   return httpRM.eth_getBalance(address, "latest");
 }
 
+/**
+ * @public
+ */
+export async function getBalanceDecimalised(address: string) {
+  let rtn = await getBalance(address)
+  return (rtn.toNumber() / Math.pow(10, 18))
+}
+
+/**
+ * @public
+ */
+export async function getBalanceByCurrency(currency: string, walletAddress: string) {
+  if (!httpRM) {
+    throw "no http requestManager";
+  }
+  if (!specifiedConfigs) {
+    throw "no specified configs";
+  }
+
+  const factory = new ContractFactory(httpRM, abis.ERC20ABI)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let token = specifiedConfigs[specifiedEnv]?.biconomy?.apiIds.tokens.filter(i => i.name === currency)[0]
+
+  if (!token) {
+    return 0
+  }
+  const contract = (await factory.at(token.address)) as any
+  const decimals: number = await contract.decimals()
+  let rtn: number = await contract.balanceOf(walletAddress)
+  rtn = rtn / Math.pow(10, decimals)
+  return rtn
+}
+
+/**
+ * @public
+ */
+export async function getAllBalances(walletAddress: string): Promise<object> {
+  if (!specifiedConfigs) {
+    throw "no specified configs";
+  }
+  const rtn: { [id: string]: number } = {}
+  let tokens = specifiedConfigs[specifiedEnv]?.biconomy?.apiIds.tokens
+  if(!tokens) {
+    return {}
+  }
+
+  const promises = tokens.map(async token => {
+    let thisBalance = 0
+
+    thisBalance = await getBalanceByCurrency(token.name, walletAddress)
+    return { "id": token.name, "balance": thisBalance }
+  })
+
+  const balances = await Promise.all(promises)
+  const maticBalance = await getBalanceDecimalised(walletAddress)
+  rtn["matic"] = maticBalance
+  for (let i = 0; i < balances.length; i++) {
+    const currentBalanceObj: { id: string; balance: number; } = balances[i]
+    rtn[currentBalanceObj["id"]] = currentBalanceObj["balance"]
+  }
+
+  return rtn
+}
+
+/**
+ * @public
+ */
+export async function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string) {
+  if (!httpRM) {
+    throw "no http requestManager";
+  }
+  const rtn: boolean = await helperHasNft(walletAddress, contractId, tokenId, NFTType[nftType as keyof typeof NFTType], httpRM, specifiedInventory)
+  return rtn
+}
+
+
+/**
+ * @public
+ */
 export async function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment): Promise<{
   isCommittable: boolean;
   voided: boolean;
@@ -83,6 +180,9 @@ export async function checkOfferCommittable(coreSDK: CoreSDK, offer: subgraph.Of
   }
 }
 
+/**
+ * @public
+ */
 export async function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<{ canCommit: boolean, approveNeeded?: boolean }> {
   const exchangeTokenAddress = offer.exchangeToken.address;
   const nativeOffer = exchangeTokenAddress === ADDRESS_ZERO;
@@ -97,7 +197,7 @@ export async function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgrap
     };
   }
   if (nativeOffer) {
-    return { 
+    return {
       canCommit: true,
       approveNeeded: false
     };
@@ -108,13 +208,16 @@ export async function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgrap
   );
   const approveNeeded = toBigNumber(currentAllowance).lt(offer.price);
   log("approveNeeded", approveNeeded);
-  return { 
+  return {
     canCommit: true,
     approveNeeded
   };
 }
 
-export async function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string) {
+/**
+ * @public
+ */
+export async function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string) : Promise<TransactionReceipt | undefined> {
   const exchangeTokenAddress = offer.exchangeToken.address;
   const nativeOffer = exchangeTokenAddress === ADDRESS_ZERO;
   const canUseMetaTx = coreSDK.isMetaTxConfigSet;
@@ -165,7 +268,7 @@ export async function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferField
           offerId: offer.id,
           nonce
         }
-      );
+        );
       txResponse = await coreSDK.relayMetaTransaction(
         {
           functionName,
@@ -184,5 +287,30 @@ export async function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferField
     log("commitToOffer - txResponse", txResponse);
     const txReceipt = await txResponse.wait();
     log("commitToOffer - txReceipt", txReceipt);
+
+    return txReceipt
   }
+}
+
+
+/**
+ * @public
+ */
+export function getEthPrice(_query:TemplateStringsArray):Promise<any>{
+  let query:string = gql(_query);
+      
+  return request("https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3", query)
+}
+
+/**
+* @public
+*/
+export function getTokenData(_query:TemplateStringsArray,_tokenID:string):Promise<any>{
+  let query:string = gql(_query);
+
+  let variables :Variables = {
+      token0:_tokenID
+    }
+      
+  return request("https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3", query, variables)
 }

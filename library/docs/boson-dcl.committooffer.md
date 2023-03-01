@@ -4,10 +4,11 @@
 
 ## commitToOffer() function
 
+
 <b>Signature:</b>
 
 ```typescript
-export declare function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<void>;
+export declare function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<TransactionReceipt | undefined>;
 ```
 
 ## Parameters
@@ -20,5 +21,5 @@ export declare function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFie
 
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+Promise&lt;TransactionReceipt \| undefined&gt;
 

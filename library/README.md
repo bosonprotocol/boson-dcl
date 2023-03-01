@@ -30,8 +30,8 @@ TBD
 
 ## How to use the library in your DCL Scene
 
-TBD
+See `README.md` in the `./scene` folder
 
 ## Integrate with your scene
 
-TBD
+See `README.md` in the `./scene` folder
