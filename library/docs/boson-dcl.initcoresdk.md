@@ -7,15 +7,16 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: string, metaTx?: MetaTxConfig): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: EnvironmentType, providerUrl: string, metaTx?: Partial<MetaTxConfig>): Promise<CoreSDK>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  envName | string |  |
-|  metaTx | MetaTxConfig | <i>(Optional)</i> |
+|  envName | EnvironmentType |  |
+|  providerUrl | string |  |
+|  metaTx | Partial&lt;MetaTxConfig&gt; | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

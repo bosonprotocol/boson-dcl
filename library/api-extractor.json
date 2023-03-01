@@ -341,6 +341,11 @@
       "default": {
         "logLevel": "warning"
         // "addToApiReportFile": false
+      },
+
+      "ae-wrong-input-file-type": {
+        "logLevel": "none",
+        "addToApiReportFile": false
       }
 
       // "ae-extra-release-tag": {

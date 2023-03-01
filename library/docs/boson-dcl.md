@@ -4,23 +4,30 @@
 
 ## boson-dcl package
 
-## Classes
-
-|  Class | Description |
-|  --- | --- |
-|  [ExampleComponent](./boson-dcl.examplecomponent.md) |  |
-|  [TimeSystem](./boson-dcl.timesystem.md) |  |
-
 ## Functions
 
 |  Function | Description |
 |  --- | --- |
-|  [initCoreSdk(envName, metaTx)](./boson-dcl.initcoresdk.md) |  |
-|  [someFn()](./boson-dcl.somefn.md) |  |
+|  [checkOfferCommittable(coreSDK, offer)](./boson-dcl.checkoffercommittable.md) |  |
+|  [checkUserCanCommitToOffer(coreSDK, offer, userAccount)](./boson-dcl.checkusercancommittooffer.md) |  |
+|  [commitToOffer(coreSDK, offer, userAccount)](./boson-dcl.committooffer.md) |  |
+|  [getBalance(address)](./boson-dcl.getbalance.md) |  |
+|  [initCoreSdk(envName, providerUrl, metaTx)](./boson-dcl.initcoresdk.md) |  |
+|  [processBiconomyConfig(envName, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
-|  [constant](./boson-dcl.constant.md) |  |
+|  [ADDRESS\_ZERO](./boson-dcl.address_zero.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [BiconomyBaseApiId](./boson-dcl.biconomybaseapiid.md) |  |
+|  [BiconomyConfig](./boson-dcl.biconomyconfig.md) |  |
+|  [BiconomyTokenApiId](./boson-dcl.biconomytokenapiid.md) |  |
+|  [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
+|  [BosonEnvConfig](./boson-dcl.bosonenvconfig.md) |  |
 

@@ -1,7 +1,3 @@
-import { ExampleComponent, constant, someFn } from "./exampleComponent";
-
-export { ExampleComponent, constant, someFn };
-
-export * from "./customSystem";
-
-export { initCoreSdk } from "./core-sdk";
+export * from "./core-sdk";
+export * from "./config";
+export { CoreSDK, MetaTxConfig } from "@bosonprotocol/core-sdk";
