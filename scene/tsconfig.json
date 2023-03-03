@@ -3,8 +3,6 @@
     "outFile": "./bin/game.js",
     "allowJs": true,
     "strict": true,
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ES6",
     "paths": {
