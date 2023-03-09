@@ -24,7 +24,7 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      'bbe324-b512-ff0f-388b-dbeea1573',
+      'c0b6a4e-d62d-751c-a3c7-b7be6fa50c',
       new boson.DisplayProduct("models/OGShirt.glb", new Transform({
         position: new Vector3(0,1.7,0),
         scale: new Vector3(1.2,1.2,1.2)
