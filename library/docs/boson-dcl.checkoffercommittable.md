@@ -4,6 +4,7 @@
 
 ## checkOfferCommittable() function
 
+
 <b>Signature:</b>
 
 ```typescript

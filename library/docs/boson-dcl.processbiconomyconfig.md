@@ -4,6 +4,7 @@
 
 ## processBiconomyConfig() function
 
+
 <b>Signature:</b>
 
 ```typescript

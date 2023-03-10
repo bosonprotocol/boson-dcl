@@ -1,96 +1,35 @@
-/// --- Set up a system ---
-
-import { ADDRESS_ZERO, checkOfferCommittable, commitToOffer, checkUserCanCommitToOffer } from '@bosonprotocol/boson-dcl'
+import * as boson from '@bosonprotocol/boson-dcl'
+import { Kiosk } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
 
-/// --- Spawner function ---
+void loadScene()
 
-function spawnCube(x: number, y: number, z: number) {
-  // create the entity
-  const cube = new Entity()
+const floor: Entity = new Entity()
+floor.addComponent(
+  new Transform({
+    position: new Vector3(8, 0, 8)
+  })
+)
+floor.addComponent(new GLTFShape('models/FloorBaseGrass_01.glb'))
+engine.addEntity(floor)
 
-  // add a transform to the entity
-  cube.addComponent(new Transform({ position: new Vector3(x, y, z) }))
+async function loadScene() {
+  void useBoson().then(async ({ coreSDK, userAccount, walletAddress }) => {
+    const allBalances: object = await boson.getAllBalances(walletAddress)
+    Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 
-  // add a shape to the entity
-  cube.addComponent(new BoxShape())
+    new Kiosk(
+      new Transform({
+        position: new Vector3(8, 0, 8),
+        rotation: Quaternion.Euler(0, 0, 0),
+        scale: new Vector3(1, 1, 1)
+      }),
+      'c0b6a4e-d62d-751c-a3c7-b7be6fa50c',
+      new boson.DisplayProduct("models/OGShirt.glb", new Transform({
+        position: new Vector3(0,1.7,0),
+        scale: new Vector3(1.2,1.2,1.2)
+      }),50)
+    )
 
-  // add the entity to the engine
-  engine.addEntity(cube)
-
-  return cube
+  })
 }
-
-/// --- Spawn a cube ---
-
-useBoson()
-  .then(async ({ coreSDK, userAccount }) => {
-    log('initialized core-sdk', coreSDK)
-
-    // query valid offers from subgraph
-    const onlyErc20Offers = true
-    const targetDate = Math.floor(Date.now() / 1000)
-    const offers = await coreSDK.getOffers({
-      offersOrderBy: 'createdAt' as any,
-      offersOrderDirection: 'desc' as any,
-      offersFirst: 10,
-      offersFilter: {
-        validFromDate_lte: String(targetDate),
-        validUntilDate_gte: String(targetDate),
-        quantityAvailable_gt: String(0),
-        exchangeToken_not: onlyErc20Offers ? ADDRESS_ZERO : undefined,
-        voided: false
-      }
-    })
-    log('offers', offers)
-
-    for (const [i, offer] of (offers as any).entries()) {
-      const cube = spawnCube(i*1.1 + 1, 1, 1)
-
-      cube.addComponent(
-        new OnPointerDown(
-          async () => {
-            try {
-              const { isCommittable, voided, notYetValid, expired, soldOut, missingSellerDeposit } = await checkOfferCommittable(coreSDK, offer)
-              if (!isCommittable) {
-                log(`Offer ${offer.id} can not be committed`)
-                if (voided) {
-                  log(`Offer ${offer.id} has been voided`)
-                  return
-                }
-                if (notYetValid) {
-                  log(`Offer ${offer.id} is not valid yet`)
-                  return
-                }
-                if (expired) {
-                  log(`Offer ${offer.id} has expired`)
-                  return
-                }
-                if (soldOut) {
-                  log(`Offer ${offer.id} is sold out`)
-                  return
-                }
-                if (missingSellerDeposit) {
-                  log(`Seller deposit can not be secured now (seller id: ${offer.seller.id})`)
-                  return
-                }
-              }
-              const { canCommit, approveNeeded } = await checkUserCanCommitToOffer(coreSDK, offer, userAccount)
-              log('canCommit', canCommit)
-              log('approveNeeded', !!approveNeeded)
-              await commitToOffer(coreSDK, offer, userAccount)
-            } catch (e) {
-              log(`ERROR when committing to offer ${offer.id}`, e)
-            }
-          },
-          {
-            button: ActionButton.POINTER,
-            hoverText: `Commit to offer: ${offer.id}`
-          }
-        )
-      )
-    }
-  })
-  .catch((e) => {
-    log('ERROR - Unable to initialize BOSON', e)
-  })

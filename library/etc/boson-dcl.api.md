@@ -4,6 +4,7 @@
 
 ```ts
 
+/// <reference types="dcl" />
 /// <reference types="env" />
 
 import { BigNumber } from 'eth-connect';
@@ -11,6 +12,8 @@ import { CoreSDK } from '@bosonprotocol/core-sdk';
 import { EnvironmentType } from '@bosonprotocol/core-sdk';
 import { MetaTxConfig } from '@bosonprotocol/core-sdk';
 import { subgraph } from '@bosonprotocol/core-sdk';
+import { TransactionReceipt } from '@bosonprotocol/common';
+import { UserData } from '@decentraland/Identity';
 
 // @public (undocumented)
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
@@ -31,7 +34,7 @@ export type BiconomyConfig = {
 };
 
 // @public (undocumented)
-export type BiconomyTokenApiId = BiconomyBaseApiId & {
+export type BiconomyTokenApiId = BiconomyBaseApiId & NamedToken & {
     address: string;
 };
 
@@ -66,17 +69,196 @@ export function checkUserCanCommitToOffer(coreSDK: CoreSDK, offer: subgraph.Offe
 }>;
 
 // @public (undocumented)
-export function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<void>;
+export function commitToOffer(coreSDK: CoreSDK, offer: subgraph.OfferFieldsFragment, userAccount: string): Promise<TransactionReceipt | undefined>;
 
 export { CoreSDK }
+
+// @public (undocumented)
+export class DisplayProduct extends Entity {
+    constructor(_modelPath: string, _transformOffset: Transform, _spinSpeed: number);
+    // (undocumented)
+    create(_parent: Entity, _productData: any): void;
+    // (undocumented)
+    created: boolean;
+    // (undocumented)
+    hide(): void;
+    // (undocumented)
+    modelPath: string;
+    // (undocumented)
+    originalScale: Vector3;
+    // (undocumented)
+    show(): void;
+    // (undocumented)
+    spinSpeed: number;
+    // (undocumented)
+    transformOffset: Transform;
+    // (undocumented)
+    update(_dt: number): void;
+}
+
+// @public (undocumented)
+export enum eCurrency {
+    // (undocumented)
+    boson = 5,
+    // (undocumented)
+    dai = 8,
+    // (undocumented)
+    eth = 2,
+    // (undocumented)
+    mana = 1,
+    // (undocumented)
+    matic = 3,
+    // (undocumented)
+    none = 0,
+    // (undocumented)
+    usd = 9,
+    // (undocumented)
+    usdc = 6,
+    // (undocumented)
+    usdt = 7,
+    // (undocumented)
+    weth = 4
+}
+
+// @public (undocumented)
+export enum eGateStateEnum {
+    // (undocumented)
+    login = 1,
+    // (undocumented)
+    noMessage = 0,
+    // (undocumented)
+    questCompleted = 3,
+    // (undocumented)
+    questInformation = 2
+}
+
+// @public (undocumented)
+export enum eGateTokenType {
+    // (undocumented)
+    quest = 2,
+    // (undocumented)
+    token = 0,
+    // (undocumented)
+    wearable = 1
+}
+
+// @public (undocumented)
+export function getAllBalances(walletAddress: string): Promise<object>;
 
 // @public (undocumented)
 export function getBalance(address: string): Promise<BigNumber>;
 
 // @public (undocumented)
-export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK>;
+export function getBalanceByCurrency(currency: string, walletAddress: string): Promise<number>;
+
+// @public (undocumented)
+export function getBalanceDecimalised(address: string): Promise<number>;
+
+// @public (undocumented)
+export function getEthPrice(_query: TemplateStringsArray): Promise<any>;
+
+// @public (undocumented)
+export function getTokenData(_query: TemplateStringsArray, _tokenID: string): Promise<any>;
+
+// @public (undocumented)
+export function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<boolean>;
+
+// @public (undocumented)
+export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: any): Promise<CoreSDK>;
+
+// @public (undocumented)
+export class Kiosk extends Entity {
+    constructor(_transform: Transform, _productUUID: string, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
+    // (undocumented)
+    static allBalances: object;
+    // (undocumented)
+    static alphaMat: Material;
+    // (undocumented)
+    static alphaTexture: Texture;
+    // (undocumented)
+    connecectedToWeb3: boolean;
+    // (undocumented)
+    createdGatedTokens(_offer: any): void;
+    // (undocumented)
+    currentItemIndex: number;
+    // (undocumented)
+    currentOfferID: string;
+    // Warning: (ae-forgotten-export) The symbol "Variation" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    currentVariation: Variation | undefined;
+    // (undocumented)
+    customQuestInformation: string;
+    // (undocumented)
+    displayProduct: DisplayProduct;
+    // Warning: (ae-forgotten-export) The symbol "GatedToken" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    gatedTokens: GatedToken[];
+    // (undocumented)
+    gateState: eGateStateEnum;
+    // (undocumented)
+    static init(coreSDK: CoreSDK, userData: UserData, walletAddress: string, allBalances: object): void;
+    // (undocumented)
+    static kioskModel: GLTFShape;
+    // (undocumented)
+    static kioskSpecialEffects: GLTFShape;
+    // (undocumented)
+    loadOffer(_data: any): void;
+    // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    lockScreen: LockScreen | undefined;
+    // (undocumented)
+    maxItemIndex: number;
+    // (undocumented)
+    offer: any;
+    // (undocumented)
+    onPointerDown: OnPointerDown;
+    // (undocumented)
+    parent: Entity;
+    // (undocumented)
+    productCurrency: eCurrency;
+    // (undocumented)
+    productData: any;
+    // (undocumented)
+    productName: Entity;
+    // (undocumented)
+    productNameText: TextShape | undefined;
+    // Warning: (ae-forgotten-export) The symbol "ProductPage" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    productPage: ProductPage | undefined;
+    // (undocumented)
+    productUUID: string;
+    // (undocumented)
+    showDisplayProduct(): void;
+    // (undocumented)
+    showLockScreen(): void;
+    // (undocumented)
+    showProduct(_product: any): void;
+    // (undocumented)
+    specialEffects: Entity;
+    // (undocumented)
+    uiOpen: boolean;
+    // (undocumented)
+    unlock(_hasToken: boolean, _tokenAddress?: string): void;
+    // (undocumented)
+    update(_dt: number): void;
+    // (undocumented)
+    updateProductPrice(): void;
+    // (undocumented)
+    variations: Variation[];
+    // (undocumented)
+    variationsData: any;
+}
 
 export { MetaTxConfig }
+
+// @public (undocumented)
+export type NamedToken = {
+    name: string;
+};
 
 // @public (undocumented)
 export function processBiconomyConfig(envName: EnvironmentType, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;

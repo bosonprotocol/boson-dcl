@@ -4,10 +4,11 @@
 
 ## initCoreSdk() function
 
+
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: any): Promise<CoreSDK>;
 ```
 
 ## Parameters
@@ -16,6 +17,8 @@ export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: Boso
 |  --- | --- | --- |
 |  envName | EnvironmentType |  |
 |  bosonConfigs | [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
+|  getUserAccount | () =&gt; Promise&lt;string&gt; |  |
+|  inventory | any |  |
 
 <b>Returns:</b>
 
