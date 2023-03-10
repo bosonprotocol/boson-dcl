@@ -4,6 +4,7 @@
 
 ## getBalance() function
 
+
 <b>Signature:</b>
 
 ```typescript

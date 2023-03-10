@@ -15,7 +15,7 @@
   "devDependencies": {
     "@dcl/eslint-config": "^1.0.1",
     "decentraland-ecs": "^6.11.4",
-    "eth-connect": "^6.0.3"
+    "eth-connect": "^6.1.0"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -23,10 +23,14 @@
     "yarn": "please use npm"
   },
   "dependencies": {
-    "@bosonprotocol/boson-dcl": "file:../library"
+    "@bosonprotocol/boson-dcl": "file:../library",
+    "@dcl/ecs-scene-utils": "^1.7.5",
+    "@dcl/crypto-scene-utils": "^1.1.2"
   },
-  "bundledDependencies": [
+  "bundleDependencies": [
+    "@bosonprotocol/boson-dcl",
+    "@dcl/ecs-scene-utils",
     "eth-connect",
-    "@bosonprotocol/boson-dcl"
+    "@dcl/crypto-scene-utils"
   ]
 }

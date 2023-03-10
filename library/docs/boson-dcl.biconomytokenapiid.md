@@ -4,12 +4,13 @@
 
 ## BiconomyTokenApiId type
 
+
 <b>Signature:</b>
 
 ```typescript
-export declare type BiconomyTokenApiId = BiconomyBaseApiId & {
+export declare type BiconomyTokenApiId = BiconomyBaseApiId & NamedToken & {
     address: string;
 };
 ```
-<b>References:</b> [BiconomyBaseApiId](./boson-dcl.biconomybaseapiid.md)
+<b>References:</b> [BiconomyBaseApiId](./boson-dcl.biconomybaseapiid.md)<!-- -->, [NamedToken](./boson-dcl.namedtoken.md)
 

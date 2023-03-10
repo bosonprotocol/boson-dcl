@@ -4,6 +4,7 @@
 
 ## checkUserCanCommitToOffer() function
 
+
 <b>Signature:</b>
 
 ```typescript
