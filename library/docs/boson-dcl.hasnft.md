@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<boolean>;
+export declare function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<number>;
 ```
 
 ## Parameters
@@ -22,5 +22,5 @@ export declare function hasNft(walletAddress: string, contractId: string, tokenI
 
 <b>Returns:</b>
 
-Promise&lt;boolean&gt;
+Promise&lt;number&gt;
 

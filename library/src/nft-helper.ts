@@ -11,90 +11,38 @@ export enum NFTType {
     ERC1155
 }
 
-async function checkL1(contractId: string, tokenId: string, nftType: NFTType) {
+async function checkL2(contractId: string, tokenId: string | undefined, nftType: NFTType): Promise<number> {
     try {
-        const factory = new eth.ContractFactory(specifiedRequestManager, nftType == NFTType.ERC721 ? abis.ERC721EnumerableABI : abis.ERC1155ABI)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const contract: any = (await factory.at(contractId))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let value: any
-        if (tokenId) {
-            if (nftType == NFTType.ERC721) {
-                value = await contract.ownerOf(tokenId)
-                if (value.toLowerCase() == specifiedWalletAddress.toLowerCase()) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-            else {
-                value = await contract.balanceOf(specifiedWalletAddress, tokenId)
-                if (value > 0) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-
+        let abi
+        if (nftType == NFTType.ERC721) {
+            abi = abis.ERC721EnumerableABI
+        }
+        else if (nftType == NFTType.ERC20) {
+            abi = abis.ERC20ABI
+            tokenId = undefined
         }
         else {
-            value = await contract.balanceOf(specifiedWalletAddress)
-            if (value > 0) {
-                return true
-            }
-            else {
-                return false
-            }
+            abi = abis.ERC1155ABI
         }
-
-    } catch (error) {
-        log(error)
-        return false
-    }
-}
-
-async function checkL2(contractId: string, tokenId: string, nftType: NFTType) {
-    try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const contract: any = await new eth.ContractFactory(specifiedRequestManager, nftType == NFTType.ERC721 ? abis.ERC721EnumerableABI : abis.ERC1155ABI).at(contractId);
+        const contract: any = await new eth.ContractFactory(specifiedRequestManager, abi).at(contractId);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let value: any
+
+        let rtn = 0
         if (tokenId) {
-            if (nftType == NFTType.ERC721) {
-                value = await contract.ownerOf(tokenId)
-                if (value.toLowerCase() == specifiedWalletAddress.toLowerCase()) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-            else {
-                value = await contract.balanceOf(specifiedWalletAddress, tokenId)
-                if (value > 0) {
-                    return true
-                }
-                else {
-                    return false
-                }
-            }
-
+            rtn = await contract.balanceOf(specifiedWalletAddress, tokenId)
         }
         else {
-            value = await contract.balanceOf(specifiedWalletAddress)
-            if (value > 0) {
-                return true
-            }
-            else {
-                return false
-            }
+            rtn = await contract.balanceOf(specifiedWalletAddress)
+            const decimals: number = await contract.decimals()
+            rtn = (rtn/ Math.pow(10, decimals))
+
         }
+        return rtn
     }
     catch (e) {
         log(e)
-        return false
+        return 0
     }
 }
 
@@ -109,31 +57,31 @@ function urnMatchesContractAndBlock(urn: string, contractAndBlock: string): bool
     return rtn
 }
 
-async function checkWearables(contractId: string, tokenId: string) {
-    let rtn = false
+async function checkWearables(contractId: string, tokenId: string): Promise<number> {
+    let rtn = 0
     const inventory = specifiedInventory
 
     for (let inventoryIndex = 0; inventoryIndex < inventory.length; inventoryIndex++) {
         const wearableUrn: string = inventory[inventoryIndex]
+        log("inventory wearable: " + wearableUrn)
         if (urnMatchesContractAndBlock(wearableUrn.toLowerCase(), contractId.toLowerCase() + ":" + tokenId.toLowerCase())) {
-            rtn = true
-            break
+            rtn += 1
         }
     }
     return rtn
 }
 
-export async function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: NFTType, requestManager: eth.RequestManager, inventory: any): Promise<boolean> {
+export async function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: NFTType, requestManager: eth.RequestManager, inventory: any): Promise<number> {
     // no chain information so check all, likliest first
     specifiedRequestManager = requestManager
     specifiedWalletAddress = walletAddress
     specifiedInventory = inventory
     let result = await checkWearables(contractId, tokenId)
         .catch(() => {
-            return false
+            return 0
         })
-        .then((result: boolean) => {
-            return result ? true : false
+        .then((result: number) => {
+            return result
         })
 
     if (result) {
@@ -141,21 +89,10 @@ export async function hasNft(walletAddress: string, contractId: string, tokenId:
     }
     result = await checkL2(contractId, tokenId, nftType)
         .catch(() => {
-            return false
+            return 0
         })
-        .then((result: boolean) => {
-            return result ? true : false
-        })
-
-    if (result) {
-        return result
-    }
-    result = await checkL1(contractId, tokenId, nftType)
-        .catch(() => {
-            return false
-        })
-        .then((result: boolean) => {
-            return result ? true : false
+        .then((result: number) => {
+            return result
         })
 
     return result

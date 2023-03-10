@@ -43,7 +43,7 @@ export class Kiosk extends Entity {
     uiOpen: boolean = false
 
     gateState: eGateStateEnum = eGateStateEnum.noMessage
-    customQuestInformation: string = "Find the 10\n hidden pizzas"
+    customQuestInformation: string = "custom message"
 
     gatedTokens: GatedToken[] = []
 
@@ -66,6 +66,8 @@ export class Kiosk extends Entity {
 
     connecectedToWeb3: boolean
 
+    billboardParent: Entity
+
     public static init(coreSDK: CoreSDK, userData: UserData, walletAddress: string, allBalances: object) {
         Kiosk.coreSDK = coreSDK
         Kiosk.userData = userData
@@ -81,6 +83,8 @@ export class Kiosk extends Entity {
         }
         this.setUpSystems()
 
+        this.productUUID = _productUUID
+
         this.connecectedToWeb3 = Kiosk.userData.hasConnectedWeb3
 
         if (Kiosk.kioskModel == undefined) {
@@ -90,12 +94,13 @@ export class Kiosk extends Entity {
 
         this.displayProduct = _displayProduct
 
-        let billboardParent: Entity = new Entity()
-        billboardParent.setParent(this)
-        billboardParent.addComponent(new Billboard(false, true, false))
+        this.billboardParent = new Entity()
+        this.billboardParent.setParent(this)
+        this.billboardParent.addComponent(new Billboard(false, true, false))
+        this.billboardParent.addComponent(new Transform({scale: new Vector3(0,0,0)}))
 
         this.parent = new Entity()
-        this.parent.setParent(billboardParent)
+        this.parent.setParent(this.billboardParent)
         this.parent.addComponent(new Transform({
             position: new Vector3(0, -0.4, 1),
             rotation: Quaternion.Euler(0, 180, 0)
@@ -145,9 +150,7 @@ export class Kiosk extends Entity {
         this.addComponent(this.onPointerDown)
         KioskUpdateSystem.instance.addKiosk(this)
 
-        Kiosk.coreSDK.getProductWithVariants(_productUUID).then((data)=>{
-            this.loadOffer(data)    
-        })
+        this.loadProduct()
         
         if (gateState) {
             this.gateState = gateState
@@ -157,6 +160,12 @@ export class Kiosk extends Entity {
         }
 
         this.lockScreen?.setGating()
+    }
+
+    loadProduct(){
+        Kiosk.coreSDK.getProductWithVariants(this.productUUID).then((data)=>{
+            this.loadOffer(data)    
+        })
     }
 
     private checkForGatedTokens() {
@@ -177,8 +186,8 @@ export class Kiosk extends Entity {
                     break
             }
 
-            boson.hasNft(Kiosk.walletAddress, this.productData.condition.tokenAddress, this.productData.condition.tokenId, nftType).then((_hasToken) => {
-                this.unlock(_hasToken, this.productData.condition.tokenAddress)
+            boson.hasNft(Kiosk.walletAddress, this.productData.condition.tokenAddress, this.productData.condition.tokenId, nftType).then((_tokenCount) => {
+                this.unlock(_tokenCount, this.productData.condition.tokenAddress)
             })
         }
     }
@@ -195,16 +204,22 @@ export class Kiosk extends Entity {
         }
     }
 
-    public unlock(_hasToken: boolean, _tokenAddress: string = "") {
+    public unlock(_tokenCount: number, _tokenAddress: string = "") {
         // Set Gate token UI
+        let hasEnoughTokens:boolean = false
         this.gatedTokens.forEach(gatedToken => {
             if (gatedToken.tokenAddress.toLocaleLowerCase() == _tokenAddress.toLocaleLowerCase()) {
-                gatedToken.setRequirement(_hasToken)
+                if(_tokenCount>= gatedToken.amountNeeded){
+                    hasEnoughTokens = true
+                } else {
+                    hasEnoughTokens = false
+                }
+                gatedToken.setRequirement(hasEnoughTokens)
             }
         });
 
         if (this.lockScreen != undefined && this.lockScreen.lockComponent != undefined && this.lockScreen.tokenGatedOffer != undefined) {
-            this.lockScreen.lockComponent.locked = !_hasToken
+            this.lockScreen.lockComponent.locked = !hasEnoughTokens
             this.lockScreen.lockComponent.setLock()
             this.lockScreen.tokenGatedOffer.updateGatedTokensUI()
         }
@@ -213,6 +228,8 @@ export class Kiosk extends Entity {
     showLockScreen() {
         if (!this.uiOpen) {
             this.uiOpen = true
+
+            this.billboardParent.getComponent(Transform).scale = Vector3.One()
 
             if (this.lockScreen == undefined) {
                 this.lockScreen = new LockScreen(this, this.offer)
@@ -240,34 +257,41 @@ export class Kiosk extends Entity {
             }
 
             if (this.displayProduct != undefined) {
-                this.displayProduct.create(this, this.offer)
-                this.displayProduct.addComponent(this.onPointerDown)
+                if(!this.displayProduct.created){
+                    this.displayProduct.create(this, this.offer)
+                    this.displayProduct.addComponent(this.onPointerDown)
+                }
                 this.displayProduct.show()
             }
 
             this.currentOfferID = this.offer.id
             this.productData = this.offer
-            this.productUUID = this.offer.metadata.product.uuid
 
             Helper.showAllEntities([
                 this
             ])
 
             // Create sign that goes on the kiosk model
-            this.productNameText = new TextShape(this.productData.metadata.product.title)
-            this.productNameText.color = Color3.FromHexString("#BAE3F2")
-            this.productNameText.fontSize = 8
-            this.productName.addComponent(this.productNameText)
-            this.productName.setParent(this)
-            this.productName.addComponent(new Transform({
-                position: new Vector3(0, 2.78, 0.665),
-                scale: new Vector3(0.1, 0.1, 0.1),
-                rotation: Quaternion.Euler(0, 180, 0)
-            }))
+            if(this.productNameText==undefined){
+                let productNameFontSize = this.getProductNameFontSize(this.productData.metadata.product.title)
+                this.productNameText = new TextShape(productNameFontSize[0])
+                this.productNameText.color = Color3.FromHexString("#BAE3F2")
+                this.productNameText.fontSize = productNameFontSize[1]
+                this.productName.addComponent(this.productNameText)
+                this.productName.setParent(this)
+                this.productName.addComponent(new Transform({
+                    position: new Vector3(0, 2.78, 0.665),
+                    scale: new Vector3(0.1, 0.1, 0.1),
+                    rotation: Quaternion.Euler(0, 180, 0)
+                }))
+            }
         }
 
         // Load variants
         if (_data.variants.length > 1) {
+            // clear old variations
+            this.variations = []
+            
             _data.variants.forEach((variant: {
                 offer: any, variations: { id: string, type: string, option: string }[]
             }) => {
@@ -305,6 +329,8 @@ export class Kiosk extends Entity {
             threshold = Helper.priceTransform(_offer.condition.threshold)
         }
 
+        // Clear tokens before adding to them 
+        this.gatedTokens = []
         this.gatedTokens.push(new GatedToken(threshold as unknown as number, _offer.metadata.condition, _offer.condition.tokenAddress, eGateTokenType.token))
     }
 
@@ -350,6 +376,7 @@ export class Kiosk extends Entity {
             ])
             this.displayProduct.show()
         }
+        this.billboardParent.getComponent(Transform).scale = Vector3.Zero()
     }
 
     updateProductPrice() {
@@ -369,6 +396,39 @@ export class Kiosk extends Entity {
 
         if (this.lockScreen?.productDollarPriceText != undefined && price > -1) {
             this.lockScreen.productDollarPriceText.value = priceString
+        }
+    }
+
+    private getProductNameFontSize(productName: string): [string, number]{
+        const minMeasurement: number = 4300
+        const maxMeasurement: number = 12500
+        const minFontSize: number = 6
+        const maxFontSize: number = 16
+
+        let fontSizeRange = maxFontSize - minFontSize
+        let fontSizeStep = fontSizeRange / (maxMeasurement - minMeasurement)
+
+        // characters sorted by width
+        const lookup: string = " .:,;'^`!|jl/\\i-()JfIt[]?{}sr*a\"ce_gFzLxkP+0123456789<=>~qvy$SbduEphonTBCXY#VRKZN%GUAHD@OQ&wmMW"
+        let measurement: number = 0
+        for (let i = 0; i < productName.length; ++i)
+        {
+           let c = lookup.indexOf(productName.charAt(i))
+           measurement += (c < 0 ? 60 : c) * 7 + 200
+           if(measurement > maxMeasurement) {
+            productName = productName.substring(0, i - 1) + "..."
+            break
+           }
+        }
+
+        if(measurement <= minMeasurement) {
+            return [productName, maxFontSize]
+        }
+        else if(measurement <= maxMeasurement) {
+            return [productName, maxFontSize - ((measurement - minMeasurement) * fontSizeStep)]
+        }
+        else {
+            return [productName, minFontSize]
         }
     }
 }

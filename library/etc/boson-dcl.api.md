@@ -81,6 +81,8 @@ export class DisplayProduct extends Entity {
     // (undocumented)
     created: boolean;
     // (undocumented)
+    frame: Entity | undefined;
+    // (undocumented)
     hide(): void;
     // (undocumented)
     modelPath: string;
@@ -161,7 +163,7 @@ export function getEthPrice(_query: TemplateStringsArray): Promise<any>;
 export function getTokenData(_query: TemplateStringsArray, _tokenID: string): Promise<any>;
 
 // @public (undocumented)
-export function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<boolean>;
+export function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<number>;
 
 // @public (undocumented)
 export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: any): Promise<CoreSDK>;
@@ -175,6 +177,8 @@ export class Kiosk extends Entity {
     static alphaMat: Material;
     // (undocumented)
     static alphaTexture: Texture;
+    // (undocumented)
+    billboardParent: Entity;
     // (undocumented)
     connecectedToWeb3: boolean;
     // (undocumented)
@@ -205,6 +209,8 @@ export class Kiosk extends Entity {
     static kioskSpecialEffects: GLTFShape;
     // (undocumented)
     loadOffer(_data: any): void;
+    // (undocumented)
+    loadProduct(): void;
     // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -242,7 +248,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     uiOpen: boolean;
     // (undocumented)
-    unlock(_hasToken: boolean, _tokenAddress?: string): void;
+    unlock(_tokenCount: number, _tokenAddress?: string): void;
     // (undocumented)
     update(_dt: number): void;
     // (undocumented)

@@ -142,6 +142,11 @@ export class ProductPage {
     artistLogoMat: Material = new Material()
     artistLogoTexture: Texture
 
+    // Redeemeum logo
+    redeemeumLogoEntity: Entity = new Entity()
+    redeemeumLogoMat: Material = new Material()
+    redeemeumLogoTexture: Texture
+
 
     enoughFunds: boolean = false
 
@@ -489,10 +494,11 @@ export class ProductPage {
         this.informationSectionText.outlineColor = Color3.Black()
         this.informationSectionText.outlineWidth = 0.1
         this.informationSectionText.hTextAlign = "left"
+        this.informationSectionText.vTextAlign = "top"
         this.informationSectionEntity.addComponent(this.informationSectionText)
         this.informationSectionEntity.setParent(this.parent)
         this.informationSectionEntity.addComponent(new Transform({
-            position: new Vector3(0.12, -0.1, -0.002),
+            position: new Vector3(0.12, 0.105, -0.002),
             scale: new Vector3(0.1, 0.1, 0.1),
             rotation: Quaternion.Euler(0, 0, 0)
         }))
@@ -501,26 +507,27 @@ export class ProductPage {
         let sellerDeposit: string = this.productData.sellerDeposit
         let buyerCancelPenalty: string = this.productData.buyerCancelPenalty
         let exchangePolicy: string = "Fair Exchange Policy"
-        let disputeResolver: string = "PORTAL"
 
         this.informationSectionDataText =
             new TextShape(new Date(redeemableUntilDate).toLocaleDateString() + "\n\n" +
                 Helper.priceTransform(sellerDeposit) + " " + Helper.getCurrencySymbol(this.kiosk.productCurrency).toUpperCase() + " (" + Math.round(((this.productData.sellerDeposit as number)/(this.productData.price as number)*100)) + "%)"  + "\n\n" +
                 Helper.priceTransform(buyerCancelPenalty) + " " + Helper.getCurrencySymbol(this.kiosk.productCurrency).toUpperCase() + " (" + Math.round(((this.productData.buyerCancelPenalty as number)/(this.productData.price as number)*100)) + "%)" + "\n\n" +
-                exchangePolicy + "\n\n" +
-                disputeResolver)
+                exchangePolicy)
         this.informationSectionDataText.color = Color3.Black()
         this.informationSectionDataText.fontSize = 4
         this.informationSectionDataText.outlineColor = Color3.Black()
         this.informationSectionDataText.outlineWidth = 0.1
         this.informationSectionDataText.hTextAlign = "left"
+        this.informationSectionDataText.vTextAlign = "top"
         this.informationSectionDataEntity.addComponent(this.informationSectionDataText)
         this.informationSectionDataEntity.setParent(this.parent)
         this.informationSectionDataEntity.addComponent(new Transform({
-            position: new Vector3(0.7, -0.1, -0.002),
+            position: new Vector3(0.7, 0.105, -0.002),
             scale: new Vector3(0.1, 0.1, 0.1),
             rotation: Quaternion.Euler(0, 0, 0)
         }))
+
+        //redeemeumLogo.png
 
         // Terms and conditions
         this.termsAndConditionsText = new TextShape("By proceeding to Commit, I agree to the Fair Exchange Policy")
@@ -557,7 +564,7 @@ export class ProductPage {
         this.termsAndConditionsClickBox2.setParent(this.parent)
         this.termsAndConditionsClickBox2.addComponent(new PlaneShape())
         this.termsAndConditionsClickBox2.addComponent(new Transform({
-            position: new Vector3(0.94, -0.22, -0.0025),
+            position: new Vector3(0.91, -0.18, -0.0025),
             scale: new Vector3(0.47, 0.1, 1)
         }))
 
@@ -769,6 +776,24 @@ export class ProductPage {
         this.artistLogoMat.emissiveColor = Color3.White()
         this.artistLogoMat.emissiveTexture = this.artistLogoTexture
         this.artistLogoEntity.addComponent(this.artistLogoMat)
+
+        // Redeemeum Logo
+        this.redeemeumLogoEntity.addComponent(new PlaneShape())
+        this.redeemeumLogoEntity.setParent(this.parent)
+        this.redeemeumLogoEntity.addComponent(new Transform({
+            position: new Vector3(0.87, -0.28, -0.002),
+            rotation: Quaternion.Euler(180, 180, 0),
+            scale: new Vector3(0.600/1.75,0.131/1.75, 0.01),
+        }))
+
+        this.redeemeumLogoTexture = new Texture("images/ui/redeemeumLogo.png",{hasAlpha:true})
+
+        this.redeemeumLogoMat.albedoTexture = this.redeemeumLogoTexture
+        this.redeemeumLogoMat.transparencyMode = 2
+        this.redeemeumLogoMat.emissiveIntensity = 1
+        this.redeemeumLogoMat.emissiveColor = Color3.White()
+        this.redeemeumLogoMat.emissiveTexture = this.redeemeumLogoTexture
+        this.redeemeumLogoEntity.addComponent(this.redeemeumLogoMat)
 
         // Add spring
         this.parent.addComponent(new ScaleSpringComponent(120, 10))
