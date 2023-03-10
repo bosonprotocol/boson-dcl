@@ -5,12 +5,13 @@ import { Helper } from "./helper"
  * @public
  */
 export class DisplayProduct extends Entity {
-
+    private readonly frameOffset: number = 0.05
     modelPath: string
     transformOffset: Transform
     spinSpeed: number
     created: boolean = false
     originalScale: Vector3
+    frame: Entity | undefined
 
     constructor(_modelPath: string, _transformOffset: Transform, _spinSpeed: number) {
         super()
@@ -49,7 +50,7 @@ export class DisplayProduct extends Entity {
                 let transform = this.addComponentOrReplace(new Transform({
                     position: new Vector3(0, 1.6, 0),
                     rotation: Quaternion.Euler(180, 0, 0),
-                    scale: new Vector3(1.6 / 1.4, 2 / 1.4, 0.01)
+                    scale: new Vector3((1.6 / 1.4) - this.frameOffset, 2 / 1.4, 0.01)
                 }))
 
                 if (_productData.metadata.product.visuals_images.length > 0) {
@@ -62,6 +63,12 @@ export class DisplayProduct extends Entity {
                     transform.scale.y =  transform.scale.x * (_productData.metadata.product.visuals_images[0].height / _productData.metadata.product.visuals_images[0].width)
                     this.originalScale = transform.scale.clone()
                 }
+
+                // Add image frame
+                this.frame = new Entity()
+                this.frame.setParent(parent)
+                this.frame.addComponent(new GLTFShape("models/ImageFrame.glb"))
+                this.frame.addComponent(transform)
             }
         }
     }

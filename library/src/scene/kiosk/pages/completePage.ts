@@ -238,6 +238,9 @@ export class CompletePage {
                 this.errorEntity,
                 this.errorTitle
             ])
+
+            // Reload product
+            this.kiosk.loadProduct()
         } else {
             // Error
             this.errorTitle.getComponent(TextShape).value = Helper.addNewLinesInString(data.toString(),70)

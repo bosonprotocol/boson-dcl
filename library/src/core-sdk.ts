@@ -135,11 +135,11 @@ export async function getAllBalances(walletAddress: string): Promise<object> {
 /**
  * @public
  */
-export async function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string) {
+export async function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string):Promise<number> {
   if (!httpRM) {
     throw "no http requestManager";
   }
-  const rtn: boolean = await helperHasNft(walletAddress, contractId, tokenId, NFTType[nftType as keyof typeof NFTType], httpRM, specifiedInventory)
+  const rtn: number = await helperHasNft(walletAddress, contractId, tokenId, NFTType[nftType as keyof typeof NFTType], httpRM, specifiedInventory)
   return rtn
 }
 
