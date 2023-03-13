@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-showProduct(_product: any): void;
+showProduct(_product: OfferFieldsFragment | undefined): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_product | any |  |
+|  \_product | OfferFieldsFragment \| undefined |  |
 
 <b>Returns:</b>
 

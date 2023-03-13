@@ -7,10 +7,13 @@
 /// <reference types="dcl" />
 /// <reference types="env" />
 
+import { BaseProductV1ProductFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
 import { BigNumber } from 'eth-connect';
 import { CoreSDK } from '@bosonprotocol/core-sdk';
 import { EnvironmentType } from '@bosonprotocol/core-sdk';
 import { MetaTxConfig } from '@bosonprotocol/core-sdk';
+import { OfferFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
+import { ProductV1Variation } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
 import { subgraph } from '@bosonprotocol/core-sdk';
 import { TransactionReceipt } from '@bosonprotocol/common';
 import { UserData } from '@decentraland/Identity';
@@ -157,6 +160,9 @@ export function getBalanceByCurrency(currency: string, walletAddress: string): P
 export function getBalanceDecimalised(address: string): Promise<number>;
 
 // @public (undocumented)
+export function getEnvironment(): EnvironmentType;
+
+// @public (undocumented)
 export function getEthPrice(_query: TemplateStringsArray): Promise<any>;
 
 // @public (undocumented)
@@ -166,7 +172,7 @@ export function getTokenData(_query: TemplateStringsArray, _tokenID: string): Pr
 export function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<number>;
 
 // @public (undocumented)
-export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: any): Promise<CoreSDK>;
+export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
 
 // @public (undocumented)
 export class Kiosk extends Entity {
@@ -182,7 +188,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     connecectedToWeb3: boolean;
     // (undocumented)
-    createdGatedTokens(_offer: any): void;
+    createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
     // (undocumented)
     currentItemIndex: number;
     // (undocumented)
@@ -208,7 +214,13 @@ export class Kiosk extends Entity {
     // (undocumented)
     static kioskSpecialEffects: GLTFShape;
     // (undocumented)
-    loadOffer(_data: any): void;
+    loadOffer(_data: {
+        product: BaseProductV1ProductFieldsFragment;
+        variants: {
+            offer: OfferFieldsFragment;
+            variations: ProductV1Variation[];
+        }[];
+    } | null): void;
     // (undocumented)
     loadProduct(): void;
     // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
@@ -218,7 +230,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     maxItemIndex: number;
     // (undocumented)
-    offer: any;
+    offer: OfferFieldsFragment | undefined;
     // (undocumented)
     onPointerDown: OnPointerDown;
     // (undocumented)
@@ -226,7 +238,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     productCurrency: eCurrency;
     // (undocumented)
-    productData: any;
+    productData: OfferFieldsFragment | undefined;
     // (undocumented)
     productName: Entity;
     // (undocumented)
@@ -242,7 +254,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     showLockScreen(): void;
     // (undocumented)
-    showProduct(_product: any): void;
+    showProduct(_product: OfferFieldsFragment | undefined): void;
     // (undocumented)
     specialEffects: Entity;
     // (undocumented)
@@ -255,8 +267,6 @@ export class Kiosk extends Entity {
     updateProductPrice(): void;
     // (undocumented)
     variations: Variation[];
-    // (undocumented)
-    variationsData: any;
 }
 
 export { MetaTxConfig }

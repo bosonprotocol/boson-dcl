@@ -2,32 +2,30 @@
 
 @Component("ScaleSpringComponent")
 export class ScaleSpringComponent {
-    
-    /* field definitions */
+  /* field definitions */
 
-    // general
-    targetScale: Vector3 = Vector3.Zero()
+  // general
+  targetScale: Vector3 = Vector3.Zero();
 
-    // physics configuration
-    force: number
-    dampening: number
-    allowNegativeScale: boolean = false
+  // physics configuration
+  force: number;
+  dampening: number;
+  allowNegativeScale = false;
 
-    // physics runtime
-    velocity: Vector3
+  // physics runtime
+  velocity: Vector3;
 
-    // flags
-    sync: boolean = false
+  // flags
+  sync = false;
 
-    /* constructor */
+  /* constructor */
 
-    constructor(_force: number, _dampening: number) {
-        
-        // populate the configuration parameters
-        this.force = _force
-        this.dampening = _dampening
+  constructor(_force: number, _dampening: number) {
+    // populate the configuration parameters
+    this.force = _force;
+    this.dampening = _dampening;
 
-        // initialise runtime fields
-        this.velocity = Vector3.Zero()
-    }
+    // initialise runtime fields
+    this.velocity = Vector3.Zero();
+  }
 }
