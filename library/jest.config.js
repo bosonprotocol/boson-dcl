@@ -11,6 +11,5 @@ module.exports = {
   coverageDirectory: "coverage",
   verbose: true,
   testMatch: ["**/*.spec.(ts)"],
-  setupFilesAfterEnv: ['./test/setup.ts']
-
-}
+  setupFilesAfterEnv: ["./test/setup.ts"],
+};

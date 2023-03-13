@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-createdGatedTokens(_offer: any): void;
+createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_offer | any |  |
+|  \_offer | OfferFieldsFragment \| undefined |  |
 
 <b>Returns:</b>
 

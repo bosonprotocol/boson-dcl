@@ -38,11 +38,11 @@ export declare class Kiosk extends Entity
 |  [kioskSpecialEffects](./boson-dcl.kiosk.kioskspecialeffects.md) | <code>static</code> | GLTFShape |  |
 |  [lockScreen](./boson-dcl.kiosk.lockscreen.md) |  | LockScreen \| undefined |  |
 |  [maxItemIndex](./boson-dcl.kiosk.maxitemindex.md) |  | number |  |
-|  [offer](./boson-dcl.kiosk.offer.md) |  | any |  |
+|  [offer](./boson-dcl.kiosk.offer.md) |  | OfferFieldsFragment \| undefined |  |
 |  [onPointerDown](./boson-dcl.kiosk.onpointerdown.md) |  | OnPointerDown |  |
 |  [parent](./boson-dcl.kiosk.parent.md) |  | Entity |  |
 |  [productCurrency](./boson-dcl.kiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
-|  [productData](./boson-dcl.kiosk.productdata.md) |  | any |  |
+|  [productData](./boson-dcl.kiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
 |  [productName](./boson-dcl.kiosk.productname.md) |  | Entity |  |
 |  [productNameText](./boson-dcl.kiosk.productnametext.md) |  | TextShape \| undefined |  |
 |  [productPage](./boson-dcl.kiosk.productpage.md) |  | ProductPage \| undefined |  |
@@ -50,7 +50,6 @@ export declare class Kiosk extends Entity
 |  [specialEffects](./boson-dcl.kiosk.specialeffects.md) |  | Entity |  |
 |  [uiOpen](./boson-dcl.kiosk.uiopen.md) |  | boolean |  |
 |  [variations](./boson-dcl.kiosk.variations.md) |  | Variation\[\] |  |
-|  [variationsData](./boson-dcl.kiosk.variationsdata.md) |  | any |  |
 
 ## Methods
 

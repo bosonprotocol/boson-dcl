@@ -7,14 +7,20 @@
 <b>Signature:</b>
 
 ```typescript
-loadOffer(_data: any): void;
+loadOffer(_data: {
+        product: BaseProductV1ProductFieldsFragment;
+        variants: {
+            offer: OfferFieldsFragment;
+            variations: ProductV1Variation[];
+        }[];
+    } | null): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_data | any |  |
+|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; } \| null |  |
 
 <b>Returns:</b>
 

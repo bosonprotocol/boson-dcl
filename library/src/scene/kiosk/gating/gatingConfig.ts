@@ -1,3 +1,1 @@
-export class GatingConfig {
-    
-}
+export class GatingConfig {}
