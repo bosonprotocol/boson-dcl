@@ -47,10 +47,9 @@ dcl start --web3
 
 A Github action automatically runs when a Release is created
 
-## How to use the library in your DCL Scene
+# Integrate Boson-DCL in your own Decentraland Scene
 
-See `README.md` in the `./library` folder
+Create your Decentraland Scene and use BOSON to sell redeemable NFT for physical products.
 
-## Integrate with your scene
+See [README.md](./library/README.md)
 
-See `README.md` in the `./library` folder
