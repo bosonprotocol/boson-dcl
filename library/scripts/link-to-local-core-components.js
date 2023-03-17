@@ -20,7 +20,7 @@ const packages = [
   { path: "common", mode, folders },
   { path: "core-sdk", mode, folders },
   { path: "eth-connect-sdk", mode, folders },
-  { path: "metadata", mode, folders }
+  { path: "metadata", mode, folders },
 ];
 
 async function main() {
@@ -52,7 +52,7 @@ async function main() {
         cpSync(target, linkPath, {
           recursive: true,
           force: true,
-          preserveTimestamps: true
+          preserveTimestamps: true,
         });
       }
     }

@@ -1,4 +1,4 @@
-import { Delay } from "./delay"
+import { Delay } from "./delay";
 
 /**
  * Quick function to delay the execution of a lambda after a given amount of time.
@@ -8,14 +8,14 @@ import { Delay } from "./delay"
  * @param callback - Function to execute when the time is up
  */
 export function setTimeout(ms: number, callback: () => void): Entity {
-	const entity = new Entity()
-	entity.addComponent(
-	  new Delay(ms, () => {
-		callback()
-		engine.removeEntity(entity)
-	  })
-	)
-	engine.addEntity(entity)
+  const entity = new Entity();
+  entity.addComponent(
+    new Delay(ms, () => {
+      callback();
+      engine.removeEntity(entity);
+    })
+  );
+  engine.addEntity(entity);
 
-	return entity
-  }
+  return entity;
+}
