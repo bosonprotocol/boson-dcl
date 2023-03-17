@@ -4,6 +4,8 @@ import { useBoson } from './boson'
 
 void loadScene()
 
+const productId = 'c0b6a4e-d62d-751c-a3c7-b7be6fa50c';
+
 const floor: Entity = new Entity()
 floor.addComponent(
   new Transform({
@@ -24,7 +26,7 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      'c0b6a4e-d62d-751c-a3c7-b7be6fa50c',
+      productId,
       new boson.DisplayProduct(
         'models/OGShirt.glb',
         new Transform({
