@@ -113,13 +113,15 @@ export class LockComponent {
         }
       }
       if (targetImage) {
-        if(targetImage.url!=undefined){
+        if (targetImage.url != undefined) {
           this.artistTexture = Helper.getIPFSImageTexture(targetImage.url);
           this.artistMat.albedoTexture = this.artistTexture;
           this.artistMat.emissiveIntensity = 1;
           this.artistMat.emissiveColor = Color3.White();
           this.artistMat.emissiveTexture = this.artistTexture;
-          this.artistMat.alphaTexture = new Texture("images/kiosk/ui/gate_mask.png");
+          this.artistMat.alphaTexture = new Texture(
+            "images/kiosk/ui/gate_mask.png"
+          );
           this.artistMat.transparencyMode = 2;
           this.artistEntity.addComponent(this.artistMat);
           if (targetImage.height && targetImage.width) {
@@ -128,6 +130,7 @@ export class LockComponent {
               (targetImage.height / targetImage.width);
           }
         }
+      }
     }
 
     //Lock
