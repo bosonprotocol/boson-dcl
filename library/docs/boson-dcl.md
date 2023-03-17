@@ -30,6 +30,7 @@
 |  [getBalance(address)](./boson-dcl.getbalance.md) |  |
 |  [getBalanceByCurrency(currency, walletAddress)](./boson-dcl.getbalancebycurrency.md) |  |
 |  [getBalanceDecimalised(address)](./boson-dcl.getbalancedecimalised.md) |  |
+|  [getEnvironment()](./boson-dcl.getenvironment.md) |  |
 |  [getEthPrice(\_query)](./boson-dcl.getethprice.md) |  |
 |  [getTokenData(\_query, \_tokenID)](./boson-dcl.gettokendata.md) |  |
 |  [hasNft(walletAddress, contractId, tokenId, nftType)](./boson-dcl.hasnft.md) |  |

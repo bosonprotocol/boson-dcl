@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: any): Promise<CoreSDK>;
+export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ export declare function initCoreSdk(envName: EnvironmentType, bosonConfigs: Boso
 |  envName | EnvironmentType |  |
 |  bosonConfigs | [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
 |  getUserAccount | () =&gt; Promise&lt;string&gt; |  |
-|  inventory | any |  |
+|  inventory | string\[\] |  |
 
 <b>Returns:</b>
 

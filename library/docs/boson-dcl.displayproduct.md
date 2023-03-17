@@ -23,6 +23,7 @@ export declare class DisplayProduct extends Entity
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [created](./boson-dcl.displayproduct.created.md) |  | boolean |  |
+|  [frame](./boson-dcl.displayproduct.frame.md) |  | Entity \| undefined |  |
 |  [modelPath](./boson-dcl.displayproduct.modelpath.md) |  | string |  |
 |  [originalScale](./boson-dcl.displayproduct.originalscale.md) |  | Vector3 |  |
 |  [spinSpeed](./boson-dcl.displayproduct.spinspeed.md) |  | number |  |

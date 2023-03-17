@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-productData: any;
+productData: OfferFieldsFragment | undefined;
 ```

@@ -25,6 +25,7 @@ export declare class Kiosk extends Entity
 |  [allBalances](./boson-dcl.kiosk.allbalances.md) | <code>static</code> | object |  |
 |  [alphaMat](./boson-dcl.kiosk.alphamat.md) | <code>static</code> | Material |  |
 |  [alphaTexture](./boson-dcl.kiosk.alphatexture.md) | <code>static</code> | Texture |  |
+|  [billboardParent](./boson-dcl.kiosk.billboardparent.md) |  | Entity |  |
 |  [connecectedToWeb3](./boson-dcl.kiosk.connecectedtoweb3.md) |  | boolean |  |
 |  [currentItemIndex](./boson-dcl.kiosk.currentitemindex.md) |  | number |  |
 |  [currentOfferID](./boson-dcl.kiosk.currentofferid.md) |  | string |  |
@@ -37,11 +38,11 @@ export declare class Kiosk extends Entity
 |  [kioskSpecialEffects](./boson-dcl.kiosk.kioskspecialeffects.md) | <code>static</code> | GLTFShape |  |
 |  [lockScreen](./boson-dcl.kiosk.lockscreen.md) |  | LockScreen \| undefined |  |
 |  [maxItemIndex](./boson-dcl.kiosk.maxitemindex.md) |  | number |  |
-|  [offer](./boson-dcl.kiosk.offer.md) |  | any |  |
+|  [offer](./boson-dcl.kiosk.offer.md) |  | OfferFieldsFragment \| undefined |  |
 |  [onPointerDown](./boson-dcl.kiosk.onpointerdown.md) |  | OnPointerDown |  |
 |  [parent](./boson-dcl.kiosk.parent.md) |  | Entity |  |
 |  [productCurrency](./boson-dcl.kiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
-|  [productData](./boson-dcl.kiosk.productdata.md) |  | any |  |
+|  [productData](./boson-dcl.kiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
 |  [productName](./boson-dcl.kiosk.productname.md) |  | Entity |  |
 |  [productNameText](./boson-dcl.kiosk.productnametext.md) |  | TextShape \| undefined |  |
 |  [productPage](./boson-dcl.kiosk.productpage.md) |  | ProductPage \| undefined |  |
@@ -49,7 +50,6 @@ export declare class Kiosk extends Entity
 |  [specialEffects](./boson-dcl.kiosk.specialeffects.md) |  | Entity |  |
 |  [uiOpen](./boson-dcl.kiosk.uiopen.md) |  | boolean |  |
 |  [variations](./boson-dcl.kiosk.variations.md) |  | Variation\[\] |  |
-|  [variationsData](./boson-dcl.kiosk.variationsdata.md) |  | any |  |
 
 ## Methods
 
@@ -58,10 +58,11 @@ export declare class Kiosk extends Entity
 |  [createdGatedTokens(\_offer)](./boson-dcl.kiosk.createdgatedtokens.md) |  |  |
 |  [init(coreSDK, userData, walletAddress, allBalances)](./boson-dcl.kiosk.init.md) | <code>static</code> |  |
 |  [loadOffer(\_data)](./boson-dcl.kiosk.loadoffer.md) |  |  |
+|  [loadProduct()](./boson-dcl.kiosk.loadproduct.md) |  |  |
 |  [showDisplayProduct()](./boson-dcl.kiosk.showdisplayproduct.md) |  |  |
 |  [showLockScreen()](./boson-dcl.kiosk.showlockscreen.md) |  |  |
 |  [showProduct(\_product)](./boson-dcl.kiosk.showproduct.md) |  |  |
-|  [unlock(\_hasToken, \_tokenAddress)](./boson-dcl.kiosk.unlock.md) |  |  |
+|  [unlock(\_tokenCount, \_tokenAddress)](./boson-dcl.kiosk.unlock.md) |  |  |
 |  [update(\_dt)](./boson-dcl.kiosk.update.md) |  |  |
 |  [updateProductPrice()](./boson-dcl.kiosk.updateproductprice.md) |  |  |
 

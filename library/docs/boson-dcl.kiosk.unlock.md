@@ -7,14 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-unlock(_hasToken: boolean, _tokenAddress?: string): void;
+unlock(_tokenCount: number, _tokenAddress?: string): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_hasToken | boolean |  |
+|  \_tokenCount | number |  |
 |  \_tokenAddress | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
