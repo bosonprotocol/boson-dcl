@@ -23,10 +23,6 @@ export class ProcessPage {
   whiteBackgroundBox: Entity = new Entity();
   whiteBackgroundMat: Material = new Material();
 
-  wavesEntity: Entity = new Entity();
-  wavesMat: Material = new Material();
-  wavesTexture: Texture | undefined;
-
   processingTitle: Entity = new Entity();
   processingTitleText: TextShape | undefined;
 
@@ -79,30 +75,6 @@ export class ProcessPage {
     this.whiteBackgroundMat.emissiveIntensity = 1;
     this.whiteBackgroundMat.emissiveColor = Color3.White();
     this.whiteBackgroundBox.addComponent(this.whiteBackgroundMat);
-
-    // Waves
-    this.wavesEntity = new Entity();
-    this.wavesEntity.addComponent(new PlaneShape());
-    this.wavesEntity.setParent(this.parent);
-    this.wavesEntity.addComponent(
-      new Transform({
-        position: new Vector3(0, -0.2, -0.0065),
-        rotation: Quaternion.Euler(180, 180, 0),
-        scale: new Vector3(0.942 * 2.5, 0.301 * 2.5, 0.01),
-      })
-    );
-
-    this.wavesMat = new Material();
-    this.wavesTexture = new Texture("images/kiosk/ui/waves.png", {
-      hasAlpha: true,
-    });
-
-    this.wavesMat.albedoTexture = this.wavesTexture;
-    this.wavesMat.emissiveIntensity = 0.2;
-    this.wavesMat.emissiveColor = Color3.White();
-    this.wavesMat.emissiveTexture = this.wavesTexture;
-    this.wavesMat.transparencyMode = 2;
-    this.wavesEntity.addComponent(this.wavesMat);
 
     // Process title
     this.processingTitleText = new TextShape(
@@ -182,7 +154,6 @@ export class ProcessPage {
     this.hideTask = new DelayedTask(() => {
       Helper.hideAllEntities([
         this.whiteBackgroundBox,
-        this.wavesEntity,
         this.processingTitle,
         this.cancelButtonEntity,
         this.separator,
@@ -191,12 +162,16 @@ export class ProcessPage {
   }
 
   show() {
+    // Show Wave Animation
+    Kiosk.waveAnimationSystem?.setNewParent(this.parent)
+
     new DelayedTask(() => {
       // Commit against the offerID
       this.commit(this.productData).then(
         (data: any) => {
           // succeeded
           log(data);
+          Kiosk.waveAnimationSystem?.hide()
           // but do we have an error?
           if (data != undefined) {
             if (data.error != undefined) {
@@ -215,6 +190,7 @@ export class ProcessPage {
         (data: any) => {
           // rejected
           log(data);
+          Kiosk.waveAnimationSystem?.hide()
           this.completePage.show(false, data);
           this.hideTask.restart(1);
         }
@@ -225,7 +201,6 @@ export class ProcessPage {
 
     Helper.showAllEntities([
       this.whiteBackgroundBox,
-      this.wavesEntity,
       this.processingTitle,
       // this.cancelButtonEntity,
       this.separator,

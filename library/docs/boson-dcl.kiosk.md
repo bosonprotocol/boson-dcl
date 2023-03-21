@@ -50,6 +50,7 @@ export declare class Kiosk extends Entity
 |  [specialEffects](./boson-dcl.kiosk.specialeffects.md) |  | Entity |  |
 |  [uiOpen](./boson-dcl.kiosk.uiopen.md) |  | boolean |  |
 |  [variations](./boson-dcl.kiosk.variations.md) |  | Variation\[\] |  |
+|  [waveAnimationSystem](./boson-dcl.kiosk.waveanimationsystem.md) | <code>static</code> | WaveAnimationSystem \| undefined |  |
 
 ## Methods
 

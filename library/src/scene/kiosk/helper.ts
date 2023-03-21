@@ -119,7 +119,7 @@ export class Helper {
     return _value / 1000000000000000000;
   }
 
-  public static addNewLinesInString(_text: string, _maxCharacters: number) {
+  public static addNewLinesInString(_text: string, _maxCharacters: number, _maxLines: number) {
     if (_text == undefined) {
       return "";
     }
@@ -129,11 +129,12 @@ export class Helper {
     }
 
     let formattedText = "";
-    let countBack:number = 0
-    let previousCountBack:number = 0
+    let countBack = 0;
+    let previousCountBack = 0;
+    let currentLines = 0;
 
     let index = 0;
-    while (_text.length > 0) {
+    while (_text.length > 0 && currentLines < _maxLines) {
       let differenceFromMax: number = _maxCharacters * index - _text.length;
 
       if (differenceFromMax <= 0) {
@@ -141,20 +142,40 @@ export class Helper {
       }
 
       //Check to see if we are at a space
-      let lettersToSearch:number = 20
-      previousCountBack = countBack
-      while(_text.charAt(_maxCharacters + (_maxCharacters * index) - differenceFromMax-countBack)!=" " && lettersToSearch>0){
-        countBack+=1
-        lettersToSearch--
+      let lettersToSearch = _maxCharacters;
+      previousCountBack = countBack;
+      while (_text.charAt(_maxCharacters + _maxCharacters * index - differenceFromMax - countBack) != " " && lettersToSearch > 0) {
+        countBack += 1;
+        lettersToSearch--;
       }
-      countBack-=1 // Don't bring the space with you
+      if (lettersToSearch != 0) { // Found a space
+        countBack -= 1; // Don't bring the space with you
+      } else {
+        // No space found so bring the whole block of text
+        countBack = 0
+      }
 
-      formattedText +=
-        _text.slice(
-          (_maxCharacters * index) -previousCountBack,
-          _maxCharacters + _maxCharacters * index - differenceFromMax -countBack
-        ) + "\n";
-      if ((index * _maxCharacters) -countBack >= _text.length) {
+      let numberOfLineBreaks: number = 0
+
+      if (currentLines < _maxLines) {
+        let textToAdd = _text.slice(_maxCharacters * index - previousCountBack, _maxCharacters + _maxCharacters * index - differenceFromMax - countBack)
+        formattedText += textToAdd + "\n";
+
+        // If the text we are adding has line breaks already add them onto the counter
+        numberOfLineBreaks = textToAdd.split(/^/gm).length
+        if (numberOfLineBreaks > 0) {
+          numberOfLineBreaks -= 1
+        }
+      }
+
+      currentLines += numberOfLineBreaks + 1
+
+      if (currentLines >= _maxLines) {
+        formattedText = formattedText.slice(0, formattedText.length - 2)
+        formattedText += "..."
+      }
+
+      if (index * _maxCharacters - countBack >= _text.length) {
         break;
       }
       index++;
@@ -163,16 +184,25 @@ export class Helper {
     return formattedText;
   }
 
-  public static getIPFSImageTexture(_value: string): Texture {
-    if (_value != undefined) {
-      return new Texture(
-        "https://gray-permanent-fly-490.mypinata.cloud/ipfs/" +
-          _value.split("ipfs://")[1],
-        { hasAlpha: true }
-      ); // "?img-width=400&img-height=800&img-fit=scale-pad"  // extended params can be used here
-    } else {
-      return new Texture("");
-    }
+  public static getIPFSImageTexture(_value: string): Promise<Texture> {
+      let url: string = "https://gray-permanent-fly-490.mypinata.cloud/ipfs/" +
+        _value.split("ipfs://")[1]
+
+        return new Promise<Texture>(
+          (resolve)=>{
+         fetch(url).then((response) => {
+           log("bobby response")
+           log(response)
+           if(response.status == 400){
+             resolve(new Texture("images/kiosk/ui/waitingForImage.png"))
+           }
+            resolve(new Texture(url))
+         },
+           () => {
+            resolve(new Texture("images/kiosk/ui/waitingForImage.png"))
+           })
+          }
+        )
   }
 
   public static getCurrencyTexture(currency: eCurrency): Texture {

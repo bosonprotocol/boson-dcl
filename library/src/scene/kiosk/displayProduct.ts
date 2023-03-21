@@ -54,24 +54,25 @@ export class DisplayProduct extends Entity {
           new Transform({
             position: new Vector3(0, 1.6, 0),
             rotation: Quaternion.Euler(180, 0, 0),
-            scale: new Vector3(1.6 / 1.4 - this.frameOffset, 2 / 1.4, 0.01),
+            scale: new Vector3(1.6 / 1.4, 1.6 / 1.4, 0.01),
           })
         );
 
         if (_productData.metadata.product.visuals_images.length > 0) {
-          const productTexture: Texture = Helper.getIPFSImageTexture(
+          Helper.getIPFSImageTexture(
             _productData.metadata.product.visuals_images[0].url
-          );
-          productImageMat.albedoTexture = productTexture;
-          productImageMat.emissiveIntensity = 1;
-          productImageMat.emissiveColor = Color3.White();
-          productImageMat.emissiveTexture = productTexture;
-          this.addComponent(productImageMat);
-          transform.scale.y =
-            transform.scale.x *
-            (_productData.metadata.product.visuals_images[0].height /
-              _productData.metadata.product.visuals_images[0].width);
-          this.originalScale = transform.scale.clone();
+          ).then((texture:Texture)=>{
+            productImageMat.albedoTexture = texture;
+            productImageMat.emissiveIntensity = 1;
+            productImageMat.emissiveColor = Color3.White();
+            productImageMat.emissiveTexture = texture;
+            this.addComponent(productImageMat);
+
+            if(texture.src.indexOf("waitingForImage")==-1){
+              transform.scale.y = transform.scale.x * (_productData.metadata.product.visuals_images[0].height / _productData.metadata.product.visuals_images[0].width);
+            }
+            this.originalScale = transform.scale.clone();
+          })
         }
 
         // Add image frame
