@@ -301,8 +301,9 @@ export class DescriptionPage {
 
     this.productDataInfoText = new TextShape(
       Helper.addNewLinesInString(
-      this.productData.metadata.product.description,
-      85
+        this.productData.metadata.product.description,
+        85,
+        20
       )
     );
     this.productDataInfoText.color = Color3.Black();
@@ -346,7 +347,8 @@ export class DescriptionPage {
     this.aboutTheCreatorTextInfo = new TextShape(
       Helper.addNewLinesInString(
         this.productData.metadata.product.productV1Seller.description,
-        85
+        85,
+        20
       )
     );
     this.aboutTheCreatorTextInfo.color = Color3.Black();

@@ -164,14 +164,15 @@ export class LockScreen {
     this.productName.setParent(this.parent);
     this.productName.addComponent(
       new Transform({
-        position: new Vector3(0, 0.9, 0),
+        position: new Vector3(0, 0.95, 0),
         scale: new Vector3(0.1, 0.1, 0.1),
       })
     );
     this.productNameText = new TextShape(
-      this.productData.metadata.product.title
+      Helper.addNewLinesInString(this.productData.metadata.product.title,32,1)
     );
     this.productNameText.fontSize = 7;
+    this.productNameText.vTextAlign = "top"
     this.productName.addComponent(this.productNameText);
 
     // Boson Logo
@@ -182,7 +183,7 @@ export class LockScreen {
       new Transform({
         position: new Vector3(0, -0.9, 0),
         rotation: Quaternion.Euler(180, 180, 0),
-        scale: new Vector3(0.274, 0.3, 0.01),
+        scale: new Vector3(0.494, 0.180, 0.01),
       })
     );
 
@@ -202,13 +203,16 @@ export class LockScreen {
     this.whiteBoxEntity = new Entity();
     this.whiteBoxEntity.addComponent(new PlaneShape());
     this.whiteBoxEntity.setParent(this.parent);
+
+   
     this.whiteBoxEntity.addComponent(
       new Transform({
         position: new Vector3(0, 0.2, 0),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(1, 0.8, 0.01),
       })
-    );
+    )
+
     this.whiteBoxMat = new Material();
     this.whiteBoxMat.emissiveIntensity = 1;
     this.whiteBoxMat.emissiveColor = Color3.White();
@@ -286,11 +290,11 @@ export class LockScreen {
     );
 
     this.productDollarPriceText = new TextShape("Loading");
-    this.productDollarPriceText.color = Color3.Black();
-    this.productDollarPriceText.fontSize = 12;
+    this.productDollarPriceText.color = Color3.Gray();
+    this.productDollarPriceText.fontSize = 10;
     this.productDollarPriceText.hTextAlign = "left";
     this.productDollarPriceText.outlineWidth = 0.1;
-    this.productDollarPriceText.outlineColor = Color3.Black();
+    this.productDollarPriceText.outlineColor = Color3.Gray();
     this.productDollarPrice.addComponent(this.productDollarPriceText);
     this.productDollarPrice.setParent(this.parent);
     this.productDollarPrice.addComponent(
@@ -369,6 +373,24 @@ export class LockScreen {
         this.tokenGatedOffer.hide();
       }
     }, 1);
+
+    // No gating formatting
+    if(this.kiosk.gatedTokens.length<1){
+      this.backgroundWidget.getComponent(Transform).scale.y = 1.8
+      this.whiteBoxEntity.getComponent(Transform).scale.y = 0.5
+ 
+      this.closeButtonEntity.getComponent(Transform).position.y -= 0.27
+      this.productItemType.getComponent(Transform).position.y -= 0.27
+      this.productName.getComponent(Transform).position.y -= 0.27
+
+      this.currencySymbolImage.getComponent(Transform).position.y -= 0.1
+      this.productPrice.getComponent(Transform).position.y -= 0.1
+      this.productDollarPrice.getComponent(Transform).position.y -= 0.1
+
+      this.proceedButtonEntity.getComponent(Transform).position.y += 0.15
+      this.howItWorksLink.getComponent(Transform).position.y += 0.15
+      this.lockLogoEntity.getComponent(Transform).position.y += 0.2
+    }
   }
 
   setGating() {

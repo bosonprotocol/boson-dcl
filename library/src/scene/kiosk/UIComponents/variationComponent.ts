@@ -61,9 +61,6 @@ export class VariationComponent {
   option1VariationIndex = 0;
   option2VariationIndex = 0;
 
-  // debugName: Entity = new Entity();
-  // debugNameText: TextShape | undefined;
-
   // Options
   variationPrevMat: Material = new Material();
   variationPrevTexture: Texture | undefined;
@@ -179,7 +176,7 @@ export class VariationComponent {
     this.option1VariationTypeName.setParent(_parent);
     this.option1VariationTypeName.addComponent(
       new Transform({
-        position: new Vector3(0.32, 0.5, -0.002),
+        position: new Vector3(0.32, 0.52, -0.002),
         scale: new Vector3(0.05, 0.05, 0.05),
         rotation: Quaternion.Euler(0, 0, 0),
       })
@@ -255,35 +252,16 @@ export class VariationComponent {
     this.option2VariationTypeName.setParent(_parent);
     this.option2VariationTypeName.addComponent(
       new Transform({
-        position: new Vector3(0.82, 0.5, -0.002),
+        position: new Vector3(0.82, 0.52, -0.002),
         scale: new Vector3(0.05, 0.05, 0.05),
         rotation: Quaternion.Euler(0, 0, 0),
       })
     );
-
-    // // Debug text
-    // this.debugNameText = new TextShape("Loading");
-    // this.debugNameText.color = Color3.Black();
-    // this.debugNameText.fontSize = 16;
-    // this.debugNameText.hTextAlign = "left";
-    // this.debugName.addComponent(this.debugNameText);
-    // this.debugName.setParent(_parent);
-    // this.debugName.addComponent(
-    //   new Transform({
-    //     position: new Vector3(0.5, 0.95, -0.002),
-    //     scale: new Vector3(0.05, 0.05, 0.05),
-    //     rotation: Quaternion.Euler(0, 0, 0),
-    //   })
-    // );
   }
 
   show() {
     this.setValues(1);
     this.setImageArrowVisibility();
-  }
-
-  hide() {
-    // implement
   }
 
   calculateOptions() {
@@ -375,11 +353,7 @@ export class VariationComponent {
       }
     }
 
-    // for debugging
     this.kiosk.currentOfferID = variation.offerID.toString();
-    //if (this.debugNameText != undefined) {
-    //  this.debugNameText.value = "Offer ID:" + this.kiosk.currentOfferID;
-    //}
 
     this.option1VariationOptionNameText.value = variation.option1.option;
     this.option2VariationOptionNameText.value = variation.option2.option;
