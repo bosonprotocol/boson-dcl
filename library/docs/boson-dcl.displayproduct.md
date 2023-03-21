@@ -33,7 +33,7 @@ export declare class DisplayProduct extends Entity
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [create(\_parent, \_productData)](./boson-dcl.displayproduct.create.md) |  |  |
+|  [create(\_parent, \_productData, mainImageIndex)](./boson-dcl.displayproduct.create.md) |  |  |
 |  [hide()](./boson-dcl.displayproduct.hide.md) |  |  |
 |  [show()](./boson-dcl.displayproduct.show.md) |  |  |
 |  [update(\_dt)](./boson-dcl.displayproduct.update.md) |  |  |

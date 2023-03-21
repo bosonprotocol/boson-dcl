@@ -33,6 +33,12 @@ export class Kiosk extends Entity {
   maxItemIndex = 0;
   offer: OfferFieldsFragment | undefined;
   productUUID = "";
+  productImageData:
+    | {
+        mainImageIndex?: number;
+        imageSizes?: { [key: number]: { height: number; width: number } };
+      }
+    | undefined = undefined;
   currentOfferID = "";
 
   productData: OfferFieldsFragment | undefined = undefined;
@@ -87,7 +93,13 @@ export class Kiosk extends Entity {
 
   constructor(
     _transform: Transform,
-    _productUUID: string,
+    _productUUID:
+      | string
+      | {
+          productUUID: string;
+          mainImageIndex?: number;
+          imageSizes?: { [key: number]: { height: number; width: number } };
+        },
     _displayProduct: DisplayProduct = new DisplayProduct(
       "",
       new Transform(),
@@ -101,7 +113,12 @@ export class Kiosk extends Entity {
     }
     this.setUpSystems();
 
-    this.productUUID = _productUUID;
+    if (typeof _productUUID === "string") {
+      this.productUUID = _productUUID;
+    } else {
+      this.productUUID = _productUUID.productUUID;
+      this.productImageData = { ..._productUUID };
+    }
 
     this.connecectedToWeb3 = Kiosk.userData.hasConnectedWeb3;
 
@@ -188,19 +205,53 @@ export class Kiosk extends Entity {
   }
 
   loadProduct() {
-    Kiosk.coreSDK.getProductWithVariants(this.productUUID).then(
-      (
-        data: {
-          product: BaseProductV1ProductFieldsFragment;
-          variants: {
-            offer: OfferFieldsFragment;
-            variations: ProductV1Variation[];
-          }[];
-        } | null
-      ) => {
-        this.loadOffer(data);
-      }
-    );
+    Kiosk.coreSDK
+      .getProductWithVariants(this.productUUID)
+      .then(
+        (
+          data: {
+            product: BaseProductV1ProductFieldsFragment;
+            variants: {
+              offer: OfferFieldsFragment;
+              variations: ProductV1Variation[];
+            }[];
+          } | null
+        ) => {
+          if (data) {
+            const mainImageIndex = this.productImageData?.mainImageIndex;
+            if (this.productImageData?.imageSizes) {
+              const overrideProduct = (product: any) => {
+                for (
+                  let index = 0;
+                  index < product.visuals_images.length;
+                  index++
+                ) {
+                  if (
+                    this.productImageData?.imageSizes &&
+                    this.productImageData?.imageSizes[index]
+                  ) {
+                    product.visuals_images[index].width =
+                      this.productImageData?.imageSizes[index].width;
+                    product.visuals_images[index].height =
+                      this.productImageData?.imageSizes[index].height;
+                  }
+                }
+              };
+              overrideProduct(data.product);
+              overrideProduct(
+                (data.variants[0]?.offer?.metadata as any)?.product
+              );
+            }
+            this.loadOffer({
+              ...data,
+              mainImageIndex,
+            });
+          }
+        }
+      )
+      .catch((e) => {
+        log("getProductWithVariants", this.productUUID, "Failed", e.toString());
+      });
   }
 
   private checkForGatedTokens() {
@@ -310,6 +361,7 @@ export class Kiosk extends Entity {
         offer: OfferFieldsFragment;
         variations: ProductV1Variation[];
       }[];
+      mainImageIndex?: number;
     } | null
   ) {
     if (!_data || !_data.variants[0] || !_data.variants[0].offer) {
@@ -333,7 +385,7 @@ export class Kiosk extends Entity {
 
       if (this.displayProduct != undefined) {
         if (!this.displayProduct.created) {
-          this.displayProduct.create(this, this.offer);
+          this.displayProduct.create(this, this.offer, _data.mainImageIndex);
           this.displayProduct.addComponent(this.onPointerDown);
         }
         this.displayProduct.show();
