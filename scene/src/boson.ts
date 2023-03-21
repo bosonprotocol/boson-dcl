@@ -3,7 +3,8 @@ import { getUserData, UserData } from '@decentraland/Identity'
 import { bosonConfig } from './bosonConfig'
 import * as crypto from '@dcl/crypto-scene-utils'
 
-//const targetEnv = 'production'
+// const targetEnv = 'production'
+// const targetEnv = 'staging'
 const targetEnv = 'testing'
 
 async function getWalletAddress(): Promise<string> {

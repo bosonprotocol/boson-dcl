@@ -223,12 +223,14 @@ export class ProductPage {
 
     this.productImageMat = new Material();
 
-    if(this.productData.metadata.product.visuals_images!=undefined){
+    if (this.productData.metadata.product.visuals_images != undefined) {
       if (this.productData.metadata.product.visuals_images.length > 0) {
         this.productData.metadata.product.visuals_images.forEach(
           (image: { url: string; width: number; height: number }) => {
             this.productTextures.push(Helper.getIPFSImageTexture(image.url));
-            this.productImageSizeRatios.push(image.height / image.width);
+            this.productImageSizeRatios.push(
+              image.width > 0 ? image.height / image.width : 1
+            );
           }
         );
       }
