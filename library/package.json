@@ -11,7 +11,7 @@
     "lint:fix": "npm run lint -- --fix",
     "link": "npm link && rollup --watch -c ",
     "test": "jest --detectOpenHandles --silent=false --verbose --colors --runInBand",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && node ./scripts/postinstall.js",
     "link-cc": "node ./scripts/link-to-local-core-components.js"
   },
   "typings": "./dist/index.d.ts",
@@ -29,7 +29,8 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/$dcl-author/$dcl-library-name"
+    "url": "git+https://github.com/bosonprotocol/boson-dcl-v2",
+    "directory": "library"
   },
   "files": [
     "dist",
