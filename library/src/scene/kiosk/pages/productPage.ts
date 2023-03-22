@@ -249,6 +249,7 @@ export class ProductPage {
                 this.productImage.addComponent(this.productImageMat);
               }
               this.setImageArrowVisibility();
+              this.calculateImageSize()
             })
           }
         );

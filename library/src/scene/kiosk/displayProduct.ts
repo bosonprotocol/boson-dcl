@@ -78,6 +78,9 @@ export class DisplayProduct extends Entity {
                 transform.scale.x * (width > 0 ? height / width : 1);
             }
             this.originalScale = transform.scale.clone();
+            if(this.getComponent(ScaleSpringComponent).targetScale.x>0){
+              this.getComponent(ScaleSpringComponent).targetScale = this.originalScale
+            }
           })
 
         }
