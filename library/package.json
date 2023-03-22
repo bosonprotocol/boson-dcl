@@ -34,7 +34,8 @@
   },
   "files": [
     "dist",
-    "!dist/types"
+    "!dist/types",
+    "scripts/postinstall.js"
   ],
   "devDependencies": {
     "@bosonprotocol/core-sdk": "^1.25.0-alpha.15",
