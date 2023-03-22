@@ -43,6 +43,7 @@ export declare class Kiosk extends Entity
 |  [parent](./boson-dcl.kiosk.parent.md) |  | Entity |  |
 |  [productCurrency](./boson-dcl.kiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
 |  [productData](./boson-dcl.kiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
+|  [productImageData](./boson-dcl.kiosk.productimagedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } \| undefined |  |
 |  [productName](./boson-dcl.kiosk.productname.md) |  | Entity |  |
 |  [productNameText](./boson-dcl.kiosk.productnametext.md) |  | TextShape \| undefined |  |
 |  [productPage](./boson-dcl.kiosk.productpage.md) |  | ProductPage \| undefined |  |

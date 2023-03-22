@@ -80,7 +80,7 @@ export { CoreSDK }
 export class DisplayProduct extends Entity {
     constructor(_modelPath: string, _transformOffset: Transform, _spinSpeed: number);
     // (undocumented)
-    create(_parent: Entity, _productData: any): void;
+    create(_parent: Entity, _productData: any, mainImageIndex?: number): void;
     // (undocumented)
     created: boolean;
     // (undocumented)
@@ -176,7 +176,16 @@ export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs
 
 // @public (undocumented)
 export class Kiosk extends Entity {
-    constructor(_transform: Transform, _productUUID: string, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
+    constructor(_transform: Transform, _productUUID: string | {
+        productUUID: string;
+        mainImageIndex?: number;
+        imageSizes?: {
+            [key: number]: {
+                height: number;
+                width: number;
+            };
+        };
+    }, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
     // (undocumented)
     static allBalances: object;
     // (undocumented)
@@ -220,6 +229,7 @@ export class Kiosk extends Entity {
             offer: OfferFieldsFragment;
             variations: ProductV1Variation[];
         }[];
+        mainImageIndex?: number;
     } | null): void;
     // (undocumented)
     loadProduct(): void;
@@ -239,6 +249,16 @@ export class Kiosk extends Entity {
     productCurrency: eCurrency;
     // (undocumented)
     productData: OfferFieldsFragment | undefined;
+    // (undocumented)
+    productImageData: {
+        mainImageIndex?: number;
+        imageSizes?: {
+            [key: number]: {
+                height: number;
+                width: number;
+            };
+        };
+    } | undefined;
     // (undocumented)
     productName: Entity;
     // (undocumented)

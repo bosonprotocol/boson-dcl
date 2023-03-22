@@ -9,7 +9,16 @@ Constructs a new instance of the `Kiosk` class
 <b>Signature:</b>
 
 ```typescript
-constructor(_transform: Transform, _productUUID: string, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
+constructor(_transform: Transform, _productUUID: string | {
+        productUUID: string;
+        mainImageIndex?: number;
+        imageSizes?: {
+            [key: number]: {
+                height: number;
+                width: number;
+            };
+        };
+    }, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
 ```
 
 ## Parameters
@@ -17,7 +26,7 @@ constructor(_transform: Transform, _productUUID: string, _displayProduct?: Displ
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  \_transform | Transform |  |
-|  \_productUUID | string |  |
+|  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } |  |
 |  \_displayProduct | [DisplayProduct](./boson-dcl.displayproduct.md) | <i>(Optional)</i> |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |
 
