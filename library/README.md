@@ -48,8 +48,7 @@
     - [Usage](#usage)
       - [`boson.ts`](#bosonts)
       - [`bosonConfig.ts`](#bosonconfigts)
-      - [Import images](#import-images)
-      - [Import 3D models](#import-3d-models)
+      - [Kiosk images and models](#kiosk-images-and-models)
     - [Example implementation](#example-implementation)
     - [Adding a 3D Model](#adding-a-3d-model)
     - [Customising the Kiosk](#customising-the-kiosk)
@@ -133,13 +132,13 @@ This file shows how to configure the Boson SDK depending on the targeted environ
 
 Please create a `bosonConfig.ts` file in your scene repository based on this example (you have to use your own BIconomy configuration and RPC node URLs)
 
-#### Import images
+#### Kiosk images and models
 
-Copy/paste the [`images`](../scene/images) directory into the root folder of your scene repo
+Images and 3D models required to build the Boson Kiosk and panels are automatically copied to the scene repository when installing the library.
+- Images are copied into: `./images/kiosk`.
+- 3D models are copied into: `./images/models`.
 
-#### Import 3D models
-
-Copy/paste the [`models`](../scene/models) directory into the root folder of your scene repo
+Please do not remove these folders.
 
 ### Example implementation
 
