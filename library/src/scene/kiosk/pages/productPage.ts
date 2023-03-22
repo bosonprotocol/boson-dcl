@@ -236,9 +236,10 @@ export class ProductPage {
       if (this.productData.metadata.product.visuals_images.length > 0) {
         this.productData.metadata.product.visuals_images.forEach(
           (image: { url: string; width: number; height: number }) => {
+
             Helper.getIPFSImageTexture(image.url).then((texture:Texture)=>{
               this.productTextures.push(texture);
-              this.productImageSizeRatios.push(image.height / image.width);
+              this.productImageSizeRatios.push(image.width > 0 ? image.height / image.width : 1);
 
               if(!this.productImage.hasComponent(Material)){
                 this.productImageMat.albedoTexture = texture
