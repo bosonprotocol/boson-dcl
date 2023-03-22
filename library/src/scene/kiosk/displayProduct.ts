@@ -29,7 +29,7 @@ export class DisplayProduct extends Entity {
     this.addComponent(new ScaleSpringComponent(120, 10));
   }
 
-  create(_parent: Entity, _productData: any) {
+  create(_parent: Entity, _productData: any, mainImageIndex = 0) {
     if (!this.created) {
       this.created = true;
 
@@ -60,17 +60,19 @@ export class DisplayProduct extends Entity {
 
         if (_productData.metadata.product.visuals_images.length > 0) {
           const productTexture: Texture = Helper.getIPFSImageTexture(
-            _productData.metadata.product.visuals_images[0].url
+            _productData.metadata.product.visuals_images[mainImageIndex].url
           );
           productImageMat.albedoTexture = productTexture;
           productImageMat.emissiveIntensity = 1;
           productImageMat.emissiveColor = Color3.White();
           productImageMat.emissiveTexture = productTexture;
           this.addComponent(productImageMat);
+          const width =
+            _productData.metadata.product.visuals_images[mainImageIndex].width;
+          const height =
+            _productData.metadata.product.visuals_images[mainImageIndex].height;
           transform.scale.y =
-            transform.scale.x *
-            (_productData.metadata.product.visuals_images[0].height /
-              _productData.metadata.product.visuals_images[0].width);
+            transform.scale.x * (width > 0 ? height / width : 1);
           this.originalScale = transform.scale.clone();
         }
 

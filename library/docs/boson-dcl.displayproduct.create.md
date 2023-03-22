@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-create(_parent: Entity, _productData: any): void;
+create(_parent: Entity, _productData: any, mainImageIndex?: number): void;
 ```
 
 ## Parameters
@@ -16,6 +16,7 @@ create(_parent: Entity, _productData: any): void;
 |  --- | --- | --- |
 |  \_parent | Entity |  |
 |  \_productData | any |  |
+|  mainImageIndex | number | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
