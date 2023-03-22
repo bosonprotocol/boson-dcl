@@ -10,6 +10,10 @@ const scene_folder = path.resolve(process.env["npm_config_local_prefix"]);
 // library dir path can be found thanks to __dirname
 const lib_folder = path.resolve(__dirname, "..");
 
+if (scene_folder === lib_folder) {
+  return;
+}
+
 // list of resources to be copied from library to scene folder
 const resources = [
   {
