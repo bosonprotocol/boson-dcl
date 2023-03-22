@@ -159,7 +159,7 @@ useBoson()
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      'dac3a-cf71-ea64-12b6-162ddb823e7'
+      'dac3a-cf71-ea64-12b6-162ddb823e7' // product uuid
     )
 
     new Kiosk(
@@ -168,12 +168,43 @@ useBoson()
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      '0af25a2-6b5a-fd5-c751-6d33e81c5634' // product id
+      '0af25a2-6b5a-fd5-c751-6d33e81c5634' // product uuid
     )
 })
 ```
 
-Here the product id is passed into the kiosk constructor.
+Here the product uuid is passed into the kiosk constructor.
+
+Optionally, it's possible to add parameters to the product managed by the kiosk:
+```ts
+    new Kiosk(
+      new Transform({
+        position: new Vector3(4, 0, 4),
+        rotation: Quaternion.Euler(0, 0, 0),
+        scale: new Vector3(1, 1, 1)
+      }),
+      {
+        productUUID: 'a3a1db6-3bb7-c6f5-441c-80cccbb014',
+        mainImageIndex: 2, // choose which image is shown in the kiosk (default: 0)
+        imageSizes: {
+          // override the image size if missing from metadata (before March 2023)
+          0: { height: 1100, width: 733 },
+          1: { height: 1100, width: 733 },
+          2: { height: 1100, width: 733 },
+          3: { height: 1100, width: 733 },
+          4: { height: 1100, width: 733 },
+          5: { height: 1100, width: 733 }
+        }
+      }
+    )
+```
+  where:
+- `productUUID` is the product uuid
+  (required)
+- `mainImageIndex` is the index of the image that is shown in the kiosk
+  (optional, default is 0)
+- `imageSizes` is the list of image size (height,width), indexed by their respective position in the metadata
+  (optional, to be used with product created before March 2023, as new products created with the dApp now include image sizes in the metadata). 
 
 ### Adding a 3D Model
 If you'd like to add a 3D model to be displayed in the kiosk, rather than the 2D thumbnail you will need to add the model to `./scene/models/` directory.  The kiosk can then be instantiated with the following code:
@@ -188,10 +219,10 @@ new Kiosk(
     }),
     '245d5ed-1c6a-0beb-23f-2d787f32ef',
     new boson.DisplayProduct("models/OGShirt.glb", // path to your 3D model
-	new Transform({
-		position: new Vector3(0,1.7,0),
-		scale: new Vector3(1.2,1.2,1.2)
-    }),50)
+      new Transform({
+        position: new Vector3(0,1.7,0),
+        scale: new Vector3(1.2,1.2,1.2)
+      }),50)
 )
 
 ```
@@ -208,9 +239,12 @@ The 3D model for the kiosk (along with its collider) can be found in `./scene/mo
 
 Currently we support the following Polygon currencies:
 
-* boson
-* weth
-* usdc
-* dai
-* usdt
-           
+| token | Polygon | Mumbai (testnet) |
+| ----- | ------- | ---------------- |
+| boson | 0x9B3B0703D392321AD24338Ff1f846650437A43C9 | 0x1f5431E8679630790E8EbA3a9b41d1BB4d41aeD0 |
+| weth | 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619 | 0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa |
+| usdc | 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174 | 0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747 |
+| dai | 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063 | 0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f |
+| usdt | 0xc2132D05D31c914a87C6611C10748AEb04B58e8F | 0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832 |
+
+Native currency (MATIC on Polygon) requires direct "commitToOffer" transactions, which can't be relayed as meta-transactions. Although supported by Boson Protocol, this currency can't be used with the Boson Decentraland Widget as it requires using meta-transaction to operate within Decentraland (because the user wallet is forced to be connected to Ethereum mainnet)

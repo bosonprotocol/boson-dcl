@@ -13,6 +13,7 @@ loadOffer(_data: {
             offer: OfferFieldsFragment;
             variations: ProductV1Variation[];
         }[];
+        mainImageIndex?: number;
     } | null): void;
 ```
 
@@ -20,7 +21,7 @@ loadOffer(_data: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; } \| null |  |
+|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; mainImageIndex?: number; } \| null |  |
 
 <b>Returns:</b>
 
