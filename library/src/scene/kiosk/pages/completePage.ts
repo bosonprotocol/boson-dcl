@@ -291,7 +291,7 @@ export class CompletePage {
     this.redeemLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL(bosonDAppUrlBase);
+          openExternalURL(bosonDAppUrlBase + "/#/account");
         },
         {
           hoverText: "Redeem",
@@ -302,6 +302,13 @@ export class CompletePage {
 
   show(_success: boolean, data: any) {
     if (_success) {
+      // TODO: extract user account and exchangeId from data
+      //  - user = data.from
+      //  - exchangeIdHexString = data.logs.find((log) => log.topics[0] === "0x442279a0d0683a12971990518f9f3f874391650139a762c4e94b23b51f04d94f").topics[3]
+      //  - exchangeId = parseInt(exchangeIdHexString, 16)
+      //  - tokenId can also be found from logs, useful for the opensea link
+      // Then refresh the links to chain explorer/opensea/bosondApp with this info.
+
       // Success
       Helper.showAllEntities([
         this.successEntity,
