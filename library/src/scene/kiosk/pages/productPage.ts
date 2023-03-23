@@ -32,6 +32,9 @@ export class ProductPage {
   productTextures: Texture[] = [];
   productImageSizeRatios: number[] = [];
 
+  productImageLoadingEntity:Entity = new Entity()
+  productImageLoadingText:TextShape;
+
   productImageIndex = 0;
 
   currencySymbolImage: Entity = new Entity();
@@ -51,7 +54,6 @@ export class ProductPage {
   productZoomMat: Material = new Material();
   productZoomTexture: Texture;
   productZoomOutTexture: Texture;
-  productZoomPointer: OnPointerDown;
   productZoomOutPointer: OnPointerDown;
 
   public productName: Entity = new Entity();
@@ -91,6 +93,8 @@ export class ProductPage {
 
   informationSectionDataEntity: Entity = new Entity();
   informationSectionDataText: TextShape | undefined;
+  informationSectionDataLinkEntity: Entity = new Entity();
+  informationSectionDataLinkText: TextShape | undefined;
 
   // Pages
   productDescriptionPage: DescriptionPage;
@@ -99,6 +103,8 @@ export class ProductPage {
 
   termsAndConditionsEntity: Entity = new Entity();
   termsAndConditionsText: TextShape | undefined;
+  termsAndConditionsEntityLink: Entity = new Entity();
+  termsAndConditionsTextLink: TextShape | undefined;
   termsAndConditionsClickBox: Entity = new Entity();
   termsAndConditionsClickBox2: Entity = new Entity();
 
@@ -115,6 +121,11 @@ export class ProductPage {
   commitButtonTexture: Texture | undefined;
   commitButtonTextureLocked: Texture | undefined;
   commitLocked = true;
+
+  // Cancel button
+  cancelButtonEntity: Entity = new Entity();
+  cancelButtonMat: Material = new Material();
+  cancelButtonTexture: Texture | undefined;
 
   // Products remaining
   productsRemaining: Entity = new Entity();
@@ -138,7 +149,6 @@ export class ProductPage {
   // Artist logo
   artistLogoEntity: Entity = new Entity();
   artistLogoMat: Material = new Material();
-  artistLogoTexture: Texture;
 
   // Redeemeum logo
   redeemeumLogoEntity: Entity = new Entity();
@@ -215,39 +225,55 @@ export class ProductPage {
     this.productImage.setParent(this.parent);
     this.productImage.addComponent(
       new Transform({
-        position: new Vector3(-0.65, 0.05, -0.0015),
+        position: new Vector3(-0.65, 0.05, -0.0017),
         rotation: Quaternion.Euler(180, 180, 0),
-        scale: new Vector3(1.6 / 1.4, 2 / 1.4, 0.01),
+        scale: new Vector3(1, 1, 0.01),
       })
     );
 
-    this.productImageMat = new Material();
 
     if (this.productData.metadata.product.visuals_images != undefined) {
       if (this.productData.metadata.product.visuals_images.length > 0) {
         this.productData.metadata.product.visuals_images.forEach(
           (image: { url: string; width: number; height: number }) => {
-            this.productTextures.push(Helper.getIPFSImageTexture(image.url));
-            this.productImageSizeRatios.push(
-              image.width > 0 ? image.height / image.width : 1
-            );
+
+            Helper.getIPFSImageTexture(image.url).then((texture:Texture)=>{
+              this.productTextures.push(texture);
+              this.productImageSizeRatios.push(image.width > 0 ? image.height / image.width : 1);
+
+              if(!this.productImage.hasComponent(Material)){
+                this.productImageMat.albedoTexture = texture
+                this.productImageMat.emissiveIntensity = 1;
+                this.productImageMat.emissiveColor = Color3.White();
+                this.productImageMat.emissiveTexture = texture
+                this.productImage.addComponent(this.productImageMat);
+              }
+              this.setImageArrowVisibility();
+              this.calculateImageSize()
+            })
           }
         );
       }
     }
 
-    this.productImageMat.albedoTexture =
-      this.productTextures[this.productImageIndex];
-    //this.productImageMat.transparencyMode = 1
-    this.productImageMat.emissiveIntensity = 1;
-    this.productImageMat.emissiveColor = Color3.White();
-    this.productImageMat.emissiveTexture =
-      this.productTextures[this.productImageIndex];
-    this.productImage.addComponent(this.productImageMat);
+    this.productImageLoadingText = new TextShape("Loading Image...");
+
+    this.productImageLoadingText.color = Color3.Black();
+    this.productImageLoadingText.fontSize = 20;    
+    this.productImageLoadingEntity.addComponent(this.productImageLoadingText);
+    this.productImageLoadingEntity.setParent(this.parent);
+    this.productImageLoadingEntity.addComponent(
+      new Transform({
+        position: new Vector3(-0.65, 0.05, -0.0015),
+        scale: new Vector3(0.05, 0.05, 0.05),
+        rotation: Quaternion.Euler(0, 0, 0),
+      })
+    );
 
     this.productNameText = new TextShape(
-      this.productData.metadata.product.title
+      Helper.addNewLinesInString(this.productData.metadata.product.title,32,1)
     );
+
     this.productNameText.color = Color3.Black();
     this.productNameText.fontSize = 20;
     this.productNameText.hTextAlign = "left";
@@ -278,10 +304,10 @@ export class ProductPage {
     );
 
     this.productDollarPriceText = new TextShape("($ Loading...)");
-    this.productDollarPriceText.color = Color3.Black();
-    this.productDollarPriceText.fontSize = 10;
+    this.productDollarPriceText.color = Color3.Gray();
+    this.productDollarPriceText.fontSize = 9;
     this.productDollarPriceText.hTextAlign = "left";
-    this.productDollarPriceText.outlineColor = Color3.Black();
+    this.productDollarPriceText.outlineColor = Color3.Gray();
     this.productDollarPriceText.outlineWidth = 0.2;
     this.productDollarPrice.addComponent(this.productDollarPriceText);
     this.productDollarPrice.setParent(this.parent);
@@ -347,7 +373,7 @@ export class ProductPage {
     this.logoEntity.setParent(this.parent);
     this.logoEntity.addComponent(
       new Transform({
-        position: new Vector3(0, -0.95, -0.002),
+        position: new Vector3(0, -0.95, -0.0019),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.435, 0.103, 0.01),
       })
@@ -369,11 +395,11 @@ export class ProductPage {
 
     this.productPrevImageEntity = new Entity();
     this.productPrevImageEntity.addComponent(new PlaneShape());
-    this.productPrevImageEntity.setParent(this.productImage);
+    this.productPrevImageEntity.setParent(this.parent);
     this.productPrevImageEntity.addComponent(
       new Transform({
-        position: new Vector3(0.45, 0, -0.1),
-        rotation: Quaternion.Euler(0, 0, 0),
+        position: new Vector3(-1.1, 0.05, -0.0019),
+        rotation: Quaternion.Euler(0, 180, 0),
         scale: new Vector3(0.12, 0.1, 0.01),
       })
     );
@@ -405,11 +431,11 @@ export class ProductPage {
 
     this.productNextImageEntity = new Entity();
     this.productNextImageEntity.addComponent(new PlaneShape());
-    this.productNextImageEntity.setParent(this.productImage);
+    this.productNextImageEntity.setParent(this.parent);
     this.productNextImageEntity.addComponent(
       new Transform({
-        position: new Vector3(-0.45, 0, -0.1),
-        rotation: Quaternion.Euler(0, 0, 0),
+        position: new Vector3(-0.2, 0.05, -0.0018),
+        rotation: Quaternion.Euler(0, 180, 0),
         scale: new Vector3(0.12, 0.1, 0.01),
       })
     );
@@ -439,15 +465,6 @@ export class ProductPage {
     this.productNextImageMat.transparencyMode = 1;
     this.productNextImageEntity.addComponent(this.productNextImageMat);
 
-    this.productZoomPointer = new OnPointerDown(
-      () => {
-        this.ZoomIn();
-      },
-      {
-        hoverText: "Zoom in",
-      }
-    );
-
     this.productZoomOutPointer = new OnPointerDown(
       () => {
         this.ZoomOut();
@@ -459,15 +476,22 @@ export class ProductPage {
 
     this.productZoomEntity = new Entity();
     this.productZoomEntity.addComponent(new PlaneShape());
-    this.productZoomEntity.setParent(this.productImage);
+    this.productZoomEntity.setParent(this.parent);
     this.productZoomEntity.addComponent(
       new Transform({
-        position: new Vector3(0.4, -0.42, -0.1),
+        position: new Vector3(-1.1, 0.5, -0.0019),
         rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(0.12, 0.1, 0.01),
+        scale: new Vector3(0.12, 0.12, 0.01),
       })
     );
-    this.productZoomEntity.addComponent(this.productZoomPointer);
+    this.productZoomEntity.addComponent(new OnPointerDown(
+      () => {
+        this.ZoomIn();
+      },
+      {
+        hoverText: "Zoom in",
+      }
+    ))
 
     this.productZoomMat = new Material();
     this.productZoomTexture = new Texture("images/kiosk/ui/product_zoom.png", {
@@ -559,10 +583,10 @@ export class ProductPage {
     this.underProductWhiteBox.addComponent(this.underProductWhiteMat);
 
     // View Full Description
-    this.viewFullDescriptionText = new TextShape("View Full Description");
-    this.viewFullDescriptionText.color = Color3.Purple();
+    this.viewFullDescriptionText = new TextShape("View full description");
+    this.viewFullDescriptionText.color = Color3.Blue();
     this.viewFullDescriptionText.fontSize = 4;
-    this.viewFullDescriptionText.outlineColor = Color3.Purple();
+    this.viewFullDescriptionText.outlineColor = Color3.Blue();
     this.viewFullDescriptionText.outlineWidth = 0.25;
     this.viewFullDescription.addComponent(this.viewFullDescriptionText);
     this.viewFullDescription.setParent(this.parent);
@@ -590,9 +614,13 @@ export class ProductPage {
           if (this.lockComponent != undefined) {
             this.lockComponent.hide();
           }
+            // If product image was zoomed in, zoom it out
+            if(this.productImage.hasComponent(this.productZoomOutPointer)){
+              this.ZoomOut()
+            }
         },
         {
-          hoverText: "View Full Description",
+          hoverText: "View full description",
         }
       )
     );
@@ -605,7 +633,7 @@ export class ProductPage {
         position: new Vector3(0.65, -0.72, -0.002),
         scale: new Vector3(0.1, 0.1, 0.1),
         rotation: Quaternion.Euler(0, 0, 0),
-      })
+      }),
     );
 
     // Information Section
@@ -632,7 +660,6 @@ export class ProductPage {
       this.productData.voucherRedeemableUntilDate * 1000;
     const sellerDeposit: string = this.productData.sellerDeposit;
     const buyerCancelPenalty: string = this.productData.buyerCancelPenalty;
-    const exchangePolicy = "Fair Exchange Policy";
 
     this.informationSectionDataText = new TextShape(
       new Date(redeemableUntilDate).toLocaleDateString() +
@@ -657,9 +684,7 @@ export class ProductPage {
             (this.productData.price as number)) *
             100
         ) +
-        "%)" +
-        "\n\n" +
-        exchangePolicy
+        "%)"
     );
     this.informationSectionDataText.color = Color3.Black();
     this.informationSectionDataText.fontSize = 4;
@@ -679,20 +704,57 @@ export class ProductPage {
       })
     );
 
+    this.informationSectionDataLinkText = new TextShape("Fair Exchange Policy");
+    this.informationSectionDataLinkText.color = Color3.Blue();
+    this.informationSectionDataLinkText.fontSize = 4;
+    this.informationSectionDataLinkText.outlineColor = Color3.Blue();
+    this.informationSectionDataLinkText.outlineWidth = 0.1;
+    this.informationSectionDataLinkText.hTextAlign = "left";
+    this.informationSectionDataLinkText.vTextAlign = "top";
+    this.informationSectionDataLinkEntity.addComponent(
+      this.informationSectionDataLinkText
+    );
+    this.informationSectionDataLinkEntity.setParent(this.parent);
+    this.informationSectionDataLinkEntity.addComponent(
+      new Transform({
+        position: new Vector3(0.7, -0.165, -0.002),
+        scale: new Vector3(0.1, 0.1, 0.1),
+        rotation: Quaternion.Euler(0, 0, 0),
+      })
+    );
+
     // Terms and conditions
     this.termsAndConditionsText = new TextShape(
-      "By proceeding to Commit, I agree to the Fair Exchange Policy"
+      "By proceeding to Commit, I agree to the"
     );
-    this.termsAndConditionsText.color = Color3.Purple();
+    this.termsAndConditionsText.color = Color3.Black();
     this.termsAndConditionsText.fontSize = 3.5;
-    this.termsAndConditionsText.outlineColor = Color3.Purple();
+    this.termsAndConditionsText.outlineColor = Color3.Black();
     this.termsAndConditionsText.outlineWidth = 0.25;
     this.termsAndConditionsText.hTextAlign = "left";
     this.termsAndConditionsEntity.addComponent(this.termsAndConditionsText);
     this.termsAndConditionsEntity.setParent(this.parent);
     this.termsAndConditionsEntity.addComponent(
       new Transform({
-        position: new Vector3(0.15, -0.47, -0.002),
+        position: new Vector3(0.21, -0.47, -0.002),
+        scale: new Vector3(0.1, 0.1, 0.1),
+        rotation: Quaternion.Euler(0, 0, 0),
+      })
+    );
+
+    this.termsAndConditionsTextLink = new TextShape(
+      "Fair Exchange Policy"
+    );
+    this.termsAndConditionsTextLink.color = Color3.Blue();
+    this.termsAndConditionsTextLink.fontSize = 3.5;
+    this.termsAndConditionsTextLink.outlineColor = Color3.Blue();
+    this.termsAndConditionsTextLink.outlineWidth = 0.25;
+    this.termsAndConditionsTextLink.hTextAlign = "left";
+    this.termsAndConditionsEntityLink.addComponent(this.termsAndConditionsTextLink);
+    this.termsAndConditionsEntityLink.setParent(this.parent);
+    this.termsAndConditionsEntityLink.addComponent(
+      new Transform({
+        position: new Vector3(0.755, -0.47, -0.002),
         scale: new Vector3(0.1, 0.1, 0.1),
         rotation: Quaternion.Euler(0, 0, 0),
       })
@@ -714,6 +776,10 @@ export class ProductPage {
           this.fairExchangePage.show();
           if (this.lockComponent != undefined) {
             this.lockComponent.hide();
+          }
+          // If product image was zoomed in, zoom it out
+          if(this.productImage.hasComponent(this.productZoomOutPointer)){
+            this.ZoomOut()
           }
         },
         {
@@ -739,6 +805,10 @@ export class ProductPage {
           if (this.lockComponent != undefined) {
             this.lockComponent.hide();
           }
+          // If product image was zoomed in, zoom it out
+          if(this.productImage.hasComponent(this.productZoomOutPointer)){
+            this.ZoomOut()
+          }
         },
         {
           hoverText: "Fair Exchange Policy",
@@ -750,7 +820,7 @@ export class ProductPage {
     this.redeemableHover = new QuestionMark(
       this.parent,
       new Transform({
-        position: new Vector3(0.53-0.05, 0.08, -0.002),
+        position: new Vector3(0.53 - 0.05, 0.08, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.05, 0.05, 0.1),
       }),
@@ -759,7 +829,7 @@ export class ProductPage {
     this.sellerDepositHover = new QuestionMark(
       this.parent,
       new Transform({
-        position: new Vector3(0.45-0.05, -0.01, -0.002),
+        position: new Vector3(0.45 - 0.05, -0.01, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.05, 0.05, 0.1),
       }),
@@ -768,7 +838,7 @@ export class ProductPage {
     this.buyerCancelHover = new QuestionMark(
       this.parent,
       new Transform({
-        position: new Vector3(0.53-0.05, -0.1, -0.002),
+        position: new Vector3(0.53 - 0.05, -0.1, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.05, 0.05, 0.1),
       }),
@@ -777,7 +847,7 @@ export class ProductPage {
     this.exchangeHover = new QuestionMark(
       this.parent,
       new Transform({
-        position: new Vector3(0.5-0.05, -0.19, -0.002),
+        position: new Vector3(0.5 - 0.05, -0.19, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.05, 0.05, 0.1),
       }),
@@ -786,7 +856,7 @@ export class ProductPage {
     this.disputeHover = new QuestionMark(
       this.parent,
       new Transform({
-        position: new Vector3(0.5-0.05, -0.28, -0.002),
+        position: new Vector3(0.5 - 0.05, -0.28, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.05, 0.05, 0.1),
       }),
@@ -840,6 +910,10 @@ export class ProductPage {
               this.lockComponent.hide();
             }
             this.processPage.show();
+            // If product image was zoomed in, zoom it out
+            if(this.productImage.hasComponent(this.productZoomOutPointer)){
+              this.ZoomOut()
+            }
           }
         },
         {
@@ -865,10 +939,44 @@ export class ProductPage {
     this.commitButtonMat.emissiveTexture = this.commitButtonTextureLocked;
     this.commitButtonEntity.addComponent(this.commitButtonMat);
 
+    // Cancel Button
+    this.cancelButtonEntity = new Entity();
+    this.cancelButtonEntity.addComponent(new PlaneShape());
+    this.cancelButtonEntity.setParent(this.parent);
+    this.cancelButtonEntity.addComponent(
+      new Transform({
+        position: new Vector3(0.9, -0.58, -0.002),
+        rotation: Quaternion.Euler(180, 180, 0),
+        scale: new Vector3(0.525 / 2, 0.224 / 2, 0.01),
+      })
+    );
+    this.cancelButtonEntity.addComponent(
+      new OnPointerDown(
+        () => {
+          // Close here
+          this.hide();
+          this.kiosk.uiOpen = false;
+          this.kiosk.showDisplayProduct();
+        },
+        {
+          hoverText: "Cancel",
+        }
+      )
+    );
+
+    this.cancelButtonMat = new Material();
+    this.cancelButtonTexture = new Texture("images/kiosk/ui/cancel.png")
+
+    this.cancelButtonMat.albedoTexture = this.cancelButtonTexture;
+    this.cancelButtonMat.emissiveIntensity = 0.5;
+    this.cancelButtonMat.emissiveColor = Color3.White();
+    this.cancelButtonMat.emissiveTexture = this.cancelButtonTexture;
+    this.cancelButtonEntity.addComponent(this.cancelButtonMat);
+
     // View Full Description
     this.productsRemainingText = new TextShape("");
     this.productsRemainingText.color = Color3.Black();
-    this.productsRemainingText.fontSize = 6;
+    this.productsRemainingText.fontSize = 4;
     this.productsRemainingText.outlineColor = Color3.Black();
     this.productsRemainingText.outlineWidth = 0.25;
     this.productsRemainingText.hTextAlign = "right";
@@ -968,11 +1076,17 @@ export class ProductPage {
       })
     );
 
+    if(errorMessage.length>0){
+      Helper.hideAllEntities([
+        this.cancelButtonEntity // Don't show cancel button as error messages use the same space
+      ])
+    }
+
     this.setCommitLock(this.productData.quantityInitial);
 
     // artist name and logo
     this.artistNameText = new TextShape(
-      this.productData.metadata.product.productV1Seller.name
+      Helper.addNewLinesInString(this.productData.metadata.product.productV1Seller.name,15,1)
     );
     this.artistNameText.color = Color3.Black();
     this.artistNameText.fontSize = 10;
@@ -999,17 +1113,17 @@ export class ProductPage {
       })
     );
 
-    this.artistLogoTexture = Helper.getIPFSImageTexture(
+    Helper.getIPFSImageTexture(
       (_productData.metadata.productV1Seller.images || []).find(
         (img: { tag: string }) => img.tag === "profile"
       )?.url
-    );
-
-    this.artistLogoMat.albedoTexture = this.artistLogoTexture;
-    this.artistLogoMat.emissiveIntensity = 1;
-    this.artistLogoMat.emissiveColor = Color3.White();
-    this.artistLogoMat.emissiveTexture = this.artistLogoTexture;
-    this.artistLogoEntity.addComponent(this.artistLogoMat);
+    ).then((texture:Texture)=>{
+      this.artistLogoMat.albedoTexture = texture;
+      this.artistLogoMat.emissiveIntensity = 1;
+      this.artistLogoMat.emissiveColor = Color3.White();
+      this.artistLogoMat.emissiveTexture = texture;
+      this.artistLogoEntity.addComponent(this.artistLogoMat);
+    })
 
     // Redeemeum Logo
     this.redeemeumLogoEntity.addComponent(new PlaneShape());
@@ -1053,10 +1167,25 @@ export class ProductPage {
       this.productTextures[this.productImageIndex];
     this.productImageMat.emissiveTexture =
       this.productTextures[this.productImageIndex];
-    this.productImage.getComponent(Transform).scale.y =
+      this.calculateImageSize()
+    this.setImageArrowVisibility();
+  }
+
+  private calculateImageSize() {
+    if(this.productTextures[this.productImageIndex].src.indexOf("waitingForImage")==-1){
+      
+    let height:number =
       this.productImage.getComponent(Transform).scale.x *
       this.productImageSizeRatios[this.productImageIndex];
-    this.setImageArrowVisibility();
+    
+    // Cap height
+    if(height>1.43){
+      height = 1.43
+    }
+    this.productImage.getComponent(Transform).scale.y = height
+    } else {
+      this.productImage.getComponent(Transform).scale.y = this.productImage.getComponent(Transform).scale.x
+    }
   }
 
   private showPreviousImage() {
@@ -1070,40 +1199,51 @@ export class ProductPage {
       this.productTextures[this.productImageIndex];
     this.productImageMat.emissiveTexture =
       this.productTextures[this.productImageIndex];
-    this.productImage.getComponent(Transform).scale.y =
-      this.productImage.getComponent(Transform).scale.x *
-      this.productImageSizeRatios[this.productImageIndex];
+      this.calculateImageSize()
     this.setImageArrowVisibility();
   }
 
-  private ZoomIn() {
+  private ZoomIn() {    
+    
+    this.productImage.addComponentOrReplace(this.productZoomOutPointer);
+
     this.productImage.getComponent(Transform).scale = this.productImage
       .getComponent(Transform)
       .scale.multiply(new Vector3(2, 2, 2));
-    this.productImage.getComponent(Transform).position = new Vector3(
-      0,
-      0,
-      -0.04
-    );
+    this.productImage.getComponent(Transform).position = new Vector3(-0.2,0,-0.028);
     this.productZoomMat.albedoTexture = this.productZoomOutTexture;
     this.productZoomMat.emissiveTexture = this.productZoomOutTexture;
 
-    this.productZoomEntity.addComponentOrReplace(this.productZoomOutPointer);
+    Helper.hideAllEntities([
+      this.productZoomEntity,
+      this.productPrevImageEntity,
+      this.productNextImageEntity,
+      this.howItWorksLink
+    ])
   }
 
   private ZoomOut() {
+    if(this.productImage.hasComponent(this.productZoomOutPointer)){
+      this.productImage.removeComponent(this.productZoomOutPointer)
+    }
+
     this.productImage.getComponent(Transform).scale = this.productImage
       .getComponent(Transform)
       .scale.multiply(new Vector3(0.5, 0.5, 0.5));
-    (this.productImage.getComponent(Transform).position = new Vector3(
-      -0.65,
-      0.05,
-      -0.0015
-    )),
+    (this.productImage.getComponent(Transform).position = new Vector3(-0.65,0.05,-0.0017)),
       (this.productZoomMat.albedoTexture = this.productZoomTexture);
     this.productZoomMat.emissiveTexture = this.productZoomTexture;
 
-    this.productZoomEntity.addComponentOrReplace(this.productZoomPointer);
+    engine.removeEntity(this.productImage)
+    new DelayedTask(()=>{
+      engine.addEntity(this.productImage)
+    },0.1)
+
+    Helper.showAllEntities([
+      this.productZoomEntity,
+      this.howItWorksLink
+    ])
+    this.setImageArrowVisibility()
   }
 
   private setImageArrowVisibility() {
@@ -1150,6 +1290,11 @@ export class ProductPage {
       this.lockComponent.show();
     }
 
+    // If product image was zoomed in, zoom it out
+    if(this.productImage.hasComponent(this.productZoomOutPointer)){
+      this.ZoomOut()
+    }
+
     // Only show terms and conditions box, link and commit if the gating isn't locked
     // And is in stock
     let locked = false;
@@ -1163,12 +1308,16 @@ export class ProductPage {
         this.termsAndConditionsEntity,
         this.commitButtonEntity,
         this.lockErrorName,
+        this.termsAndConditionsEntityLink,
+        this.termsAndConditionsClickBox
       ]);
     } else {
       Helper.hideAllEntities([
         this.termsAndConditionsEntity,
         this.commitButtonEntity,
         this.lockErrorName,
+        this.termsAndConditionsEntityLink,
+        this.termsAndConditionsClickBox
       ]);
     }
 

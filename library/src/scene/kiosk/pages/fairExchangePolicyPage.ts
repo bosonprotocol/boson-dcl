@@ -28,6 +28,9 @@ export class FairExchangePolicyPage {
   InformationContent: Entity = new Entity();
   InformationContentText: TextShape;
 
+  InformationContentLinks: Entity = new Entity();
+  InformationContentLinksText: TextShape;
+
   LicenseClickBox: Entity = new Entity();
   CommerceClickBox: Entity = new Entity();
 
@@ -168,8 +171,9 @@ export class FairExchangePolicyPage {
           this.productData.disputeResolver.escalationResponsePeriod /
             (60 * 60 * 24)
         ) +
-        " days\n\nLicense Agreement v1\n\nCommerce Agreement v1"
+        " days"
     );
+
     this.InformationContentText.color = Color3.Black();
     this.InformationContentText.fontSize = 5;
     this.InformationContentText.outlineColor = Color3.Black();
@@ -179,7 +183,26 @@ export class FairExchangePolicyPage {
     this.InformationContent.setParent(this.parent);
     this.InformationContent.addComponent(
       new Transform({
-        position: new Vector3(1, 0.1, -0.004),
+        position: new Vector3(1, 0.215, -0.004),
+        scale: new Vector3(0.1, 0.1, 0.1),
+        rotation: Quaternion.Euler(0, 0, 0),
+      })
+    );
+
+    this.InformationContentLinksText = new TextShape(
+      "License Agreement v1\n\nCommerce Agreement v1"
+    );
+    
+    this.InformationContentLinksText.color = Color3.Blue();
+    this.InformationContentLinksText.fontSize = 5;
+    this.InformationContentLinksText.outlineColor = Color3.Black();
+    this.InformationContentLinksText.hTextAlign = "right";
+    this.InformationContentLinksText.outlineWidth = 0.1;
+    this.InformationContentLinks.addComponent(this.InformationContentLinksText);
+    this.InformationContentLinks.setParent(this.parent);
+    this.InformationContentLinks.addComponent(
+      new Transform({
+        position: new Vector3(1, -0.068, -0.004),
         scale: new Vector3(0.1, 0.1, 0.1),
         rotation: Quaternion.Euler(0, 0, 0),
       })
