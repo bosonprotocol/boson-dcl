@@ -12,9 +12,9 @@ export class HowItWorksLink extends Entity {
     this.howDoesItWorkPage = new HowDoesItWork(_kiosk, _parent);
 
     this.viewHowItWorksText = new TextShape("How it works?");
-    this.viewHowItWorksText.color = Color3.Purple();
+    this.viewHowItWorksText.color = Color3.Blue();
     this.viewHowItWorksText.fontSize = 4;
-    this.viewHowItWorksText.outlineColor = Color3.Purple();
+    this.viewHowItWorksText.outlineColor = Color3.Blue();
     this.viewHowItWorksText.outlineWidth = 0.25;
     this.addComponent(this.viewHowItWorksText);
     this.setParent(_parent);

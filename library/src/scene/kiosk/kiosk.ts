@@ -17,6 +17,7 @@ import {
   OfferFieldsFragment,
   ProductV1Variation,
 } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
+import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
 
 /**
  * @public
@@ -77,6 +78,8 @@ export class Kiosk extends Entity {
   connecectedToWeb3: boolean;
 
   billboardParent: Entity;
+
+  static waveAnimationSystem : WaveAnimationSystem | undefined = undefined
 
   public static init(
     coreSDK: CoreSDK,
@@ -308,6 +311,10 @@ export class Kiosk extends Entity {
     }
     if (!DelayedTaskSystem.instance) {
       engine.addSystem(new DelayedTaskSystem());
+    }
+    if(Kiosk.waveAnimationSystem==undefined){
+      Kiosk.waveAnimationSystem = new WaveAnimationSystem()
+      engine.addSystem(Kiosk.waveAnimationSystem )
     }
   }
 
@@ -613,7 +620,7 @@ export class Kiosk extends Entity {
     let measurement = 0;
     for (let i = 0; i < productName.length; ++i) {
       const c = lookup.indexOf(productName.charAt(i));
-      measurement += (c < 0 ? 60 : c) * 7 + 200;
+      measurement += (c < 0 ? 60 : c) * 7 + 250;
       if (measurement > maxMeasurement) {
         productName = productName.substring(0, i - 1) + "...";
         break;

@@ -287,6 +287,10 @@ export class Kiosk extends Entity {
     updateProductPrice(): void;
     // (undocumented)
     variations: Variation[];
+    // Warning: (ae-forgotten-export) The symbol "WaveAnimationSystem" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    static waveAnimationSystem: WaveAnimationSystem | undefined;
 }
 
 export { MetaTxConfig }

@@ -54,26 +54,35 @@ export class DisplayProduct extends Entity {
           new Transform({
             position: new Vector3(0, 1.6, 0),
             rotation: Quaternion.Euler(180, 0, 0),
-            scale: new Vector3(1.6 / 1.4 - this.frameOffset, 2 / 1.4, 0.01),
+            scale: new Vector3(1.6 / 1.4, 1.6 / 1.4, 0.01),
           })
         );
 
         if (_productData.metadata.product.visuals_images.length > 0) {
-          const productTexture: Texture = Helper.getIPFSImageTexture(
+
+          Helper.getIPFSImageTexture(
             _productData.metadata.product.visuals_images[mainImageIndex].url
-          );
-          productImageMat.albedoTexture = productTexture;
-          productImageMat.emissiveIntensity = 1;
-          productImageMat.emissiveColor = Color3.White();
-          productImageMat.emissiveTexture = productTexture;
-          this.addComponent(productImageMat);
-          const width =
-            _productData.metadata.product.visuals_images[mainImageIndex].width;
-          const height =
-            _productData.metadata.product.visuals_images[mainImageIndex].height;
-          transform.scale.y =
-            transform.scale.x * (width > 0 ? height / width : 1);
-          this.originalScale = transform.scale.clone();
+          ).then((texture: Texture) => {
+            productImageMat.albedoTexture = texture;
+            productImageMat.emissiveIntensity = 1;
+            productImageMat.emissiveColor = Color3.White();
+            productImageMat.emissiveTexture = texture;
+            this.addComponent(productImageMat);
+
+            if (texture.src.indexOf("waitingForImage") == -1) {
+              const width =
+                _productData.metadata.product.visuals_images[mainImageIndex].width;
+              const height =
+                _productData.metadata.product.visuals_images[mainImageIndex].height;
+              transform.scale.y =
+                transform.scale.x * (width > 0 ? height / width : 1);
+            }
+            this.originalScale = transform.scale.clone();
+            if(this.getComponent(ScaleSpringComponent).targetScale.x>0){
+              this.getComponent(ScaleSpringComponent).targetScale = this.originalScale
+            }
+          })
+
         }
 
         // Add image frame

@@ -8,7 +8,6 @@ export class LockComponent {
   // artist image for lock
   artistEntity: Entity = new Entity();
   artistMat: Material = new Material();
-  artistTexture: Texture | undefined;
 
   // Artist background in case it has alpha
   artistFillEntity: Entity = new Entity();
@@ -87,6 +86,7 @@ export class LockComponent {
           _transform.position.y,
           _transform.position.z - 0.0008
         ),
+        rotation: Quaternion.Euler(180,180,0),
         scale: _transform.scale,
       })
     );
@@ -114,16 +114,18 @@ export class LockComponent {
       }
       if (targetImage) {
         if (targetImage.url != undefined) {
-          this.artistTexture = Helper.getIPFSImageTexture(targetImage.url);
-          this.artistMat.albedoTexture = this.artistTexture;
-          this.artistMat.emissiveIntensity = 1;
-          this.artistMat.emissiveColor = Color3.White();
-          this.artistMat.emissiveTexture = this.artistTexture;
-          this.artistMat.alphaTexture = new Texture(
-            "images/kiosk/ui/gate_mask.png"
-          );
-          this.artistMat.transparencyMode = 2;
-          this.artistEntity.addComponent(this.artistMat);
+          Helper.getIPFSImageTexture(targetImage.url).then((texture:Texture)=>{
+            this.artistMat.albedoTexture = texture;
+            this.artistMat.emissiveIntensity = 1;
+            this.artistMat.emissiveColor = Color3.White();
+            this.artistMat.emissiveTexture = texture;
+            this.artistMat.alphaTexture = new Texture(
+              "images/kiosk/ui/gate_mask.png"
+            );
+            this.artistMat.transparencyMode = 2;
+            this.artistEntity.addComponent(this.artistMat);
+          })
+
           if (targetImage.height && targetImage.width) {
             this.artistEntity.getComponent(Transform).scale.y =
               this.artistEntity.getComponent(Transform).scale.x *
@@ -131,46 +133,47 @@ export class LockComponent {
           }
         }
       }
+
+      //Lock
+      this.backgroundEntity = new Entity();
+      this.backgroundEntity.addComponent(new PlaneShape());
+      this.backgroundEntity.setParent(_parent);
+      this.backgroundEntity.addComponent(
+        new Transform({
+          position: new Vector3(
+            _transform.position.x,
+            _transform.position.y,
+            _transform.position.z - 0.0
+          ),
+          rotation: _transform.rotation,
+          scale: new Vector3(
+            _transform.scale.x * 1.2,
+            _transform.scale.y * 1.2,
+            0.01
+          ),
+        })
+      );
+
+      this.lockMaterial = new Material();
+      this.lockTextureUnlocked = new Texture(
+        "images/kiosk/ui/gate_lock_tick.png"
+      );
+      this.lockTextureLocked = new Texture(
+        "images/kiosk/ui/gate_lock_cross.png"
+      );
+
+      this.lockMaterial.albedoTexture = this.lockTextureLocked;
+      this.lockMaterial.emissiveIntensity = 0.25;
+      this.lockMaterial.emissiveColor = Color3.White();
+      this.lockMaterial.emissiveTexture = this.lockTextureLocked;
+      this.lockMaterial.transparencyMode = 2;
+      this.backgroundEntity.addComponent(this.lockMaterial);
+      this.foregroundEntity.addComponent(this.lockMaterial);
+
+      this.setLock();
     }
-
-    //Lock
-    this.backgroundEntity = new Entity();
-    this.backgroundEntity.addComponent(new PlaneShape());
-    this.backgroundEntity.setParent(_parent);
-    this.backgroundEntity.addComponent(
-      new Transform({
-        position: new Vector3(
-          _transform.position.x,
-          _transform.position.y,
-          _transform.position.z - 0.0
-        ),
-        rotation: _transform.rotation,
-        scale: new Vector3(
-          _transform.scale.x * 1.2,
-          _transform.scale.y * 1.2,
-          0.01
-        ),
-      })
-    );
-
-    this.lockMaterial = new Material();
-    this.lockTextureUnlocked = new Texture(
-      "images/kiosk/ui/gate_lock_tick.png"
-    );
-    this.lockTextureLocked = new Texture("images/kiosk/ui/gate_lock_cross.png");
-
-    this.lockMaterial.albedoTexture = this.lockTextureLocked;
-    this.lockMaterial.emissiveIntensity = 0.25;
-    this.lockMaterial.emissiveColor = Color3.White();
-    this.lockMaterial.emissiveTexture = this.lockTextureLocked;
-    this.lockMaterial.transparencyMode = 2;
-    this.backgroundEntity.addComponent(this.lockMaterial);
-    this.foregroundEntity.addComponent(this.lockMaterial);
-
-    this.setLock();
   }
-
-  show() {
+  public show(): void {
     Helper.showAllEntities([
       this.artistEntity,
       this.backgroundEntity,
@@ -179,7 +182,7 @@ export class LockComponent {
     ]);
   }
 
-  hide() {
+  public hide(): void {
     Helper.hideAllEntities([
       this.artistEntity,
       this.backgroundEntity,
@@ -188,7 +191,7 @@ export class LockComponent {
     ]);
   }
 
-  setLock() {
+  public setLock(): void {
     if (this.locked) {
       this.lockMaterial.albedoTexture = this.lockTextureLocked;
       this.lockMaterial.emissiveTexture = this.lockTextureLocked;
