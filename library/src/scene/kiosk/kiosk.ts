@@ -537,28 +537,32 @@ export class Kiosk extends Entity {
   }
 
   update(_dt: number) {
-    if (!this.isAddedToEngine()) {
-      return;
-    }
-
-    if (this.displayProduct != undefined) {
-      this.displayProduct.update(_dt);
-    }
-
-    //Is the UI open?
-    if (this.uiOpen) {
-      // If player is over 5m from the kiosk close the UI
-      if (
-        Vector3.Distance(
-          this.getComponent(Transform).position,
-          Camera.instance.position
-        ) > 20
-      ) {
-        this.productPage?.hide();
-        this.lockScreen?.hide();
-        this.uiOpen = false;
-        this.showDisplayProduct();
+    try {
+      if (!this.isAddedToEngine()) {
+        return;
       }
+
+      if (this.displayProduct != undefined) {
+        this.displayProduct.update(_dt);
+      }
+
+      //Is the UI open?
+      if (this.uiOpen) {
+        // If player is over 5m from the kiosk close the UI
+        if (
+          Vector3.Distance(
+            this.getComponent(Transform).position,
+            Camera.instance.position
+          ) > 20
+        ) {
+          this.productPage?.hide();
+          this.lockScreen?.hide();
+          this.uiOpen = false;
+          this.showDisplayProduct();
+        }
+      }
+    } catch (e) {
+      log(e);
     }
   }
 
@@ -571,30 +575,34 @@ export class Kiosk extends Entity {
   }
 
   updateProductPrice() {
-    if (!this.productData || !this.productData.price) {
-      return;
-    }
-    // Find and update price text values
-    let price = -1;
-    Helper.currencyPrices.forEach((currencyPrice) => {
-      if (currencyPrice.currency == this.productCurrency) {
-        price = currencyPrice.price;
+    try {
+      if (!this.productData || !this.productData.price) {
+        return;
       }
-    });
+      // Find and update price text values
+      let price = -1;
+      Helper.currencyPrices.forEach((currencyPrice) => {
+        if (currencyPrice.currency == this.productCurrency) {
+          price = currencyPrice.price;
+        }
+      });
 
-    const priceString: string =
-      "($" +
-      Helper.nPriceTransform(
-        price * parseFloat(this.productData.price)
-      ).toFixed(2) +
-      ")";
+      const priceString: string =
+        "($" +
+        Helper.nPriceTransform(
+          price * parseFloat(this.productData.price)
+        ).toFixed(2) +
+        ")";
 
-    if (this.productPage?.productDollarPriceText != undefined && price > -1) {
-      this.productPage.productDollarPriceText.value = priceString;
-    }
+      if (this.productPage?.productDollarPriceText != undefined && price > -1) {
+        this.productPage.productDollarPriceText.value = priceString;
+      }
 
-    if (this.lockScreen?.productDollarPriceText != undefined && price > -1) {
-      this.lockScreen.productDollarPriceText.value = priceString;
+      if (this.lockScreen?.productDollarPriceText != undefined && price > -1) {
+        this.lockScreen.productDollarPriceText.value = priceString;
+      }
+    } catch (e) {
+      log(e);
     }
   }
 

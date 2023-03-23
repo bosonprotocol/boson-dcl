@@ -129,8 +129,8 @@ export class Helper {
     }
 
     let formattedText = "";
-    let countBack:number = 0
-    let previousCountBack:number = 0
+    let countBack = 0;
+    let previousCountBack = 0;
 
     let index = 0;
     while (_text.length > 0) {
@@ -141,20 +141,31 @@ export class Helper {
       }
 
       //Check to see if we are at a space
-      let lettersToSearch:number = 20
-      previousCountBack = countBack
-      while(_text.charAt(_maxCharacters + (_maxCharacters * index) - differenceFromMax-countBack)!=" " && lettersToSearch>0){
-        countBack+=1
-        lettersToSearch--
+      let lettersToSearch = 20;
+      previousCountBack = countBack;
+      while (
+        _text.charAt(
+          _maxCharacters +
+            _maxCharacters * index -
+            differenceFromMax -
+            countBack
+        ) != " " &&
+        lettersToSearch > 0
+      ) {
+        countBack += 1;
+        lettersToSearch--;
       }
-      countBack-=1 // Don't bring the space with you
+      countBack -= 1; // Don't bring the space with you
 
       formattedText +=
         _text.slice(
-          (_maxCharacters * index) -previousCountBack,
-          _maxCharacters + _maxCharacters * index - differenceFromMax -countBack
+          _maxCharacters * index - previousCountBack,
+          _maxCharacters +
+            _maxCharacters * index -
+            differenceFromMax -
+            countBack
         ) + "\n";
-      if ((index * _maxCharacters) -countBack >= _text.length) {
+      if (index * _maxCharacters - countBack >= _text.length) {
         break;
       }
       index++;
@@ -269,32 +280,40 @@ export class Helper {
   }
 
   public static refreshPrices() {
-    const template: TemplateStringsArray = Helper.passTemplate`
-        {
-            pools(
-              where: {
-                  token0_: { symbol: "WETH" }
-                  token1_: { symbol: "USDT" }
-              }
-              orderBy: volumeUSD
-              orderDirection: desc
-            ) {
-              token0 {
-                symbol
-              }
-              token0Price
-              token1 {
-                symbol
-              }
-              token1Price
+    try {
+      const template: TemplateStringsArray = Helper.passTemplate`
+      {
+          pools(
+            where: {
+                token0_: { symbol: "WETH" }
+                token1_: { symbol: "USDT" }
             }
-        }
-          `;
-
-    boson.getEthPrice(template).then((data) => {
-      Helper.ethPrice = data.pools[0].token1Price;
-      Helper.getAllTokenPrices();
-    });
+            orderBy: volumeUSD
+            orderDirection: desc
+          ) {
+            token0 {
+              symbol
+            }
+            token0Price
+            token1 {
+              symbol
+            }
+            token1Price
+          }
+      }
+        `;
+      boson
+        .getEthPrice(template)
+        .then((data) => {
+          Helper.ethPrice = data.pools[0].token1Price;
+          Helper.getAllTokenPrices();
+        })
+        .catch((e) => {
+          log(e);
+        });
+    } catch (e) {
+      log(e);
+    }
   }
 
   public static getAllTokenPrices() {
@@ -304,23 +323,32 @@ export class Helper {
   }
 
   public static getTokenData(_currencyPrice: CurrencyPrice) {
-    const template: TemplateStringsArray = Helper.passTemplate`
-        query($token0:String) {
-            token(id: $token0) {
-              name
-              symbol
-              derivedETH
-            }
-          }
-          `;
-    boson.getTokenData(template, _currencyPrice.tokenID).then((data) => {
-      Helper.currencyPrices.forEach((currencyPrice) => {
-        if (data.token != null) {
-          if (currencyPrice.tokenID == _currencyPrice.tokenID) {
-            currencyPrice.price = data.token.derivedETH * Helper.ethPrice;
+    try {
+      const template: TemplateStringsArray = Helper.passTemplate`
+      query($token0:String) {
+          token(id: $token0) {
+            name
+            symbol
+            derivedETH
           }
         }
-      });
-    });
+        `;
+      boson
+        .getTokenData(template, _currencyPrice.tokenID)
+        .then((data) => {
+          Helper.currencyPrices.forEach((currencyPrice) => {
+            if (data.token != null) {
+              if (currencyPrice.tokenID == _currencyPrice.tokenID) {
+                currencyPrice.price = data.token.derivedETH * Helper.ethPrice;
+              }
+            }
+          });
+        })
+        .catch((e) => {
+          log(e);
+        });
+    } catch (e) {
+      log(e);
+    }
   }
 }
