@@ -1,3 +1,4 @@
+import { getEnvironment } from "../../../core-sdk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
@@ -221,14 +222,37 @@ export class CompletePage {
       })
     );
 
+    let explorerUrlBase = "";
+    let openseaUrlBase = "";
+    let bosonDAppUrlBase = "";
+
+    switch (getEnvironment()) {
+      case "local":
+      case "testing":
+        explorerUrlBase = "https://mumbai.polygonscan.com";
+        openseaUrlBase = "https://testnets.opensea.io";
+        bosonDAppUrlBase = "https://interface-test.on.fleek.co";
+        break;
+      case "staging":
+        explorerUrlBase = "https://mumbai.polygonscan.com";
+        openseaUrlBase = "https://testnets.opensea.io";
+        bosonDAppUrlBase = "https://interface-staging.on.fleek.co";
+        break;
+      case "production":
+        explorerUrlBase = "https://polygonscan.com";
+        openseaUrlBase = "https://opensea.io";
+        bosonDAppUrlBase = "https://bosonapp.io";
+        break;
+    }
+
     this.etherScanLinkClickBox.addComponent(Kiosk.alphaMat as Material);
     this.etherScanLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://etherscan.io/");
+          openExternalURL(explorerUrlBase);
         },
         {
-          hoverText: "Etherscan",
+          hoverText: "Polygonscan",
         }
       )
     );
@@ -246,7 +270,7 @@ export class CompletePage {
     this.openSeaLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://opensea.io/");
+          openExternalURL(openseaUrlBase);
         },
         {
           hoverText: "OpenSea",
@@ -267,7 +291,7 @@ export class CompletePage {
     this.redeemLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://bosonapp.io/");
+          openExternalURL(bosonDAppUrlBase);
         },
         {
           hoverText: "Redeem",
