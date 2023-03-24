@@ -322,7 +322,7 @@ export class CompletePage {
     } else {
       // Error
       this.errorTitle.getComponent(TextShape).value =
-        Helper.addNewLinesInString(data.toString(), 70);
+        Helper.addNewLinesInString(data.toString(), 70,8);
 
       Helper.hideAllEntities([
         this.successEntity,
