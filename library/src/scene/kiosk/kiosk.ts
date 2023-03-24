@@ -560,7 +560,7 @@ export class Kiosk extends Entity {
           Vector3.Distance(
             this.getComponent(Transform).position,
             Camera.instance.position
-          ) > 20
+          ) > 20 && Camera.instance.position.x != 0
         ) {
           this.productPage?.hide();
           this.lockScreen?.hide();
