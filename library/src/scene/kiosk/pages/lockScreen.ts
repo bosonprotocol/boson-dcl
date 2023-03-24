@@ -442,7 +442,21 @@ export class LockScreen {
     }
 
     // Set gate text
-    this.gateInfoText.value = "Proceed to view\nproduct details"
+    if(this.kiosk.gatedTokens.length > 0){
+      this.gateInfo.getComponent(Transform).position.y = 0.45
+      this.gateInfo.getComponent(Transform).position.x = 0.2
+      this.gateInfoText.fontSize = 14
+      if(this.lockComponent?.locked){
+        this.gateInfoText.value = "Locked"
+      } else {
+        this.gateInfoText.value = "Unlocked"
+      }
+    } else {
+      this.gateInfoText.value = "Proceed to view\nproduct details"
+      this.gateInfo.getComponent(Transform).position.y = 0.325
+      this.gateInfo.getComponent(Transform).position.x = 0.24
+      this.gateInfoText.fontSize = 10
+    }
 
     this.parent.getComponent(ScaleSpringComponent).targetScale = new Vector3(
       1,
