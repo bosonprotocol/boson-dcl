@@ -28,7 +28,9 @@ export class HowDoesItWork {
     this.kiosk = _kiosk;
     this.parent = new Entity();
     this.parent.setParent(_parent);
-    this.parent.addComponent(new Transform());
+    this.parent.addComponent(new Transform({
+      scale:new Vector3(0,0,0)
+    }));
 
     // Back Arrow
     this.backButtonEntity = new Entity();
@@ -36,7 +38,7 @@ export class HowDoesItWork {
     this.backButtonEntity.setParent(this.parent);
     this.backButtonEntity.addComponent(
       new Transform({
-        position: new Vector3(-1.2, 0.95, -0.002),
+        position: new Vector3(-1.2, 0.95, -0.0035),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.07, 0.07, 0.01),
       })
@@ -82,7 +84,7 @@ export class HowDoesItWork {
     this.backgroundWidget.setParent(this.parent);
     this.backgroundWidget.addComponent(
       new Transform({
-        position: new Vector3(0, 0, -0.00015),
+        position: new Vector3(0, 0, -0.003),
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(2.6, 2.1, 2),
       })
@@ -107,7 +109,7 @@ export class HowDoesItWork {
     this.backgroundImageEntity.setParent(this.parent);
     this.backgroundImageEntity.addComponent(
       new Transform({
-        position: new Vector3(0, 0, -0.03),
+        position: new Vector3(0, 0, -0.035),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(
           1.543 * backgroundScale,
@@ -136,7 +138,7 @@ export class HowDoesItWork {
     this.learnMoreClickBox.addComponent(new PlaneShape());
     this.learnMoreClickBox.addComponent(
       new Transform({
-        position: new Vector3(-1.04, -0.64, -0.032),
+        position: new Vector3(-1.04, -0.64, -0.04),
         scale: new Vector3(0.27, 0.06, 0.01),
       })
     );
