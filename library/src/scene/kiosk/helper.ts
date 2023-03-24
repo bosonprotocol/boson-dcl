@@ -211,7 +211,6 @@ export class Helper {
     return new Promise<Texture>((resolve) => {
       fetch(url).then(
         (response) => {
-          log("bobby response");
           log(response);
           if (response.status == 400) {
             resolve(new Texture("images/kiosk/ui/waitingForImage.png"));

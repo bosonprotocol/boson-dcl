@@ -1186,6 +1186,10 @@ export class ProductPage {
     } else {
       this.productImage.getComponent(Transform).scale.y = this.productImage.getComponent(Transform).scale.x
     }
+
+    // Calculate zoom button height
+    this.productZoomEntity.getComponent(Transform).position.y = this.productImage.getComponent(Transform).scale.y/2
+
   }
 
   private showPreviousImage() {

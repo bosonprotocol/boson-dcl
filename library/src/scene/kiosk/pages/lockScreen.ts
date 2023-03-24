@@ -49,7 +49,7 @@ export class LockScreen {
 
   // Gate information. Quest status, low price, informs of login etc
   gateInfo: Entity = new Entity();
-  gateInfoText: TextShape | undefined;
+  gateInfoText: TextShape;
 
   tokenGatedOffer: TokenGatedOffer | undefined;
 
@@ -63,6 +63,7 @@ export class LockScreen {
   public lockComponent: LockComponent | undefined;
 
   hideTask: DelayedTask;
+  hideTaskFirstRun: boolean = true
 
   constructor(_kiosk: Kiosk, _productData: any) {
     this.kiosk = _kiosk;
@@ -169,7 +170,7 @@ export class LockScreen {
       })
     );
     this.productNameText = new TextShape(
-      Helper.addNewLinesInString(this.productData.metadata.product.title,32,1)
+      Helper.addNewLinesInString(this.productData.metadata.product.title, 32, 1)
     );
     this.productNameText.fontSize = 7;
     this.productNameText.vTextAlign = "top"
@@ -204,7 +205,7 @@ export class LockScreen {
     this.whiteBoxEntity.addComponent(new PlaneShape());
     this.whiteBoxEntity.setParent(this.parent);
 
-   
+
     this.whiteBoxEntity.addComponent(
       new Transform({
         position: new Vector3(0, 0.2, 0),
@@ -315,7 +316,7 @@ export class LockScreen {
     this.gateInfo.setParent(this.parent);
     this.gateInfo.addComponent(
       new Transform({
-        position: new Vector3(0.17, 0.45, -0.002),
+        position: new Vector3(0.24, 0.325, -0.002),
         scale: new Vector3(0.05, 0.05, 0.05),
         rotation: Quaternion.Euler(0, 0, 0),
       })
@@ -356,29 +357,33 @@ export class LockScreen {
     this.parent.addComponent(new ScaleSpringComponent(120, 10));
 
     this.hideTask = new DelayedTask(() => {
-      Helper.hideAllEntities([
-        this.backgroundWidget,
-        this.productItemType,
-        this.productName,
-        this.lockLogoEntity,
-        this.whiteBoxEntity,
-        this.proceedButtonEntity,
-        this.howItWorksLink,
-        this.gateInfo,
-        this.currencySymbolImage,
-        this.productPrice,
-        this.closeButtonEntity,
-      ]);
-      if (this.tokenGatedOffer != undefined) {
-        this.tokenGatedOffer.hide();
+      if (this.hideTaskFirstRun) {
+        return
+      } else {
+        Helper.hideAllEntities([
+          this.backgroundWidget,
+          this.productItemType,
+          this.productName,
+          this.lockLogoEntity,
+          this.whiteBoxEntity,
+          this.proceedButtonEntity,
+          this.howItWorksLink,
+          this.gateInfo,
+          this.currencySymbolImage,
+          this.productPrice,
+          this.closeButtonEntity,
+        ]);
+        if (this.tokenGatedOffer != undefined) {
+          this.tokenGatedOffer.hide();
+        }
       }
-    }, 1);
+    }, 0);
 
     // No gating formatting
-    if(this.kiosk.gatedTokens.length<1){
+    if (this.kiosk.gatedTokens.length < 1) {
       this.backgroundWidget.getComponent(Transform).scale.y = 1.8
       this.whiteBoxEntity.getComponent(Transform).scale.y = 0.5
- 
+
       this.closeButtonEntity.getComponent(Transform).position.y -= 0.27
       this.productItemType.getComponent(Transform).position.y -= 0.27
       this.productName.getComponent(Transform).position.y -= 0.27
@@ -434,6 +439,23 @@ export class LockScreen {
 
     if (this.tokenGatedOffer != undefined) {
       this.tokenGatedOffer.show();
+    }
+
+    // Set gate text
+    if(this.kiosk.gatedTokens.length > 0){
+      this.gateInfo.getComponent(Transform).position.y = 0.45
+      this.gateInfo.getComponent(Transform).position.x = 0.2
+      this.gateInfoText.fontSize = 14
+      if(this.lockComponent?.locked){
+        this.gateInfoText.value = "Locked"
+      } else {
+        this.gateInfoText.value = "Unlocked"
+      }
+    } else {
+      this.gateInfoText.value = "Proceed to view\nproduct details"
+      this.gateInfo.getComponent(Transform).position.y = 0.325
+      this.gateInfo.getComponent(Transform).position.x = 0.24
+      this.gateInfoText.fontSize = 10
     }
 
     this.parent.getComponent(ScaleSpringComponent).targetScale = new Vector3(
