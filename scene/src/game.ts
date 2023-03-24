@@ -4,7 +4,12 @@ import { useBoson } from './boson'
 
 void loadScene()
 
-const productUUIDs = ['c0b6a4e-d62d-751c-a3c7-b7be6fa50c', 'a3a1db6-3bb7-c6f5-441c-80cccbb014']
+const productUUIDs = [
+  '7e8bd10-14f3-be4c-a7c-c2d632080f01',
+  '5ba4b06-184e-3ea-86bd-40fc1e10eb85',
+  '56a8db7-5ff-66a-2d7-dffef58dc2',
+  'df883c1-4bd8-30fe-721b-e6dceb6e1371'
+]
 
 const floor: Entity = new Entity()
 floor.addComponent(
@@ -22,7 +27,7 @@ async function loadScene() {
 
     new Kiosk(
       new Transform({
-        position: new Vector3(6, 0, 6),
+        position: new Vector3(6, 0, 2),
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
@@ -39,7 +44,7 @@ async function loadScene() {
 
     new Kiosk(
       new Transform({
-        position: new Vector3(6, 0, 10),
+        position: new Vector3(6, 0, 4),
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
@@ -48,13 +53,35 @@ async function loadScene() {
         mainImageIndex: 2, // choose which image is shown in the kiosk (default: 0)
         imageSizes: {
           // override the image size if missing from metadata (before March 2023)
-          0: { height: 1100, width: 733 },
-          1: { height: 1100, width: 733 },
-          2: { height: 1100, width: 733 },
-          3: { height: 1100, width: 733 },
-          4: { height: 1100, width: 733 },
-          5: { height: 1100, width: 733 }
+          0: { height: 1100, width: 880 },
+          1: { height: 1100, width: 880 },
+          2: { height: 1100, width: 880 },
+          3: { height: 1100, width: 880 },
+          4: { height: 1100, width: 880 },
+          5: { height: 1100, width: 880 }
         }
+      }
+    )
+
+    new Kiosk(
+      new Transform({
+        position: new Vector3(6, 0, 6),
+        rotation: Quaternion.Euler(0, 0, 0),
+        scale: new Vector3(1, 1, 1)
+      }),
+      {
+        productUUID: productUUIDs[2] // product UUID
+      }
+    )
+
+    new Kiosk(
+      new Transform({
+        position: new Vector3(6, 0, 8),
+        rotation: Quaternion.Euler(0, 0, 0),
+        scale: new Vector3(1, 1, 1)
+      }),
+      {
+        productUUID: productUUIDs[3] // product UUID
       }
     )
   })

@@ -1,3 +1,4 @@
+import { getEnvironment } from "../../../core-sdk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
@@ -221,14 +222,37 @@ export class CompletePage {
       })
     );
 
+    let explorerUrlBase = "";
+    let openseaUrlBase = "";
+    let bosonDAppUrlBase = "";
+
+    switch (getEnvironment()) {
+      case "local":
+      case "testing":
+        explorerUrlBase = "https://mumbai.polygonscan.com";
+        openseaUrlBase = "https://testnets.opensea.io";
+        bosonDAppUrlBase = "https://interface-test.on.fleek.co";
+        break;
+      case "staging":
+        explorerUrlBase = "https://mumbai.polygonscan.com";
+        openseaUrlBase = "https://testnets.opensea.io";
+        bosonDAppUrlBase = "https://interface-staging.on.fleek.co";
+        break;
+      case "production":
+        explorerUrlBase = "https://polygonscan.com";
+        openseaUrlBase = "https://opensea.io";
+        bosonDAppUrlBase = "https://bosonapp.io";
+        break;
+    }
+
     this.etherScanLinkClickBox.addComponent(Kiosk.alphaMat as Material);
     this.etherScanLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://etherscan.io/");
+          openExternalURL(explorerUrlBase);
         },
         {
-          hoverText: "Etherscan",
+          hoverText: "Polygonscan",
         }
       )
     );
@@ -246,7 +270,7 @@ export class CompletePage {
     this.openSeaLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://opensea.io/");
+          openExternalURL(openseaUrlBase);
         },
         {
           hoverText: "OpenSea",
@@ -267,7 +291,7 @@ export class CompletePage {
     this.redeemLinkClickBox.addComponent(
       new OnPointerDown(
         () => {
-          openExternalURL("https://bosonapp.io/");
+          openExternalURL(bosonDAppUrlBase + "/#/account");
         },
         {
           hoverText: "Redeem",
@@ -278,6 +302,13 @@ export class CompletePage {
 
   show(_success: boolean, data: any) {
     if (_success) {
+      // TODO: extract user account and exchangeId from data
+      //  - user = data.from
+      //  - exchangeIdHexString = data.logs.find((log) => log.topics[0] === "0x442279a0d0683a12971990518f9f3f874391650139a762c4e94b23b51f04d94f").topics[3]
+      //  - exchangeId = parseInt(exchangeIdHexString, 16)
+      //  - tokenId can also be found from logs, useful for the opensea link
+      // Then refresh the links to chain explorer/opensea/bosondApp with this info.
+
       // Success
       Helper.showAllEntities([
         this.successEntity,

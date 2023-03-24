@@ -119,7 +119,11 @@ export class Helper {
     return _value / 1000000000000000000;
   }
 
-  public static addNewLinesInString(_text: string, _maxCharacters: number, _maxLines: number) {
+  public static addNewLinesInString(
+    _text: string,
+    _maxCharacters: number,
+    _maxLines: number
+  ) {
     if (_text == undefined) {
       return "";
     }
@@ -144,35 +148,50 @@ export class Helper {
       //Check to see if we are at a space
       let lettersToSearch = _maxCharacters;
       previousCountBack = countBack;
-      while (_text.charAt(_maxCharacters + _maxCharacters * index - differenceFromMax - countBack) != " " && lettersToSearch > 0) {
+      while (
+        _text.charAt(
+          _maxCharacters +
+            _maxCharacters * index -
+            differenceFromMax -
+            countBack
+        ) != " " &&
+        lettersToSearch > 0
+      ) {
         countBack += 1;
         lettersToSearch--;
       }
-      if (lettersToSearch != 0) { // Found a space
+      if (lettersToSearch != 0) {
+        // Found a space
         countBack -= 1; // Don't bring the space with you
       } else {
         // No space found so bring the whole block of text
-        countBack = 0
+        countBack = 0;
       }
 
-      let numberOfLineBreaks: number = 0
+      let numberOfLineBreaks = 0;
 
       if (currentLines < _maxLines) {
-        let textToAdd = _text.slice(_maxCharacters * index - previousCountBack, _maxCharacters + _maxCharacters * index - differenceFromMax - countBack)
+        const textToAdd = _text.slice(
+          _maxCharacters * index - previousCountBack,
+          _maxCharacters +
+            _maxCharacters * index -
+            differenceFromMax -
+            countBack
+        );
         formattedText += textToAdd + "\n";
 
         // If the text we are adding has line breaks already add them onto the counter
-        numberOfLineBreaks = textToAdd.split(/^/gm).length
+        numberOfLineBreaks = textToAdd.split(/^/gm).length;
         if (numberOfLineBreaks > 0) {
-          numberOfLineBreaks -= 1
+          numberOfLineBreaks -= 1;
         }
       }
 
-      currentLines += numberOfLineBreaks + 1
+      currentLines += numberOfLineBreaks + 1;
 
       if (currentLines >= _maxLines) {
-        formattedText = formattedText.slice(0, formattedText.length - 2)
-        formattedText += "..."
+        formattedText = formattedText.slice(0, formattedText.length - 2);
+        formattedText += "...";
       }
 
       if (index * _maxCharacters - countBack >= _text.length) {
@@ -185,24 +204,25 @@ export class Helper {
   }
 
   public static getIPFSImageTexture(_value: string): Promise<Texture> {
-      let url: string = "https://gray-permanent-fly-490.mypinata.cloud/ipfs/" +
-        _value.split("ipfs://")[1]
+    const url: string =
+      "https://gray-permanent-fly-490.mypinata.cloud/ipfs/" +
+      _value.split("ipfs://")[1];
 
-        return new Promise<Texture>(
-          (resolve)=>{
-         fetch(url).then((response) => {
-           log("bobby response")
-           log(response)
-           if(response.status == 400){
-             resolve(new Texture("images/kiosk/ui/waitingForImage.png"))
-           }
-            resolve(new Texture(url))
-         },
-           () => {
-            resolve(new Texture("images/kiosk/ui/waitingForImage.png"))
-           })
+    return new Promise<Texture>((resolve) => {
+      fetch(url).then(
+        (response) => {
+          log("bobby response");
+          log(response);
+          if (response.status == 400) {
+            resolve(new Texture("images/kiosk/ui/waitingForImage.png"));
           }
-        )
+          resolve(new Texture(url));
+        },
+        () => {
+          resolve(new Texture("images/kiosk/ui/waitingForImage.png"));
+        }
+      );
+    });
   }
 
   public static getCurrencyTexture(currency: eCurrency): Texture {
@@ -299,32 +319,40 @@ export class Helper {
   }
 
   public static refreshPrices() {
-    const template: TemplateStringsArray = Helper.passTemplate`
-        {
-            pools(
-              where: {
-                  token0_: { symbol: "WETH" }
-                  token1_: { symbol: "USDT" }
-              }
-              orderBy: volumeUSD
-              orderDirection: desc
-            ) {
-              token0 {
-                symbol
-              }
-              token0Price
-              token1 {
-                symbol
-              }
-              token1Price
+    try {
+      const template: TemplateStringsArray = Helper.passTemplate`
+      {
+          pools(
+            where: {
+                token0_: { symbol: "WETH" }
+                token1_: { symbol: "USDT" }
             }
-        }
-          `;
-
-    boson.getEthPrice(template).then((data) => {
-      Helper.ethPrice = data.pools[0].token1Price;
-      Helper.getAllTokenPrices();
-    });
+            orderBy: volumeUSD
+            orderDirection: desc
+          ) {
+            token0 {
+              symbol
+            }
+            token0Price
+            token1 {
+              symbol
+            }
+            token1Price
+          }
+      }
+        `;
+      boson
+        .getEthPrice(template)
+        .then((data) => {
+          Helper.ethPrice = data.pools[0].token1Price;
+          Helper.getAllTokenPrices();
+        })
+        .catch((e) => {
+          log(e);
+        });
+    } catch (e) {
+      log(e);
+    }
   }
 
   public static getAllTokenPrices() {
@@ -334,23 +362,32 @@ export class Helper {
   }
 
   public static getTokenData(_currencyPrice: CurrencyPrice) {
-    const template: TemplateStringsArray = Helper.passTemplate`
-        query($token0:String) {
-            token(id: $token0) {
-              name
-              symbol
-              derivedETH
-            }
-          }
-          `;
-    boson.getTokenData(template, _currencyPrice.tokenID).then((data) => {
-      Helper.currencyPrices.forEach((currencyPrice) => {
-        if (data.token != null) {
-          if (currencyPrice.tokenID == _currencyPrice.tokenID) {
-            currencyPrice.price = data.token.derivedETH * Helper.ethPrice;
+    try {
+      const template: TemplateStringsArray = Helper.passTemplate`
+      query($token0:String) {
+          token(id: $token0) {
+            name
+            symbol
+            derivedETH
           }
         }
-      });
-    });
+        `;
+      boson
+        .getTokenData(template, _currencyPrice.tokenID)
+        .then((data) => {
+          Helper.currencyPrices.forEach((currencyPrice) => {
+            if (data.token != null) {
+              if (currencyPrice.tokenID == _currencyPrice.tokenID) {
+                currencyPrice.price = data.token.derivedETH * Helper.ethPrice;
+              }
+            }
+          });
+        })
+        .catch((e) => {
+          log(e);
+        });
+    } catch (e) {
+      log(e);
+    }
   }
 }
