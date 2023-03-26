@@ -185,7 +185,7 @@ export class Kiosk extends Entity {
                 width: number;
             };
         };
-    }, _displayProduct?: DisplayProduct, gateState?: eGateStateEnum);
+    }, _displayProduct?: DisplayProduct | DisplayProduct[], gateState?: eGateStateEnum);
     // (undocumented)
     static allBalances: object;
     // (undocumented)
@@ -209,7 +209,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     customQuestInformation: string;
     // (undocumented)
-    displayProduct: DisplayProduct;
+    displayProducts: DisplayProduct[];
     // Warning: (ae-forgotten-export) The symbol "GatedToken" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)

@@ -31,7 +31,7 @@ export declare class Kiosk extends Entity
 |  [currentOfferID](./boson-dcl.kiosk.currentofferid.md) |  | string |  |
 |  [currentVariation](./boson-dcl.kiosk.currentvariation.md) |  | Variation \| undefined |  |
 |  [customQuestInformation](./boson-dcl.kiosk.customquestinformation.md) |  | string |  |
-|  [displayProduct](./boson-dcl.kiosk.displayproduct.md) |  | [DisplayProduct](./boson-dcl.displayproduct.md) |  |
+|  [displayProducts](./boson-dcl.kiosk.displayproducts.md) |  | [DisplayProduct](./boson-dcl.displayproduct.md)<!-- -->\[\] |  |
 |  [gatedTokens](./boson-dcl.kiosk.gatedtokens.md) |  | GatedToken\[\] |  |
 |  [gateState](./boson-dcl.kiosk.gatestate.md) |  | [eGateStateEnum](./boson-dcl.egatestateenum.md) |  |
 |  [kioskModel](./boson-dcl.kiosk.kioskmodel.md) | <code>static</code> | GLTFShape |  |
