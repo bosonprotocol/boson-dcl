@@ -58,7 +58,7 @@ export class Kiosk extends Entity {
 
   gatedTokens: GatedToken[] = [];
 
-  displayProduct: DisplayProduct;
+  displayProducts: DisplayProduct[];
 
   onPointerDown: OnPointerDown;
 
@@ -79,7 +79,7 @@ export class Kiosk extends Entity {
 
   billboardParent: Entity;
 
-  static waveAnimationSystem : WaveAnimationSystem | undefined = undefined
+  static waveAnimationSystem: WaveAnimationSystem | undefined = undefined;
 
   public static init(
     coreSDK: CoreSDK,
@@ -103,7 +103,7 @@ export class Kiosk extends Entity {
           mainImageIndex?: number;
           imageSizes?: { [key: number]: { height: number; width: number } };
         },
-    _displayProduct: DisplayProduct = new DisplayProduct(
+    _displayProduct: DisplayProduct | DisplayProduct[] = new DisplayProduct(
       "",
       new Transform(),
       5
@@ -132,7 +132,9 @@ export class Kiosk extends Entity {
       );
     }
 
-    this.displayProduct = _displayProduct;
+    this.displayProducts = Array.isArray(_displayProduct)
+      ? _displayProduct
+      : [_displayProduct];
 
     this.billboardParent = new Entity();
     this.billboardParent.setParent(this);
@@ -180,12 +182,14 @@ export class Kiosk extends Entity {
 
         this.checkForGatedTokens();
         new DelayedTask(() => {
-          if (this.displayProduct != undefined) {
-            Helper.hideAllEntities([this.displayProduct]);
+          if (this.displayProducts && this.displayProducts.length > 0) {
+            Helper.hideAllEntities(this.displayProducts);
           }
         }, 1);
-        if (this.displayProduct != undefined) {
-          this.displayProduct.hide();
+        if (this.displayProducts && this.displayProducts.length > 0) {
+          this.displayProducts.forEach((displayProduct) =>
+            displayProduct.hide()
+          );
         }
       },
       {
@@ -312,9 +316,9 @@ export class Kiosk extends Entity {
     if (!DelayedTaskSystem.instance) {
       engine.addSystem(new DelayedTaskSystem());
     }
-    if(Kiosk.waveAnimationSystem==undefined){
-      Kiosk.waveAnimationSystem = new WaveAnimationSystem()
-      engine.addSystem(Kiosk.waveAnimationSystem )
+    if (Kiosk.waveAnimationSystem == undefined) {
+      Kiosk.waveAnimationSystem = new WaveAnimationSystem();
+      engine.addSystem(Kiosk.waveAnimationSystem);
     }
   }
 
@@ -390,12 +394,14 @@ export class Kiosk extends Entity {
         this.createdGatedTokens(this.offer);
       }
 
-      if (this.displayProduct != undefined) {
-        if (!this.displayProduct.created) {
-          this.displayProduct.create(this, this.offer, _data.mainImageIndex);
-          this.displayProduct.addComponent(this.onPointerDown);
-        }
-        this.displayProduct.show();
+      if (this.displayProducts && this.displayProducts.length > 0) {
+        this.displayProducts.forEach((displayProduct) => {
+          if (!displayProduct.created) {
+            displayProduct.create(this, this.offer, _data.mainImageIndex);
+            displayProduct.addComponent(this.onPointerDown);
+          }
+          displayProduct.show();
+        });
       }
 
       this.currentOfferID = this.offer.id;
@@ -549,8 +555,10 @@ export class Kiosk extends Entity {
         return;
       }
 
-      if (this.displayProduct != undefined) {
-        this.displayProduct.update(_dt);
+      if (this.displayProducts && this.displayProducts.length > 0) {
+        this.displayProducts.forEach((displayProduct) =>
+          displayProduct.update(_dt)
+        );
       }
 
       //Is the UI open?
@@ -560,7 +568,8 @@ export class Kiosk extends Entity {
           Vector3.Distance(
             this.getComponent(Transform).position,
             Camera.instance.position
-          ) > 20 && Camera.instance.position.x != 0
+          ) > 20 &&
+          Camera.instance.position.x != 0
         ) {
           this.productPage?.hide();
           this.lockScreen?.hide();
@@ -574,9 +583,11 @@ export class Kiosk extends Entity {
   }
 
   showDisplayProduct() {
-    if (this.displayProduct != undefined) {
-      Helper.showAllEntities([this.displayProduct]);
-      this.displayProduct.show();
+    if (this.displayProducts && this.displayProducts.length > 0) {
+      Helper.showAllEntities(this.displayProducts);
+      this.displayProducts.forEach((displayProduct) => {
+        displayProduct.show();
+      });
     }
     this.billboardParent.getComponent(Transform).scale = Vector3.Zero();
   }

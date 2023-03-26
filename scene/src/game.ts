@@ -84,5 +84,33 @@ async function loadScene() {
         productUUID: productUUIDs[3] // product UUID
       }
     )
+
+    new Kiosk(
+      new Transform({
+        position: new Vector3(6, 0, 10),
+        rotation: Quaternion.Euler(0, 0, 0),
+        scale: new Vector3(1, 1, 1)
+      }),
+      productUUIDs[0], // product UUID
+      [
+        // combine 2 3D models inside the kiosk
+        new boson.DisplayProduct(
+          'models/OGShirt.glb',
+          new Transform({
+            position: new Vector3(0, 1.7, 0),
+            scale: new Vector3(1.2, 1.2, 1.2)
+          }),
+          50
+        ),
+        new boson.DisplayProduct(
+          'models/s0_Mannequin_02.glb',
+          new Transform({
+            position: new Vector3(0, 0.78, 0),
+            scale: new Vector3(0.9, 0.9, 0.9)
+          }),
+          50
+        )
+      ]
+    )
   })
 }
