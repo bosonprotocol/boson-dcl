@@ -618,10 +618,15 @@ export class Kiosk extends Entity {
         }
       });
 
+      const tokenDecimals = Helper.getTokenDecimals(
+        this.productData.exchangeToken.address
+      );
+
       const priceString: string =
         "($" +
         Helper.nPriceTransform(
-          toBigNumber(this.productData.price).multipliedBy(price).toString()
+          toBigNumber(this.productData.price).multipliedBy(price).toString(),
+          tokenDecimals
         ).toFixed(2) +
         ")";
 
