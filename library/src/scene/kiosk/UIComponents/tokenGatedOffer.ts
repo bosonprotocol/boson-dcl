@@ -144,22 +144,19 @@ export class TokenGatedOffer extends Entity {
       tokenEntity.setParent(this);
       tokenEntity.addComponent(
         new Transform({
-          position: new Vector3(-0.13, 0.1 - 0.035 * index, -0.002),
+          position: new Vector3(0.13, 0.08 - 0.035 * index, -0.002),
           scale: new Vector3(0.1, 0.1, 0.1),
         })
       );
 
-      let tokenTextValue = "";
-      if (token.tokenType == eGateTokenType.quest) {
-        tokenTextValue = token.name;
-      } else {
-        tokenTextValue = token.amountNeeded + " x " + token.name;
-      }
-      const tokenText = new TextShape(tokenTextValue);
+      const tokenText = new TextShape(token.name);
       tokenText.fontSize = 3;
       tokenText.outlineColor = Color3.White();
       tokenText.color = Color3.White();
       tokenText.hTextAlign = "left";
+      tokenText.vTextAlign = "top";
+      tokenText.textWrapping = true;
+      tokenText.width = 5;
       tokenEntity.addComponent(tokenText);
 
       this.tokenEntities.push(tokenEntity);

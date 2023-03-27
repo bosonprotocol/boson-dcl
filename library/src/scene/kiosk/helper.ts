@@ -1,3 +1,4 @@
+import { toBigNumber } from "eth-connect";
 import * as boson from "../../core-sdk";
 import { eCurrency } from "./enums";
 
@@ -111,12 +112,14 @@ export class Helper {
     });
   }
 
-  public static priceTransform(_value: string): string {
-    return (parseFloat(_value) / 1000000000000000000).toString();
+  public static priceTransform(_value: string, decimals = 18): string {
+    const bnValue = toBigNumber(_value).div(toBigNumber("10").pow(decimals));
+    return bnValue.toString();
   }
 
-  public static nPriceTransform(_value: number): number {
-    return _value / 1000000000000000000;
+  public static nPriceTransform(_value: string, decimals = 18): number {
+    const bnValue = toBigNumber(_value).div(toBigNumber("10").pow(decimals));
+    return bnValue.toNumber();
   }
 
   public static addNewLinesInString(
