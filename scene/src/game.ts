@@ -8,7 +8,7 @@ const productUUIDs = [
   '7e8bd10-14f3-be4c-a7c-c2d632080f01',
   '5ba4b06-184e-3ea-86bd-40fc1e10eb85',
   '56a8db7-5ff-66a-2d7-dffef58dc2',
-  'df883c1-4bd8-30fe-721b-e6dceb6e1371',
+  'ba60ba2-1db1-abcc-0e50-5473d737443',
   'c1f8f8b-cd06-106-86-37e2a06b2436'
 ]
 
