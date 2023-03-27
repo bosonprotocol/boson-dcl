@@ -18,6 +18,7 @@ import {
   ProductV1Variation,
 } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
 import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
+import { toBigNumber } from "eth-connect";
 
 /**
  * @public
@@ -494,16 +495,28 @@ export class Kiosk extends Entity {
       }
     });
 
-    // Check some mumbai addresses for testing
-    switch (_offer.condition.tokenAddress) {
-      case "0x1f5431e8679630790e8eba3a9b41d1bb4d41aed0": //boson
-      case "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa": //weth
-      case "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747": //USDC
+    let tokenDecimals = 0;
+    // Check some token addresses for testing
+    switch (_offer.condition.tokenAddress.toLowerCase()) {
+      case "0x1f5431e8679630790e8eba3a9b41d1bb4d41aed0": //boson mumbai
+      case "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa": //weth mumbai
+      case "0x9b3b0703d392321ad24338ff1f846650437a43c9": //boson polygon
+      case "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619": //weth polygon
         isCurrencyToken = true;
+        tokenDecimals = 18;
+        break;
+      case "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747": //USDC mumbai
+      case "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": //USDC polygon
+        isCurrencyToken = true;
+        tokenDecimals = 6;
+        break;
     }
 
     if (isCurrencyToken) {
-      threshold = Helper.priceTransform(_offer.condition.threshold);
+      threshold = Helper.priceTransform(
+        _offer.condition.threshold,
+        tokenDecimals
+      );
     }
 
     if (!_offer.metadata || !_offer.metadata) {
@@ -608,7 +621,7 @@ export class Kiosk extends Entity {
       const priceString: string =
         "($" +
         Helper.nPriceTransform(
-          price * parseFloat(this.productData.price)
+          toBigNumber(this.productData.price).multipliedBy(price).toString()
         ).toFixed(2) +
         ")";
 
