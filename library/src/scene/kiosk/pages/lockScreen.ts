@@ -272,8 +272,11 @@ export class LockScreen {
     this.currencySymbolImage.addComponent(this.currencySymbolMat);
 
     // Product price
+    const tokenDecimals = Helper.getTokenDecimals(
+      this.productData.exchangeToken.address
+    );
     this.productPriceText = new TextShape(
-      Helper.priceTransform(this.productData.price)
+      Helper.priceTransform(this.productData.price, tokenDecimals)
     );
     this.productPriceText.color = Color3.Black();
     this.productPriceText.fontSize = 20;
