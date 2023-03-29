@@ -1,4 +1,5 @@
-import { getEnvironment } from "../../../core-sdk";
+import { OfferFieldsFragment } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
+import { ADDRESS_ZERO, getEnvironment } from "../../../core-sdk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
@@ -38,6 +39,10 @@ export class CompletePage {
   etherScanLinkClickBox: Entity = new Entity();
   openSeaLinkClickBox: Entity = new Entity();
   redeemLinkClickBox: Entity = new Entity();
+
+  explorerUrlBase = "";
+  openseaUrlBase = "";
+  bosonDAppUrlBase = "";
 
   constructor(_kiosk: Kiosk, _parent: Entity, _productData: any) {
     this.kiosk = _kiosk;
@@ -222,40 +227,26 @@ export class CompletePage {
       })
     );
 
-    let explorerUrlBase = "";
-    let openseaUrlBase = "";
-    let bosonDAppUrlBase = "";
-
     switch (getEnvironment()) {
       case "local":
       case "testing":
-        explorerUrlBase = "https://mumbai.polygonscan.com";
-        openseaUrlBase = "https://testnets.opensea.io";
-        bosonDAppUrlBase = "https://interface-test.on.fleek.co";
+        this.explorerUrlBase = "https://mumbai.polygonscan.com";
+        this.openseaUrlBase = "https://testnets.opensea.io/assets/mumbai";
+        this.bosonDAppUrlBase = "https://interface-test.on.fleek.co";
         break;
       case "staging":
-        explorerUrlBase = "https://mumbai.polygonscan.com";
-        openseaUrlBase = "https://testnets.opensea.io";
-        bosonDAppUrlBase = "https://interface-staging.on.fleek.co";
+        this.explorerUrlBase = "https://mumbai.polygonscan.com";
+        this.openseaUrlBase = "https://testnets.opensea.io/assets/mumbai";
+        this.bosonDAppUrlBase = "https://interface-staging.on.fleek.co";
         break;
       case "production":
-        explorerUrlBase = "https://polygonscan.com";
-        openseaUrlBase = "https://opensea.io";
-        bosonDAppUrlBase = "https://bosonapp.io";
+        this.explorerUrlBase = "https://polygonscan.com";
+        this.openseaUrlBase = "https://opensea.io/assets/matic";
+        this.bosonDAppUrlBase = "https://bosonapp.io";
         break;
     }
 
     this.etherScanLinkClickBox.addComponent(Kiosk.alphaMat as Material);
-    this.etherScanLinkClickBox.addComponent(
-      new OnPointerDown(
-        () => {
-          openExternalURL(explorerUrlBase);
-        },
-        {
-          hoverText: "Polygonscan",
-        }
-      )
-    );
 
     this.openSeaLinkClickBox.setParent(this.parent);
     this.openSeaLinkClickBox.addComponent(new PlaneShape());
@@ -267,16 +258,6 @@ export class CompletePage {
     );
 
     this.openSeaLinkClickBox.addComponent(Kiosk.alphaMat as Material);
-    this.openSeaLinkClickBox.addComponent(
-      new OnPointerDown(
-        () => {
-          openExternalURL(openseaUrlBase);
-        },
-        {
-          hoverText: "OpenSea",
-        }
-      )
-    );
 
     this.redeemLinkClickBox.setParent(this.parent);
     this.redeemLinkClickBox.addComponent(new PlaneShape());
@@ -288,19 +269,9 @@ export class CompletePage {
     );
 
     this.redeemLinkClickBox.addComponent(Kiosk.alphaMat as Material);
-    this.redeemLinkClickBox.addComponent(
-      new OnPointerDown(
-        () => {
-          openExternalURL(bosonDAppUrlBase + "/#/account");
-        },
-        {
-          hoverText: "Redeem",
-        }
-      )
-    );
   }
 
-  show(_success: boolean, data: any) {
+  show(_success: boolean, data: any, productData: OfferFieldsFragment) {
     if (_success) {
       // TODO: extract user account and exchangeId from data
       //  - user = data.from
@@ -308,6 +279,67 @@ export class CompletePage {
       //  - exchangeId = parseInt(exchangeIdHexString, 16)
       //  - tokenId can also be found from logs, useful for the opensea link
       // Then refresh the links to chain explorer/opensea/bosondApp with this info.
+
+      this.etherScanLinkClickBox.addComponentOrReplace(
+        new OnPointerDown(
+          () => {
+            openExternalURL(this.explorerUrlBase + "/address/" + data.from);
+          },
+          {
+            hoverText: "Polygonscan",
+          }
+        )
+      );
+
+      const tokenIdHexString = data.logs.find(
+        (log: any) =>
+          log.topics[0] ===
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" &&
+          log.topics[1] ===
+            "0x0000000000000000000000000000000000000000000000000000000000000000"
+      );
+
+      const tokenId = parseInt(tokenIdHexString.topics[3], 16);
+
+      this.openSeaLinkClickBox.addComponentOrReplace(
+        new OnPointerDown(
+          () => {
+            openExternalURL(
+              this.openseaUrlBase +
+                "/" +
+                productData.seller.voucherCloneAddress +
+                "/" +
+                tokenId
+            );
+          },
+          {
+            hoverText: "OpenSea",
+          }
+        )
+      );
+
+      const exchangeIdHexString = data.logs.find(
+        (log: any) =>
+          log.topics[0] ===
+          "0x442279a0d0683a12971990518f9f3f874391650139a762c4e94b23b51f04d94f"
+      );
+
+      const exchangeId = parseInt(exchangeIdHexString.topics[3], 16);
+
+      const redemptionUrl = productData.metadata.attributes
+        .find((attr: any) => attr.traitType === "Redeemable At")
+        .value.replace(/\/+$/, "");
+
+      this.redeemLinkClickBox.addComponentOrReplace(
+        new OnPointerDown(
+          () => {
+            openExternalURL(redemptionUrl + "/#/exchange/" + exchangeId);
+          },
+          {
+            hoverText: "Redeem",
+          }
+        )
+      );
 
       // Success
       Helper.showAllEntities([
@@ -322,7 +354,7 @@ export class CompletePage {
     } else {
       // Error
       this.errorTitle.getComponent(TextShape).value =
-        Helper.addNewLinesInString(data.toString(), 70,8);
+        Helper.addNewLinesInString(data.toString(), 70, 8);
 
       Helper.hideAllEntities([
         this.successEntity,
