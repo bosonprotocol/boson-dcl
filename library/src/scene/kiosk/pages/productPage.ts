@@ -1135,13 +1135,18 @@ export class ProductPage {
       (_productData.metadata.productV1Seller.images || []).find(
         (img: { tag: string }) => img.tag === "profile"
       )?.url
-    ).then((texture: Texture) => {
-      this.artistLogoMat.albedoTexture = texture;
-      this.artistLogoMat.emissiveIntensity = 1;
-      this.artistLogoMat.emissiveColor = Color3.White();
-      this.artistLogoMat.emissiveTexture = texture;
-      this.artistLogoEntity.addComponent(this.artistLogoMat);
-    });
+    )
+      .then((texture: Texture) => {
+        log("seller image loaded");
+        this.artistLogoMat.albedoTexture = texture;
+        this.artistLogoMat.emissiveIntensity = 1;
+        this.artistLogoMat.emissiveColor = Color3.White();
+        this.artistLogoMat.emissiveTexture = texture;
+        this.artistLogoEntity.addComponent(this.artistLogoMat);
+      })
+      .catch((e) => {
+        log("ERROR when loading seller image", e);
+      });
 
     // Redeemeum Logo
     this.redeemeumLogoEntity.addComponent(new PlaneShape());
