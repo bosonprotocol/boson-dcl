@@ -388,19 +388,75 @@ export class Helper {
       boson
         .getTokenData(template, _currencyPrice.tokenID)
         .then((data) => {
-          Helper.currencyPrices.forEach((currencyPrice) => {
-            if (data.token != null) {
+          if (
+            data.token &&
+            data.token.derivedETH &&
+            Number(data.token.derivedETH)
+          ) {
+            Helper.currencyPrices.forEach((currencyPrice) => {
               if (currencyPrice.tokenID == _currencyPrice.tokenID) {
-                currencyPrice.price = data.token.derivedETH * Helper.ethPrice;
+                currencyPrice.price =
+                  Number(data.token.derivedETH) * Helper.ethPrice;
               }
-            }
-          });
+            });
+          } else {
+            log(
+              `WARNING: Token data for ${JSON.stringify(
+                _currencyPrice
+              )} not available on Uniswap_v3`
+            );
+            Helper.useCryptoCompare(_currencyPrice);
+          }
         })
         .catch((e) => {
-          log(e);
+          Helper.useCryptoCompare(_currencyPrice);
+          throw e;
         });
     } catch (e) {
       log(e);
+    }
+  }
+
+  public static useCryptoCompare(_currencyPrice: CurrencyPrice) {
+    try {
+      const timestamp = Date.now();
+      const symbol = Helper.getCurrencySymbol(_currencyPrice.currency);
+      const url = `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${symbol}&tsym=USD&limit=1&toTs=${timestamp}`;
+      fetch(url).then(
+        (response) => {
+          if (response.status == 400) {
+            response.text().then((e) => {
+              throw e;
+            });
+          }
+          response.json().then((respJson: any) => {
+            if (respJson.Response === "Success") {
+              const value = respJson?.Data?.Data?.[0].close;
+              if (isNaN(value)) {
+                throw respJson;
+              }
+              log(
+                `Found ${symbol} currency price using cryptocompare API: ${value}`
+              );
+              Helper.currencyPrices.forEach((currencyPrice) => {
+                if (currencyPrice.tokenID == _currencyPrice.tokenID) {
+                  currencyPrice.price = Number(value);
+                }
+              });
+            } else {
+              throw respJson;
+            }
+          });
+        },
+        (reason) => {
+          throw reason;
+        }
+      );
+    } catch (e) {
+      log(
+        `Unable to get token price for ${_currencyPrice.name} using cryptocompare API`,
+        e
+      );
     }
   }
 }
