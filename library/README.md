@@ -1,42 +1,10 @@
-[![banner](docs/assets/banner.png)](https://bosonprotocol.io)
+[![banner](../docs/assets/banner.png)](https://bosonprotocol.io)
 
-  
+# Boson Protocol Metaverse Toolkit - Decentraland Library
 
-<h2  align="center">Boson Protocol - DCL Library V2</h2>
-
-  
-
-<div  align="center">
-
-  
-
-<a  href="">![](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat-square)</a>
-
-<a  href="https://discord.com/invite/QSdtKRaap6">![](https://img.shields.io/badge/Chat%20on-Discord-%235766f2?style=flat-square)</a>
-
-<a  href="https://twitter.com/BosonProtocol">![](https://img.shields.io/twitter/follow/BosonProtocol?style=social)</a>
-
-  
-
-</div>
-
-  
-
-<div  align="center">
-
-  
-
-🛠️ **The official Decentraland library to build on top of the [Boson Protocol](https://bosonprotocol.io).**
-
-  
-
-</div>
-
-  
+This repo provides the first instance of the Boson Protocol Metaverse Toolkit. This will allow scene builders, in Decentraland, the ability to add a Boson Kiosk to their scene, that will allow potential buyers to buy Boson rNFTs directly from the Metaverse, interacting directly with the Boson Protocol on Polygon.
 
 # Index
-
-  
 
 - [Index](#index)
 - [Using boson-dcl in your decentraland scene](#using-boson-dcl-in-your-decentraland-scene)
@@ -54,7 +22,6 @@
     - [Customising the Kiosk](#customising-the-kiosk)
     - [Supported Currencies](#supported-currencies)
 
-  
 
 # Using boson-dcl in your decentraland scene
 
@@ -128,9 +95,14 @@ Please copy/paste this file into your scene repository, so that you can import `
 
 #### [`bosonConfig.ts`](../scene/src/bosonConfig.example.ts)
 
-This file shows how to configure the Boson SDK depending on the targeted environment. For each environment, configuration includes a Biconomy coniguration (to handle metatransactions) and an RPC node URL (to connect with the blockchain).
+This file shows how to configure the Boson SDK depending on the targeted environment. For each environment, configuration includes a Biconomy configuration (to handle metatransactions) and an RPC node URL (to connect with the blockchain).
 
-Please create a `bosonConfig.ts` file in your scene repository based on this example (you have to use your own BIconomy configuration and RPC node URLs)
+Please create a `bosonConfig.ts` file in your scene repository based on this example (you have to use your own Biconomy configuration and RPC node URLs)
+
+#### Note that
+
+Note that, as a developer if you wish to use the Metaverse Toolkit in production you will need to provide your own [Biconomy account details](https://biconomy.io/) to the scene `scene/src/bosonConfig.ts`. We do provide example configurations for use on the Polygon's Testnet Mumbai, so that people can get up and running quickly. 
+
 
 #### Kiosk images and models
 
@@ -248,3 +220,21 @@ Currently we support the following Polygon currencies:
 | usdt | 0xc2132D05D31c914a87C6611C10748AEb04B58e8F | 0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832 |
 
 Native currency (MATIC on Polygon) requires direct "commitToOffer" transactions, which can't be relayed as meta-transactions. Although supported by Boson Protocol, this currency can't be used with the Boson Decentraland Widget as it requires using meta-transaction to operate within Decentraland (because the user wallet is forced to be connected to Ethereum mainnet)
+
+# Contributing
+
+We welcome contributions! Until now, Boson Protocol has been largely worked on by a small dedicated team. However, the ultimate goal is for all of the Boson Protocol repositories to be fully owned by the community and contributors. Issues, pull requests, suggestions, and any sort of involvement are more than welcome.
+
+If you have noticed a bug, please report them here as an issue.
+
+Questions and feedback are always welcome, we will use them to improve our offering.
+
+All PRs must pass all tests before being merged.
+
+By being in this community, you agree to the [Code of Conduct](../docs/code-of-conduct.md). Take a look at it, if you haven't already.
+
+Before starting to contribute, please check out Local development guide.
+
+# License
+
+Licensed under [Apache v2](../LICENSE)
