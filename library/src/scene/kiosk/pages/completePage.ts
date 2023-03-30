@@ -273,13 +273,6 @@ export class CompletePage {
 
   show(_success: boolean, data: any, productData: OfferFieldsFragment) {
     if (_success) {
-      // TODO: extract user account and exchangeId from data
-      //  - user = data.from
-      //  - exchangeIdHexString = data.logs.find((log) => log.topics[0] === "0x442279a0d0683a12971990518f9f3f874391650139a762c4e94b23b51f04d94f").topics[3]
-      //  - exchangeId = parseInt(exchangeIdHexString, 16)
-      //  - tokenId can also be found from logs, useful for the opensea link
-      // Then refresh the links to chain explorer/opensea/bosondApp with this info.
-
       this.etherScanLinkClickBox.addComponentOrReplace(
         new OnPointerDown(
           () => {
@@ -291,7 +284,7 @@ export class CompletePage {
         )
       );
 
-      const tokenIdHexString = data.logs.find(
+      const tokenIdHexString = data?.logs?.find(
         (log: any) =>
           log.topics[0] ===
             "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" &&
@@ -299,7 +292,9 @@ export class CompletePage {
             "0x0000000000000000000000000000000000000000000000000000000000000000"
       );
 
-      const tokenId = parseInt(tokenIdHexString.topics[3], 16);
+      const tokenId = tokenIdHexString?.topics?.[3]
+        ? parseInt(tokenIdHexString.topics[3], 16).toString()
+        : "?";
 
       this.openSeaLinkClickBox.addComponentOrReplace(
         new OnPointerDown(
@@ -318,22 +313,33 @@ export class CompletePage {
         )
       );
 
-      const exchangeIdHexString = data.logs.find(
+      const exchangeIdHexString = data?.logs?.find(
         (log: any) =>
           log.topics[0] ===
           "0x442279a0d0683a12971990518f9f3f874391650139a762c4e94b23b51f04d94f"
       );
 
-      const exchangeId = parseInt(exchangeIdHexString.topics[3], 16);
+      const exchangeId = exchangeIdHexString?.topics?.[3]
+        ? parseInt(exchangeIdHexString.topics[3], 16).toString()
+        : "?";
 
-      const redemptionUrl = productData.metadata.attributes
-        .find((attr: any) => attr.traitType === "Redeemable At")
-        .value.replace(/\/+$/, "");
+      const redemptionUrlLog = (productData?.metadata as any)?.attributes
+        ? (productData.metadata as any).attributes.find(
+            (attr: any) => attr.traitType === "Redeemable At"
+          )
+        : undefined;
+      const redemptionUrl = redemptionUrlLog?.value
+        ? redemptionUrlLog.value.replace(/\/+$/, "")
+        : undefined;
 
       this.redeemLinkClickBox.addComponentOrReplace(
         new OnPointerDown(
           () => {
-            openExternalURL(redemptionUrl + "/#/exchange/" + exchangeId);
+            openExternalURL(
+              (redemptionUrl || this.bosonDAppUrlBase) +
+                "/#/exchange/" +
+                exchangeId
+            );
           },
           {
             hoverText: "Redeem",
