@@ -175,15 +175,15 @@ export class ProcessPage {
           // but do we have an error?
           if (data != undefined) {
             if (data.error != undefined) {
-              this.completePage.show(false, data.errorMessage);
+              this.completePage.show(false, data.errorMessage, this.productData);
               this.hideTask.restart(1);
             } else {
-              this.completePage.show(true, data);
+              this.completePage.show(true, data, this.productData);
               this.hideTask.restart(1);
             }
           } else {
             // The data here should be a Transaction Receipt
-            this.completePage.show(true, data);
+            this.completePage.show(true, data, this.productData);
             this.hideTask.restart(1);
           }
         },
