@@ -76,11 +76,11 @@ export const bosonConfig: BosonConfigs = {
   production: {
     // polygon
     biconomy: {
-      apiKey: 'J-MlG5f54.3bdc0452-958a-4d74-b8af-09e9ab2308c2',
+      apiKey: 'production-project-api-key',
       apiIds: {
         protocol: {
           method: 'executeMetaTransaction',
-          apiId: 'ad97cc4f-8ae0-4fc6-aebe-a86eda71d559'
+          apiId: 'production-project-protocol-api-id'
         },
         tokens: [
           {
@@ -88,39 +88,39 @@ export const bosonConfig: BosonConfigs = {
             name: 'boson',
             address: '0x9B3B0703D392321AD24338Ff1f846650437A43C9',
             method: 'executeMetaTransaction',
-            apiId: '4b937cdc-07b6-47c9-a762-a56b9139dfef'
+            apiId: 'production-project-boson-token-api-id'
           },
           {
             // weth
             name: 'weth',
             address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
             method: 'executeMetaTransaction',
-            apiId: 'a6ce58a0-6d2a-4248-a081-b4a17a837aa6'
+            apiId: 'production-project-weth-token-api-id'
           },
           {
             // usdc
             name: 'usdc',
             address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
             method: 'executeMetaTransaction',
-            apiId: '199109f4-f590-48ae-a882-e93489792b46'
+            apiId: 'production-project-usdc-token-api-id'
           },
           {
             // dai
             name: 'dai',
             address: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
             method: 'executeMetaTransaction',
-            apiId: 'c432c813-29ef-4bed-aa13-39f3cce86119'
+            apiId: 'production-project-dai-token-api-id'
           },
           {
             // usdt
             name: 'usdt',
             address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
             method: 'executeMetaTransaction',
-            apiId: '0baf8633-65ab-4d1b-bcc9-a9249ccaaa41'
+            apiId: 'production-project-usdt-token-api-id'
           }
         ]
       }
     },
-    providerUrl: 'https://polygon-rpc.com/'
+    providerUrl: 'polygon-rpc-node'
   }
 }
