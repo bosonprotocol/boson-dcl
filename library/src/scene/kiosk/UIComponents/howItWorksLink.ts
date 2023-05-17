@@ -28,7 +28,7 @@ export class HowItWorksLink extends Entity {
       })
     );
 
-    this.viewHowItWorksClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.viewHowItWorksClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.viewHowItWorksClickBox.addComponent(
       new OnPointerDown(
         () => {

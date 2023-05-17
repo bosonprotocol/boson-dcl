@@ -249,7 +249,7 @@ export class FairExchangePolicyPage {
       })
     );
 
-    this.LicenseClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.LicenseClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.LicenseClickBox.addComponent(
       new OnPointerDown(
         () => {
@@ -278,7 +278,7 @@ export class FairExchangePolicyPage {
       })
     );
 
-    this.CommerceClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.CommerceClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.CommerceClickBox.addComponent(
       new OnPointerDown(
         () => {

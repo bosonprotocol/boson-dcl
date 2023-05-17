@@ -613,7 +613,9 @@ export class ProductPage {
       })
     );
 
-    this.viewFullDescriptionClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.viewFullDescriptionClickBox.addComponent(
+      Kiosk.getAlphaMat() as Material
+    );
     this.viewFullDescriptionClickBox.addComponent(
       new OnPointerDown(
         () => {
@@ -780,7 +782,9 @@ export class ProductPage {
       })
     );
 
-    this.termsAndConditionsClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.termsAndConditionsClickBox.addComponent(
+      Kiosk.getAlphaMat() as Material
+    );
     this.termsAndConditionsClickBox.addComponent(
       new OnPointerDown(
         () => {
@@ -808,7 +812,9 @@ export class ProductPage {
       })
     );
 
-    this.termsAndConditionsClickBox2.addComponent(Kiosk.alphaMat as Material);
+    this.termsAndConditionsClickBox2.addComponent(
+      Kiosk.getAlphaMat() as Material
+    );
     this.termsAndConditionsClickBox2.addComponent(
       new OnPointerDown(
         () => {
@@ -1068,7 +1074,7 @@ export class ProductPage {
       this.enoughFunds = true;
     }
 
-    if (!this.kiosk.connecectedToWeb3) {
+    if (!this.kiosk.connectedToWeb3) {
       errorMessage = "Sign in to metamask to Commit";
     }
 
@@ -1439,7 +1445,7 @@ export class ProductPage {
   }
 
   public setCommitLock(_currentStock: number) {
-    if (this.kiosk.connecectedToWeb3 && this.enoughFunds) {
+    if (this.kiosk.connectedToWeb3 && this.enoughFunds) {
       this.commitLocked = false;
       this.commitButtonMat.albedoTexture = this.commitButtonTexture;
       this.commitButtonMat.emissiveTexture = this.commitButtonTexture;
@@ -1456,7 +1462,7 @@ export class ProductPage {
     if (
       _currentStock > 0 &&
       this.commitLocked &&
-      this.kiosk.connecectedToWeb3 &&
+      this.kiosk.connectedToWeb3 &&
       this.enoughFunds
     ) {
       this.commitLocked = false;

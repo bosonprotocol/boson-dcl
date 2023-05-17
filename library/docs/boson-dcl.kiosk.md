@@ -23,8 +23,6 @@ export declare class Kiosk extends Entity
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [allBalances](./boson-dcl.kiosk.allbalances.md) | <code>static</code> | object |  |
-|  [alphaMat](./boson-dcl.kiosk.alphamat.md) | <code>static</code> | Material |  |
-|  [alphaTexture](./boson-dcl.kiosk.alphatexture.md) | <code>static</code> | Texture |  |
 |  [billboardParent](./boson-dcl.kiosk.billboardparent.md) |  | Entity |  |
 |  [connecectedToWeb3](./boson-dcl.kiosk.connecectedtoweb3.md) |  | boolean |  |
 |  [currentItemIndex](./boson-dcl.kiosk.currentitemindex.md) |  | number |  |
@@ -58,6 +56,7 @@ export declare class Kiosk extends Entity
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [createdGatedTokens(\_offer)](./boson-dcl.kiosk.createdgatedtokens.md) |  |  |
+|  [getAlphaMat()](./boson-dcl.kiosk.getalphamat.md) | <code>static</code> |  |
 |  [init(coreSDK, userData, walletAddress, allBalances)](./boson-dcl.kiosk.init.md) | <code>static</code> |  |
 |  [loadOffer(\_data)](./boson-dcl.kiosk.loadoffer.md) |  |  |
 |  [loadProduct()](./boson-dcl.kiosk.loadproduct.md) |  |  |

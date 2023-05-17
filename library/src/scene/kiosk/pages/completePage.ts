@@ -246,7 +246,7 @@ export class CompletePage {
         break;
     }
 
-    this.etherScanLinkClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.etherScanLinkClickBox.addComponent(Kiosk.getAlphaMat() as Material);
 
     this.openSeaLinkClickBox.setParent(this.parent);
     this.openSeaLinkClickBox.addComponent(new PlaneShape());
@@ -257,7 +257,7 @@ export class CompletePage {
       })
     );
 
-    this.openSeaLinkClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.openSeaLinkClickBox.addComponent(Kiosk.getAlphaMat() as Material);
 
     this.redeemLinkClickBox.setParent(this.parent);
     this.redeemLinkClickBox.addComponent(new PlaneShape());
@@ -268,7 +268,7 @@ export class CompletePage {
       })
     );
 
-    this.redeemLinkClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.redeemLinkClickBox.addComponent(Kiosk.getAlphaMat() as Material);
   }
 
   show(_success: boolean, data: any, productData: OfferFieldsFragment) {
