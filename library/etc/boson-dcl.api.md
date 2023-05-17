@@ -189,10 +189,6 @@ export class Kiosk extends Entity {
     // (undocumented)
     static allBalances: object;
     // (undocumented)
-    static alphaMat: Material;
-    // (undocumented)
-    static alphaTexture: Texture;
-    // (undocumented)
     billboardParent: Entity;
     // (undocumented)
     connecectedToWeb3: boolean;
@@ -216,6 +212,8 @@ export class Kiosk extends Entity {
     gatedTokens: GatedToken[];
     // (undocumented)
     gateState: eGateStateEnum;
+    // (undocumented)
+    static getAlphaMat(): Material;
     // (undocumented)
     static init(coreSDK: CoreSDK, userData: UserData, walletAddress: string, allBalances: object): void;
     // (undocumented)

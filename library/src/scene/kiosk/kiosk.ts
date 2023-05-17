@@ -49,8 +49,8 @@ export class Kiosk extends Entity {
   lockScreen: LockScreen | undefined;
   productPage: ProductPage | undefined;
 
-  static alphaMat: Material;
-  static alphaTexture: Texture;
+  private static alphaMat: Material;
+  private static alphaTexture: Texture;
 
   uiOpen = false;
 
@@ -76,7 +76,7 @@ export class Kiosk extends Entity {
   currentVariation: Variation | undefined;
   variations: Variation[] = [];
 
-  connecectedToWeb3: boolean;
+  connectedToWeb3: boolean;
 
   billboardParent: Entity;
 
@@ -93,6 +93,23 @@ export class Kiosk extends Entity {
     Kiosk.walletAddress = walletAddress;
     Kiosk.initialised = true;
     Kiosk.allBalances = allBalances;
+  }
+
+  public static getAlphaMat() {
+    // Set up Alpha material for all kiosks and pages to use
+    if (!Kiosk.alphaTexture) {
+      Kiosk.alphaTexture = new Texture("images/kiosk/ui/alpha.png", {
+        hasAlpha: true,
+      });
+    }
+    if (!Kiosk.alphaMat) {
+      Kiosk.alphaMat = new Material();
+      Kiosk.alphaMat.alphaTexture = Kiosk.alphaTexture;
+      Kiosk.alphaMat.albedoTexture = Kiosk.alphaTexture;
+      Kiosk.alphaMat.alphaTest = 1;
+      Kiosk.alphaMat.transparencyMode = 1;
+    }
+    return Kiosk.alphaMat;
   }
 
   constructor(
@@ -124,7 +141,7 @@ export class Kiosk extends Entity {
       this.productImageData = { ..._productUUID };
     }
 
-    this.connecectedToWeb3 = Kiosk.userData.hasConnectedWeb3;
+    this.connectedToWeb3 = Kiosk.userData.hasConnectedWeb3;
 
     if (Kiosk.kioskModel == undefined) {
       Kiosk.kioskModel = new GLTFShape("models/kiosk/kiosk.glb");
@@ -163,16 +180,6 @@ export class Kiosk extends Entity {
         scale: new Vector3(1, 1.2, 1),
       })
     );
-
-    // Set up Alpha material for all kiosks and pages to use
-    if (Kiosk.alphaMat == undefined) {
-      Kiosk.alphaMat = new Material();
-      Kiosk.alphaTexture = new Texture("images/kiosk/ui/alpha.png");
-      Kiosk.alphaMat.alphaTexture = Kiosk.alphaTexture;
-      Kiosk.alphaMat.albedoTexture = Kiosk.alphaTexture;
-      Kiosk.alphaMat.alphaTest = 1;
-      Kiosk.alphaMat.transparencyMode = 1;
-    }
 
     this.addComponent(Kiosk.kioskModel);
     this.addComponent(_transform);

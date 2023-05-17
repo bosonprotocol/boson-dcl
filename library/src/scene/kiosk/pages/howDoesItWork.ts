@@ -143,7 +143,7 @@ export class HowDoesItWork {
       })
     );
 
-    this.learnMoreClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.learnMoreClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.learnMoreClickBox.addComponent(
       new OnPointerDown(
         () => {

@@ -185,7 +185,7 @@ export class DescriptionPage {
         scale: new Vector3(5.2, 1, 1),
       })
     );
-    this.tab1ClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.tab1ClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.tab1ClickBox.addComponent(
       new OnPointerDown(
         () => {
@@ -220,7 +220,7 @@ export class DescriptionPage {
         scale: new Vector3(5, 1, 1),
       })
     );
-    this.tab2ClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.tab2ClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.tab2ClickBox.addComponent(
       new OnPointerDown(
         () => {
@@ -255,7 +255,7 @@ export class DescriptionPage {
         scale: new Vector3(5.5, 1, 1),
       })
     );
-    this.tab3ClickBox.addComponent(Kiosk.alphaMat as Material);
+    this.tab3ClickBox.addComponent(Kiosk.getAlphaMat() as Material);
     this.tab3ClickBox.addComponent(
       new OnPointerDown(
         () => {

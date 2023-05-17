@@ -8,7 +8,7 @@ export const bosonConfig: BosonConfigs = {
       apiIds: {
         protocol: {
           method: 'executeMetaTransaction',
-          apiId: 'eaeff5a5-2efd-4c2b-85f5-b597c79eabf2'
+          apiId: '0a35ec78-dfde-4cb8-b015-cd793684b71f'
         },
         tokens: [
           {
@@ -44,7 +44,7 @@ export const bosonConfig: BosonConfigs = {
       apiIds: {
         protocol: {
           method: 'executeMetaTransaction',
-          apiId: '065e7662-4562-4e65-ba9f-ad543a3243ab'
+          apiId: 'fc2b3fb0-ae4b-405e-970e-ddcb0643350a'
         },
         tokens: [
           {
