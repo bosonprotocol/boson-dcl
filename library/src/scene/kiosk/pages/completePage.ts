@@ -1,9 +1,10 @@
 import { OfferFieldsFragment } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
-import { ADDRESS_ZERO, getEnvironment } from "../../../core-sdk";
+import { getEnvironment } from "../../../core-sdk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
 import { Separator } from "../UIComponents/separator";
+import { toBigNumber } from "eth-connect";
 
 export class CompletePage {
   kiosk: Kiosk;
@@ -284,7 +285,7 @@ export class CompletePage {
         )
       );
 
-      const tokenIdHexString = data?.logs?.find(
+      const tokenIdLog = data?.logs?.find(
         (log: any) =>
           log.topics[0] ===
             "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" &&
@@ -292,8 +293,15 @@ export class CompletePage {
             "0x0000000000000000000000000000000000000000000000000000000000000000"
       );
 
-      const tokenId = tokenIdHexString?.topics?.[3]
-        ? parseInt(tokenIdHexString.topics[3], 16).toString()
+      let tokenIdHexString = tokenIdLog?.topics?.[3];
+      // ensure the string starts with 0x for toBigNumber() to consider as an hex value
+      tokenIdHexString =
+        tokenIdHexString && tokenIdHexString.indexOf("0x") < 0
+          ? "0x" + tokenIdHexString
+          : tokenIdHexString;
+
+      const tokenId = tokenIdHexString
+        ? toBigNumber(tokenIdHexString).toString(10)
         : "?";
 
       this.openSeaLinkClickBox.addComponentOrReplace(
