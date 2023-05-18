@@ -24,7 +24,7 @@ export declare class Kiosk extends Entity
 |  --- | --- | --- | --- |
 |  [allBalances](./boson-dcl.kiosk.allbalances.md) | <code>static</code> | object |  |
 |  [billboardParent](./boson-dcl.kiosk.billboardparent.md) |  | Entity |  |
-|  [connecectedToWeb3](./boson-dcl.kiosk.connecectedtoweb3.md) |  | boolean |  |
+|  [connectedToWeb3](./boson-dcl.kiosk.connectedtoweb3.md) |  | boolean |  |
 |  [currentItemIndex](./boson-dcl.kiosk.currentitemindex.md) |  | number |  |
 |  [currentOfferID](./boson-dcl.kiosk.currentofferid.md) |  | string |  |
 |  [currentVariation](./boson-dcl.kiosk.currentvariation.md) |  | Variation \| undefined |  |

@@ -191,7 +191,7 @@ export class Kiosk extends Entity {
     // (undocumented)
     billboardParent: Entity;
     // (undocumented)
-    connecectedToWeb3: boolean;
+    connectedToWeb3: boolean;
     // (undocumented)
     createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
     // (undocumented)

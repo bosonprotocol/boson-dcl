@@ -40,8 +40,8 @@
     "models/kiosk"
   ],
   "devDependencies": {
-    "@bosonprotocol/core-sdk": "^1.25.0-mvfw23.1",
-    "@bosonprotocol/eth-connect-sdk": "^1.5.0-alpha.14",
+    "@bosonprotocol/core-sdk": "^1.25.2",
+    "@bosonprotocol/eth-connect-sdk": "^1.5.2",
     "@microsoft/api-documenter": "^7.17.11",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.1.0",
