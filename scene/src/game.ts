@@ -5,11 +5,11 @@ import { useBoson } from './boson'
 void loadScene()
 
 const productUUIDs = [
-  '4c1e10a-35c0-413d-0027-542dcdd0260',
-  'b32328e-055-106c-0cce-1e760750881',
-  'd4574f4-d811-b0ad-f76d-5aa4caf2c5f',
-  'a634361-1f44-54ca-c1f-6b45f7ae8ef8',
-  '4c1e10a-35c0-413d-0027-542dcdd0260'
+  'a234728-dc54-faa6-f1e-0886d3d0e18',
+  'f04f0f6-107a-b1ef-a4af-dc4bd0a8eb1f',
+  '5d7ad1-64ff-e80-bce8-14a6f32f72e',
+  '3fe1ace-b45e-715b-4be-a48a053c566f',
+  'cbbedf-6331-8b77-560f-3c144f6d8b23'
 ]
 
 const floor: Entity = new Entity()
