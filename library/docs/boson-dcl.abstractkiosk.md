@@ -16,20 +16,18 @@ export declare class AbstractKiosk extends Entity
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(\_transform, \_productUUID, \_displayProduct, gateState)](./boson-dcl.abstractkiosk._constructor_.md) |  | Constructs a new instance of the <code>AbstractKiosk</code> class |
+|  [(constructor)(\_parent, \_productUUID, gateState)](./boson-dcl.abstractkiosk._constructor_.md) |  | Constructs a new instance of the <code>AbstractKiosk</code> class |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [allBalances](./boson-dcl.abstractkiosk.allbalances.md) | <code>static</code> | object |  |
-|  [billboardParent](./boson-dcl.abstractkiosk.billboardparent.md) |  | Entity |  |
 |  [connectedToWeb3](./boson-dcl.abstractkiosk.connectedtoweb3.md) |  | boolean |  |
 |  [currentItemIndex](./boson-dcl.abstractkiosk.currentitemindex.md) |  | number |  |
 |  [currentOfferID](./boson-dcl.abstractkiosk.currentofferid.md) |  | string |  |
 |  [currentVariation](./boson-dcl.abstractkiosk.currentvariation.md) |  | Variation \| undefined |  |
 |  [customQuestInformation](./boson-dcl.abstractkiosk.customquestinformation.md) |  | string |  |
-|  [displayProducts](./boson-dcl.abstractkiosk.displayproducts.md) |  | [DisplayProduct](./boson-dcl.displayproduct.md)<!-- -->\[\] |  |
 |  [gatedTokens](./boson-dcl.abstractkiosk.gatedtokens.md) |  | GatedToken\[\] |  |
 |  [gateState](./boson-dcl.abstractkiosk.gatestate.md) |  | [eGateStateEnum](./boson-dcl.egatestateenum.md) |  |
 |  [lockScreen](./boson-dcl.abstractkiosk.lockscreen.md) |  | LockScreen \| undefined |  |

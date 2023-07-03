@@ -2,7 +2,7 @@ import * as boson from '@bosonprotocol/boson-dcl'
 import { Kiosk } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
 
-const aCube = new Entity();
+const aCube = new Entity('aCube');
 aCube.addComponent(new Transform({ position: new Vector3(8, 0.5, 5) }))
 aCube.addComponent(new BoxShape())
 engine.addEntity(aCube)
@@ -120,16 +120,10 @@ async function loadScene() {
     //   ]
     // )
 
-    const anAbstractKiosk = new boson.AbstractKiosk(
-      new Transform({
-        position: new Vector3(8, 0, 5)
-      }),
-      productUUIDs[4]
-    )
+    new boson.AbstractKiosk(aCube, productUUIDs[4])
     // const aCube = new Entity();
     // aCube.addComponent(new Transform({ position: new Vector3(8, 0, 5) }))
     // aCube.addComponent(new BoxShape())
-    aCube.addComponent(anAbstractKiosk.onPointerDown)
     // engine.addEntity(aCube)
   })
 }

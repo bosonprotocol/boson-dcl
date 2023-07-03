@@ -4,13 +4,9 @@ import { eCurrency, eGateStateEnum, eGateTokenType } from "./enums";
 import { Helper } from "./helper";
 import { LockScreen } from "./pages/lockScreen";
 import { ProductPage } from "./pages/productPage";
-import { DelayedTask } from "./tasks/DelayedTask";
 import * as boson from "../../core-sdk";
 import { Option, Variation } from "./UIComponents/variationComponent";
 import { CoreSDK } from "../..";
-import { KioskUpdateSystem } from "./kioskUpdateSystem";
-import { ScaleSpringSystem } from "./animation/ScaleSpringSystem";
-import { DelayedTaskSystem } from "./tasks/DelayedTaskSystem";
 import { UserData } from "@decentraland/Identity";
 import {
   BaseProductV1ProductFieldsFragment,
@@ -56,8 +52,6 @@ export class AbstractKiosk extends Entity {
 
   gatedTokens: GatedToken[] = [];
 
-  displayProducts: DisplayProduct[];
-
   onPointerDown: OnPointerDown;
 
   productCurrency: eCurrency = eCurrency.none;
@@ -69,8 +63,6 @@ export class AbstractKiosk extends Entity {
   variations: Variation[] = [];
 
   connectedToWeb3: boolean;
-
-  billboardParent: Entity;
 
   static waveAnimationSystem: WaveAnimationSystem | undefined = undefined;
 
@@ -88,7 +80,7 @@ export class AbstractKiosk extends Entity {
   }
 
   constructor(
-    _transform: Transform,
+    _parent: Entity,
     _productUUID:
       | string
       | {
@@ -96,11 +88,6 @@ export class AbstractKiosk extends Entity {
           mainImageIndex?: number;
           imageSizes?: { [key: number]: { height: number; width: number } };
         },
-    _displayProduct: DisplayProduct | DisplayProduct[] = new DisplayProduct(
-      "",
-      new Transform(),
-      5
-    ),
     gateState?: eGateStateEnum
   ) {
     super();
@@ -117,43 +104,15 @@ export class AbstractKiosk extends Entity {
 
     this.connectedToWeb3 = AbstractKiosk.userData.hasConnectedWeb3;
 
-    this.displayProducts = Array.isArray(_displayProduct)
-      ? _displayProduct
-      : [_displayProduct];
-
-    this.billboardParent = new Entity();
-    this.billboardParent.setParent(this);
-    this.billboardParent.addComponent(new Billboard(false, true, false));
-    this.billboardParent.addComponent(
-      new Transform({ scale: new Vector3(0, 0, 0) })
-    );
-
-    this.parent = new Entity();
-    this.parent.setParent(this.billboardParent);
-    this.parent.addComponent(
-      new Transform({
-        position: new Vector3(0, -0.4, 1),
-        rotation: Quaternion.Euler(0, 180, 0),
-      })
-    );
-
-    this.addComponent(_transform);
+    this.parent = _parent;
+    this.setParent(_parent);
+    this.addComponent(new Transform({ position: new Vector3(0, 0, 0) }));
 
     this.onPointerDown = new OnPointerDown(
       () => {
         this.showLockScreen();
 
         this.checkForGatedTokens();
-        new DelayedTask(() => {
-          if (this.displayProducts && this.displayProducts.length > 0) {
-            Helper.hideAllEntities(this.displayProducts);
-          }
-        }, 1);
-        if (this.displayProducts && this.displayProducts.length > 0) {
-          this.displayProducts.forEach((displayProduct) =>
-            displayProduct.hide()
-          );
-        }
       },
       {
         hoverText: "View Product",
@@ -169,6 +128,7 @@ export class AbstractKiosk extends Entity {
     }
 
     this.lockScreen?.setGating();
+    this.parent.addComponentOrReplace(this.onPointerDown);
   }
 
   loadProduct() {
@@ -298,8 +258,6 @@ export class AbstractKiosk extends Entity {
     if (!this.uiOpen) {
       this.uiOpen = true;
 
-      this.billboardParent.getComponent(Transform).scale = Vector3.One();
-
       if (this.lockScreen == undefined) {
         this.lockScreen = new LockScreen(this, this.offer);
         this.lockScreen.show();
@@ -336,16 +294,6 @@ export class AbstractKiosk extends Entity {
       // Set up gated tokens
       if (this.offer.condition != undefined) {
         this.createdGatedTokens(this.offer);
-      }
-
-      if (this.displayProducts && this.displayProducts.length > 0) {
-        this.displayProducts.forEach((displayProduct) => {
-          if (!displayProduct.created) {
-            displayProduct.create(this, this.offer, _data.mainImageIndex);
-            displayProduct.addComponent(this.onPointerDown);
-          }
-          displayProduct.show();
-        });
       }
 
       this.currentOfferID = this.offer.id;
@@ -485,12 +433,6 @@ export class AbstractKiosk extends Entity {
         return;
       }
 
-      if (this.displayProducts && this.displayProducts.length > 0) {
-        this.displayProducts.forEach((displayProduct) =>
-          displayProduct.update(_dt)
-        );
-      }
-
       //Is the UI open?
       if (this.uiOpen) {
         // If player is over 5m from the kiosk close the UI
@@ -504,7 +446,6 @@ export class AbstractKiosk extends Entity {
           this.productPage?.hide();
           this.lockScreen?.hide();
           this.uiOpen = false;
-          this.showDisplayProduct();
         }
       }
     } catch (e) {
@@ -512,15 +453,7 @@ export class AbstractKiosk extends Entity {
     }
   }
 
-  showDisplayProduct() {
-    if (this.displayProducts && this.displayProducts.length > 0) {
-      Helper.showAllEntities(this.displayProducts);
-      this.displayProducts.forEach((displayProduct) => {
-        displayProduct.show();
-      });
-    }
-    this.billboardParent.getComponent(Transform).scale = Vector3.Zero();
-  }
+  showDisplayProduct() {}
 
   updateProductPrice() {
     try {

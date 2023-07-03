@@ -20,7 +20,7 @@ import { UserData } from '@decentraland/Identity';
 
 // @public (undocumented)
 export class AbstractKiosk extends Entity {
-    constructor(_transform: Transform, _productUUID: string | {
+    constructor(_parent: Entity, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
         imageSizes?: {
@@ -29,11 +29,9 @@ export class AbstractKiosk extends Entity {
                 width: number;
             };
         };
-    }, _displayProduct?: DisplayProduct | DisplayProduct[], gateState?: eGateStateEnum);
+    }, gateState?: eGateStateEnum);
     // (undocumented)
     static allBalances: object;
-    // (undocumented)
-    billboardParent: Entity;
     // (undocumented)
     connectedToWeb3: boolean;
     // (undocumented)
@@ -48,8 +46,6 @@ export class AbstractKiosk extends Entity {
     currentVariation: Variation | undefined;
     // (undocumented)
     customQuestInformation: string;
-    // (undocumented)
-    displayProducts: DisplayProduct[];
     // Warning: (ae-forgotten-export) The symbol "GatedToken" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
