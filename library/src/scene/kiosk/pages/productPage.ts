@@ -13,12 +13,13 @@ import { VariationComponent } from "../UIComponents/variationComponent";
 import { CoreSDK } from "../../..";
 import { FairExchangePolicyPage } from "./fairExchangePolicyPage";
 import { toBigNumber } from "eth-connect";
+import { AbstractKiosk } from "../absrtactKiosk";
 
 export class ProductPage {
   private _coreSdk: CoreSDK;
   private _userAccount: string;
 
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
 
   productData: any = undefined;
 
@@ -161,7 +162,7 @@ export class ProductPage {
   constructor(
     coreSDK: CoreSDK,
     userAccount: string,
-    _kiosk: Kiosk,
+    _kiosk: Kiosk | AbstractKiosk,
     _productData: any
   ) {
     this._coreSdk = coreSDK;

@@ -1,10 +1,11 @@
+import { AbstractKiosk } from "../absrtactKiosk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
 import { DelayedTask } from "../tasks/DelayedTask";
 
 export class HowDoesItWork {
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
   parent: Entity;
   backButtonEntity: Entity = new Entity();
   backButtonMat: Material = new Material();
@@ -24,7 +25,7 @@ export class HowDoesItWork {
   // openSeaLinkClickBox: Entity = new Entity();
   // redeemLinkClickBox: Entity = new Entity();
 
-  constructor(_kiosk: Kiosk, _parent: Entity) {
+  constructor(_kiosk: Kiosk | AbstractKiosk, _parent: Entity) {
     this.kiosk = _kiosk;
     this.parent = new Entity();
     this.parent.setParent(_parent);

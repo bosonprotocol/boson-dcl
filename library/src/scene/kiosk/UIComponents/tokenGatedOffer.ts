@@ -2,9 +2,10 @@ import { eGateTokenType } from "../enums";
 import { Kiosk } from "../kiosk";
 import { GatedToken } from "../gating/gatedToken";
 import { Helper } from "../helper";
+import { AbstractKiosk } from "../absrtactKiosk";
 
 export class TokenGatedOffer extends Entity {
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
 
   backgroundBox: Entity = new Entity();
   backgroundBoxMat: Material = new Material();
@@ -25,7 +26,7 @@ export class TokenGatedOffer extends Entity {
 
   parent: Entity;
 
-  constructor(_kiosk: Kiosk, _parent: Entity, _transform: Transform) {
+  constructor(_kiosk: Kiosk | AbstractKiosk, _parent: Entity, _transform: Transform) {
     super();
 
     this.parent = new Entity();

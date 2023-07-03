@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [AbstractKiosk](./boson-dcl.abstractkiosk.md) |  |
 |  [DisplayProduct](./boson-dcl.displayproduct.md) |  |
 |  [Kiosk](./boson-dcl.kiosk.md) |  |
 

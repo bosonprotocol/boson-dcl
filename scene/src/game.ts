@@ -2,6 +2,11 @@ import * as boson from '@bosonprotocol/boson-dcl'
 import { Kiosk } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
 
+const aCube = new Entity();
+aCube.addComponent(new Transform({ position: new Vector3(8, 0.5, 5) }))
+aCube.addComponent(new BoxShape())
+engine.addEntity(aCube)
+
 void loadScene()
 
 const productUUIDs = [
@@ -25,93 +30,106 @@ async function loadScene() {
   void useBoson().then(async ({ coreSDK, userAccount, walletAddress }) => {
     const allBalances: object = await boson.getAllBalances(walletAddress)
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
+    boson.AbstractKiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 
-    new Kiosk(
-      new Transform({
-        position: new Vector3(6, 0, 2),
-        rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(1, 1, 1)
-      }),
-      productUUIDs[0], // product UUID
-      new boson.DisplayProduct( // show a 3D model inside the kiosk
-        'models/OGShirt.glb',
-        new Transform({
-          position: new Vector3(0, 1.7, 0),
-          scale: new Vector3(1.2, 1.2, 1.2)
-        }),
-        50
-      )
-    )
+    // new Kiosk(
+    //   new Transform({
+    //     position: new Vector3(6, 0, 2),
+    //     rotation: Quaternion.Euler(0, 0, 0),
+    //     scale: new Vector3(1, 1, 1)
+    //   }),
+    //   productUUIDs[0], // product UUID
+    //   new boson.DisplayProduct( // show a 3D model inside the kiosk
+    //     'models/OGShirt.glb',
+    //     new Transform({
+    //       position: new Vector3(0, 1.7, 0),
+    //       scale: new Vector3(1.2, 1.2, 1.2)
+    //     }),
+    //     50
+    //   )
+    // )
 
-    new Kiosk(
-      new Transform({
-        position: new Vector3(6, 0, 4),
-        rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(1, 1, 1)
-      }),
-      {
-        productUUID: productUUIDs[1], // product UUID
-        mainImageIndex: 2, // choose which image is shown in the kiosk (default: 0)
-        imageSizes: {
-          // override the image size if missing from metadata (before March 2023)
-          0: { height: 1100, width: 880 },
-          1: { height: 1100, width: 880 },
-          2: { height: 1100, width: 880 },
-          3: { height: 1100, width: 880 },
-          4: { height: 1100, width: 880 },
-          5: { height: 1100, width: 880 }
-        }
-      }
-    )
+    // new Kiosk(
+    //   new Transform({
+    //     position: new Vector3(6, 0, 4),
+    //     rotation: Quaternion.Euler(0, 0, 0),
+    //     scale: new Vector3(1, 1, 1)
+    //   }),
+    //   {
+    //     productUUID: productUUIDs[1], // product UUID
+    //     mainImageIndex: 2, // choose which image is shown in the kiosk (default: 0)
+    //     imageSizes: {
+    //       // override the image size if missing from metadata (before March 2023)
+    //       0: { height: 1100, width: 880 },
+    //       1: { height: 1100, width: 880 },
+    //       2: { height: 1100, width: 880 },
+    //       3: { height: 1100, width: 880 },
+    //       4: { height: 1100, width: 880 },
+    //       5: { height: 1100, width: 880 }
+    //     }
+    //   }
+    // )
 
-    new Kiosk(
-      new Transform({
-        position: new Vector3(6, 0, 6),
-        rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(1, 1, 1)
-      }),
-      {
-        productUUID: productUUIDs[2] // product UUID
-      }
-    )
+    // new Kiosk(
+    //   new Transform({
+    //     position: new Vector3(6, 0, 6),
+    //     rotation: Quaternion.Euler(0, 0, 0),
+    //     scale: new Vector3(1, 1, 1)
+    //   }),
+    //   {
+    //     productUUID: productUUIDs[2] // product UUID
+    //   }
+    // )
 
-    new Kiosk(
-      new Transform({
-        position: new Vector3(6, 0, 8),
-        rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(1, 1, 1)
-      }),
-      {
-        productUUID: productUUIDs[3] // product UUID
-      }
-    )
+    // new Kiosk(
+    //   new Transform({
+    //     position: new Vector3(6, 0, 8),
+    //     rotation: Quaternion.Euler(0, 0, 0),
+    //     scale: new Vector3(1, 1, 1)
+    //   }),
+    //   {
+    //     productUUID: productUUIDs[3] // product UUID
+    //   }
+    // )
 
-    new Kiosk(
+    // new Kiosk(
+    //   new Transform({
+    //     position: new Vector3(6, 0, 10),
+    //     rotation: Quaternion.Euler(0, 0, 0),
+    //     scale: new Vector3(1, 1, 1)
+    //   }),
+    //   productUUIDs[4], // product UUID
+    //   [
+    //     // combine 2 3D models inside the kiosk
+    //     new boson.DisplayProduct(
+    //       'models/OGShirt.glb',
+    //       new Transform({
+    //         position: new Vector3(0, 1.7, 0),
+    //         scale: new Vector3(1.2, 1.2, 1.2)
+    //       }),
+    //       50
+    //     ),
+    //     new boson.DisplayProduct(
+    //       'models/s0_Mannequin_02.glb',
+    //       new Transform({
+    //         position: new Vector3(0, 0.78, 0),
+    //         scale: new Vector3(0.9, 0.9, 0.9)
+    //       }),
+    //       50
+    //     )
+    //   ]
+    // )
+
+    const anAbstractKiosk = new boson.AbstractKiosk(
       new Transform({
-        position: new Vector3(6, 0, 10),
-        rotation: Quaternion.Euler(0, 0, 0),
-        scale: new Vector3(1, 1, 1)
+        position: new Vector3(8, 0, 5)
       }),
-      productUUIDs[4], // product UUID
-      [
-        // combine 2 3D models inside the kiosk
-        new boson.DisplayProduct(
-          'models/OGShirt.glb',
-          new Transform({
-            position: new Vector3(0, 1.7, 0),
-            scale: new Vector3(1.2, 1.2, 1.2)
-          }),
-          50
-        ),
-        new boson.DisplayProduct(
-          'models/s0_Mannequin_02.glb',
-          new Transform({
-            position: new Vector3(0, 0.78, 0),
-            scale: new Vector3(0.9, 0.9, 0.9)
-          }),
-          50
-        )
-      ]
+      productUUIDs[4]
     )
+    // const aCube = new Entity();
+    // aCube.addComponent(new Transform({ position: new Vector3(8, 0, 5) }))
+    // aCube.addComponent(new BoxShape())
+    aCube.addComponent(anAbstractKiosk.onPointerDown)
+    // engine.addEntity(aCube)
   })
 }
