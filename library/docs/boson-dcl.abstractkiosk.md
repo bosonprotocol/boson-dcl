@@ -23,6 +23,7 @@ export declare class AbstractKiosk extends Entity
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [allBalances](./boson-dcl.abstractkiosk.allbalances.md) | <code>static</code> | object |  |
+|  [billboardParent](./boson-dcl.abstractkiosk.billboardparent.md) |  | Entity |  |
 |  [connectedToWeb3](./boson-dcl.abstractkiosk.connectedtoweb3.md) |  | boolean |  |
 |  [currentItemIndex](./boson-dcl.abstractkiosk.currentitemindex.md) |  | number |  |
 |  [currentOfferID](./boson-dcl.abstractkiosk.currentofferid.md) |  | string |  |

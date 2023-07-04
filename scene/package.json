@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "@bosonprotocol/boson-dcl": "file:../library",
-    "@dcl/ecs-scene-utils": "^1.7.5",
-    "@dcl/crypto-scene-utils": "^1.1.2"
+    "@dcl/crypto-scene-utils": "^1.1.2",
+    "@dcl/ecs-scene-utils": "^1.7.5"
   },
   "bundleDependencies": [
     "@bosonprotocol/boson-dcl",

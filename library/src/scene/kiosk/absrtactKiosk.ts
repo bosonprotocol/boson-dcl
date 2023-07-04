@@ -1,4 +1,3 @@
-import { DisplayProduct } from "./displayProduct";
 import { GatedToken } from "./gating/gatedToken";
 import { eCurrency, eGateStateEnum, eGateTokenType } from "./enums";
 import { Helper } from "./helper";
@@ -14,7 +13,7 @@ import {
   ProductV1Variation,
 } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
 import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
-import { toBigNumber } from "eth-connect";
+import { KioskUpdateSystem } from "./kioskUpdateSystem";
 
 /**
  * @public
@@ -64,6 +63,8 @@ export class AbstractKiosk extends Entity {
 
   connectedToWeb3: boolean;
 
+  billboardParent: Entity;
+
   static waveAnimationSystem: WaveAnimationSystem | undefined = undefined;
 
   public static init(
@@ -94,6 +95,7 @@ export class AbstractKiosk extends Entity {
     if (!AbstractKiosk.initialised) {
       throw "Call AbstractKiosk.init before contructing instances.";
     }
+    this.setUpSystems();
 
     if (typeof _productUUID === "string") {
       this.productUUID = _productUUID;
@@ -104,8 +106,22 @@ export class AbstractKiosk extends Entity {
 
     this.connectedToWeb3 = AbstractKiosk.userData.hasConnectedWeb3;
 
-    this.parent = _parent;
-    this.setParent(_parent);
+    this.billboardParent = new Entity();
+    this.billboardParent.setParent(this);
+    this.billboardParent.addComponent(new Billboard(false, true, false));
+    this.billboardParent.addComponent(
+      new Transform({ scale: new Vector3(0, 0, 0) })
+    );
+
+    this.parent = new Entity();
+    this.parent.setParent(this.billboardParent);
+    this.parent.addComponent(
+      new Transform({
+        position: new Vector3(0, -0.4, 1),
+        rotation: Quaternion.Euler(0, 180, 0),
+      })
+    );
+
     this.addComponent(new Transform({ position: new Vector3(0, 0, 0) }));
 
     this.onPointerDown = new OnPointerDown(
@@ -118,6 +134,7 @@ export class AbstractKiosk extends Entity {
         hoverText: "View Product",
       }
     );
+    KioskUpdateSystem.instance.addKiosk(this);
 
     this.loadProduct();
 
@@ -128,7 +145,8 @@ export class AbstractKiosk extends Entity {
     }
 
     this.lockScreen?.setGating();
-    this.parent.addComponentOrReplace(this.onPointerDown);
+    this.setParent(_parent);
+    _parent.addComponentOrReplace(this.onPointerDown);
   }
 
   loadProduct() {
@@ -226,6 +244,12 @@ export class AbstractKiosk extends Entity {
       });
   }
 
+  private setUpSystems() {
+    if (!KioskUpdateSystem.instance) {
+      KioskUpdateSystem.instance = new KioskUpdateSystem();
+    }
+  }
+
   public unlock(_tokenCount: number, _tokenAddress = "") {
     // Set Gate token UI
     let hasEnoughTokens = false;
@@ -257,6 +281,8 @@ export class AbstractKiosk extends Entity {
   showLockScreen() {
     if (!this.uiOpen) {
       this.uiOpen = true;
+
+      this.billboardParent.getComponent(Transform).scale = Vector3.One();
 
       if (this.lockScreen == undefined) {
         this.lockScreen = new LockScreen(this, this.offer);
@@ -453,7 +479,9 @@ export class AbstractKiosk extends Entity {
     }
   }
 
-  showDisplayProduct() {}
+  showDisplayProduct() {
+    this.billboardParent.getComponent(Transform).scale = Vector3.Zero();
+  }
 
   updateProductPrice() {
     try {

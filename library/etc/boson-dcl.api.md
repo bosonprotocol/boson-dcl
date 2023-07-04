@@ -33,6 +33,8 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     static allBalances: object;
     // (undocumented)
+    billboardParent: Entity;
+    // (undocumented)
     connectedToWeb3: boolean;
     // (undocumented)
     createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
