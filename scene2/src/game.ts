@@ -11,6 +11,6 @@ async function loadScene() {
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
     AbstractKiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 
-    const scene = SceneFactory.createNewScene2()
+    const scene = SceneFactory.createNewScene3()
   })
 }
