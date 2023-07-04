@@ -14,6 +14,7 @@ import {
 } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
 import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
 import { KioskUpdateSystem } from "./kioskUpdateSystem";
+import { ScaleSpringSystem } from "./animation/ScaleSpringSystem";
 
 /**
  * @public
@@ -247,6 +248,9 @@ export class AbstractKiosk extends Entity {
   private setUpSystems() {
     if (!KioskUpdateSystem.instance) {
       KioskUpdateSystem.instance = new KioskUpdateSystem();
+    }
+    if (!ScaleSpringSystem.instance) {
+      ScaleSpringSystem.ensureInstance();
     }
   }
 

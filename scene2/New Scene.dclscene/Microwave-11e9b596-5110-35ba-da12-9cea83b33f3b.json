@@ -1,0 +1,86 @@
+{
+  "customName": "Microwave",
+  "guid": "11e9b596-5110-35ba-da12-9cea83b33f3b",
+  "parentGuid": null,
+  "hierarchyOrder": 0.0,
+  "isExposed": false,
+  "components": [
+    {
+      "nameInCode": "Transform",
+      "nameOfSlot": "Transform",
+      "properties": [
+        {
+          "name": "position",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 8.436262,
+            "y": 1.00969672,
+            "z": 6.97451544
+          }
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          }
+        },
+        {
+          "name": "scale",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "nameInCode": "GLTFShape",
+      "nameOfSlot": "Shape",
+      "properties": [
+        {
+          "name": "asset",
+          "type": "Asset",
+          "fixedValue": "69695443-7b21-4caa-9bf9-4147bab4ab6c"
+        },
+        {
+          "name": "visible",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "withCollisions",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "isPointerBlocker",
+          "type": "Boolean",
+          "fixedValue": true
+        }
+      ]
+    },
+    {
+      "nameInCode": "BosonProduct",
+      "nameOfSlot": "BosonProduct",
+      "properties": [
+        {
+          "name": "productUUID",
+          "type": "String",
+          "fixedValue": "a234728-dc54-faa6-f1e-0886d3d0e18"
+        },
+        {
+          "name": "environment",
+          "type": "String",
+          "fixedValue": "production"
+        }
+      ]
+    }
+  ],
+  "dclEditVersionNumber": "1.0.4"
+}
