@@ -5,7 +5,7 @@ import { Helper } from "../helper";
 import { Separator } from "../UIComponents/separator";
 import { toBigNumber } from "eth-connect";
 import { Kiosk } from "../kiosk";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class CompletePage {
   kiosk: Kiosk | AbstractKiosk;

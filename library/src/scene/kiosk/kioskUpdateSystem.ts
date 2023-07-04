@@ -1,4 +1,4 @@
-import { AbstractKiosk } from "./absrtactKiosk";
+import { AbstractKiosk } from "./abstractKiosk";
 import { Helper } from "./helper";
 import { Kiosk } from "./kiosk";
 

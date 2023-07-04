@@ -1,5 +1,5 @@
 import { Kiosk } from "./kiosk";
-import { AbstractKiosk } from "./absrtactKiosk";
+import { AbstractKiosk } from "./abstractKiosk";
 import { DisplayProduct } from "./displayProduct";
 
 import { eGateStateEnum, eGateTokenType, eCurrency } from "./enums";

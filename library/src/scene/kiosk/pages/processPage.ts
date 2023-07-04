@@ -10,7 +10,7 @@ import {
   checkUserCanCommitToOffer,
 } from "../../../core-sdk";
 import { CoreSDK } from "../../..";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class ProcessPage {
   private _coreSdk: CoreSDK;

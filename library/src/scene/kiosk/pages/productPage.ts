@@ -13,7 +13,7 @@ import { VariationComponent } from "../UIComponents/variationComponent";
 import { CoreSDK } from "../../..";
 import { FairExchangePolicyPage } from "./fairExchangePolicyPage";
 import { toBigNumber } from "eth-connect";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class ProductPage {
   private _coreSdk: CoreSDK;

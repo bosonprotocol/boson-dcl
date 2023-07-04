@@ -1,5 +1,5 @@
 import { getEnvironment } from "../../../core-sdk";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
 import { Separator } from "../UIComponents/separator";

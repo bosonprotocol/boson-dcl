@@ -2,7 +2,7 @@ import { eGateTokenType } from "../enums";
 import { Kiosk } from "../kiosk";
 import { GatedToken } from "../gating/gatedToken";
 import { Helper } from "../helper";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class TokenGatedOffer extends Entity {
   kiosk: Kiosk | AbstractKiosk;

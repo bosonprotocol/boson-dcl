@@ -1,4 +1,4 @@
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { eGateStateEnum } from "../enums";
 import { Helper } from "../helper";

@@ -1,6 +1,6 @@
 import { HowDoesItWork } from "../pages/howDoesItWork";
 import { Kiosk } from "../kiosk";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class HowItWorksLink extends Entity {
   viewHowItWorksText: TextShape;

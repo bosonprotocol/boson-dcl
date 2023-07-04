@@ -1,5 +1,5 @@
 import { Kiosk } from "../kiosk";
-import { AbstractKiosk } from "../absrtactKiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 import { Helper } from "./../helper";
 
 export class DescriptionPage {
