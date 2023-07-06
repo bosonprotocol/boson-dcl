@@ -20,7 +20,10 @@ import { UserData } from '@decentraland/Identity';
 
 // @public (undocumented)
 export class AbstractKiosk extends Entity {
-    constructor(_parent: Entity, _productUUID: string | {
+    constructor(_parent: Entity | {
+        parent: Entity;
+        panelPosition: Vector3;
+    }, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
         imageSizes?: {

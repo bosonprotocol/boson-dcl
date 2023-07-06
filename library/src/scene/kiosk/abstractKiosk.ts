@@ -82,7 +82,12 @@ export class AbstractKiosk extends Entity {
   }
 
   constructor(
-    _parent: Entity,
+    _parent:
+      | Entity
+      | {
+          parent: Entity;
+          panelPosition: Vector3;
+        },
     _productUUID:
       | string
       | {
@@ -93,6 +98,15 @@ export class AbstractKiosk extends Entity {
     gateState?: eGateStateEnum
   ) {
     super();
+    let parentEntity: Entity;
+    let panelPosition: Vector3;
+    if ((_parent as Entity).uuid) {
+      parentEntity = _parent as Entity;
+      panelPosition = Vector3.Zero();
+    } else {
+      parentEntity = (_parent as any).parent;
+      panelPosition = (_parent as any).panelPosition;
+    }
     if (!AbstractKiosk.initialised) {
       throw "Call AbstractKiosk.init before contructing instances.";
     }
@@ -111,7 +125,10 @@ export class AbstractKiosk extends Entity {
     this.billboardParent.setParent(this);
     this.billboardParent.addComponent(new Billboard(false, true, false));
     this.billboardParent.addComponent(
-      new Transform({ scale: new Vector3(0, 0, 0) })
+      new Transform({
+        position: panelPosition,
+        scale: new Vector3(0, 0, 0),
+      })
     );
 
     this.parent = new Entity();
@@ -146,8 +163,8 @@ export class AbstractKiosk extends Entity {
     }
 
     this.lockScreen?.setGating();
-    this.setParent(_parent);
-    _parent.addComponentOrReplace(this.onPointerDown);
+    this.setParent(parentEntity);
+    parentEntity.addComponentOrReplace(this.onPointerDown);
   }
 
   loadProduct() {

@@ -9,7 +9,10 @@ Constructs a new instance of the `AbstractKiosk` class
 <b>Signature:</b>
 
 ```typescript
-constructor(_parent: Entity, _productUUID: string | {
+constructor(_parent: Entity | {
+        parent: Entity;
+        panelPosition: Vector3;
+    }, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
         imageSizes?: {
@@ -25,7 +28,7 @@ constructor(_parent: Entity, _productUUID: string | {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_parent | Entity |  |
+|  \_parent | Entity \| { parent: Entity; panelPosition: Vector3; } |  |
 |  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } |  |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |
 

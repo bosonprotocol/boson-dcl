@@ -2,7 +2,7 @@ import { Kiosk, AbstractKiosk, getAllBalances, DisplayProduct } from '@bosonprot
 import { useBoson } from './boson'
 
 const aCube = new Entity('aCube');
-aCube.addComponent(new Transform({ position: new Vector3(8, 0.5, 5) }))
+aCube.addComponent(new Transform({ position: new Vector3(8, 2, 5) }))
 aCube.addComponent(new BoxShape())
 engine.addEntity(aCube)
 
@@ -119,6 +119,6 @@ async function loadScene() {
       ]
     )
 
-    new AbstractKiosk(aCube, productUUIDs[4])
+    new AbstractKiosk({ parent: aCube, panelPosition: new Vector3(0, -2, 2) }, productUUIDs[4])
   })
 }
