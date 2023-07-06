@@ -100,10 +100,10 @@ export class Helper {
 
   public static getTokenDecimals(tokenAddress: string): number {
     switch (tokenAddress.toLowerCase()) {
-      case "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747": //USDC mumbai
-      case "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": //USDC polygon
-      case "0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832": //USDT mumbai
-      case "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": //USDT polygon
+      case "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747".toLowerCase(): //USDC mumbai
+      case "0x2791bca1f2de4661ed88a30c99a7a9449aa84174".toLowerCase(): //USDC polygon
+      case "0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832".toLowerCase(): //USDT mumbai
+      case "0xc2132D05D31c914a87C6611C10748AEb04B58e8F".toLowerCase(): //USDT polygon
         return 6;
     }
     return 18;
