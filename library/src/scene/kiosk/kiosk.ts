@@ -35,10 +35,16 @@ export class Kiosk extends Entity {
   maxItemIndex = 0;
   offer: OfferFieldsFragment | undefined;
   productUUID = "";
-  productImageData:
+  productOverrideData:
     | {
         mainImageIndex?: number;
         imageSizes?: { [key: number]: { height: number; width: number } };
+        override?: {
+          productName?: string;
+          productDescription?: string;
+          sellerName?: string;
+          sellerDescription?: string;
+        };
       }
     | undefined = undefined;
   currentOfferID = "";
@@ -120,6 +126,12 @@ export class Kiosk extends Entity {
           productUUID: string;
           mainImageIndex?: number;
           imageSizes?: { [key: number]: { height: number; width: number } };
+          override?: {
+            productName?: string;
+            productDescription?: string;
+            sellerName?: string;
+            sellerDescription?: string;
+          };
         },
     _displayProduct: DisplayProduct | DisplayProduct[] = new DisplayProduct(
       "",
@@ -138,7 +150,7 @@ export class Kiosk extends Entity {
       this.productUUID = _productUUID;
     } else {
       this.productUUID = _productUUID.productUUID;
-      this.productImageData = { ..._productUUID };
+      this.productOverrideData = { ..._productUUID };
     }
 
     this.connectedToWeb3 = Kiosk.userData.hasConnectedWeb3;
@@ -233,8 +245,58 @@ export class Kiosk extends Entity {
           } | null
         ) => {
           if (data) {
-            const mainImageIndex = this.productImageData?.mainImageIndex;
-            if (this.productImageData?.imageSizes) {
+            const mainImageIndex = this.productOverrideData?.mainImageIndex;
+            if (this.productOverrideData?.override) {
+              if (this.productOverrideData.override.productName) {
+                data.product.title =
+                  this.productOverrideData.override.productName;
+                if (data.variants[0]?.offer?.metadata) {
+                  data.variants[0].offer.metadata.name =
+                    this.productOverrideData.override.productName;
+                  if ((data.variants[0].offer.metadata as any).product) {
+                    (data.variants[0].offer.metadata as any).product.title =
+                      this.productOverrideData.override.productName;
+                  }
+                }
+              }
+              if (this.productOverrideData.override.productDescription) {
+                data.product.description =
+                  this.productOverrideData.override.productDescription;
+                if (data.variants[0]?.offer?.metadata) {
+                  data.variants[0].offer.metadata.description =
+                    this.productOverrideData.override.productDescription;
+                  if ((data.variants[0].offer.metadata as any).product) {
+                    (
+                      data.variants[0].offer.metadata as any
+                    ).product.description =
+                      this.productOverrideData.override.productDescription;
+                  }
+                }
+              }
+              if (this.productOverrideData.override.sellerName) {
+                if (
+                  (data.variants[0].offer.metadata as any).product
+                    ?.productV1Seller
+                ) {
+                  (
+                    data.variants[0].offer.metadata as any
+                  ).product.productV1Seller.name =
+                    this.productOverrideData.override.sellerName;
+                }
+              }
+              if (this.productOverrideData.override.sellerDescription) {
+                if (
+                  (data.variants[0].offer.metadata as any).product
+                    ?.productV1Seller
+                ) {
+                  (
+                    data.variants[0].offer.metadata as any
+                  ).product.productV1Seller.description =
+                    this.productOverrideData.override.sellerDescription;
+                }
+              }
+            }
+            if (this.productOverrideData?.imageSizes) {
               const overrideProduct = (product: any) => {
                 for (
                   let index = 0;
@@ -242,13 +304,13 @@ export class Kiosk extends Entity {
                   index++
                 ) {
                   if (
-                    this.productImageData?.imageSizes &&
-                    this.productImageData?.imageSizes[index]
+                    this.productOverrideData?.imageSizes &&
+                    this.productOverrideData?.imageSizes[index]
                   ) {
                     product.visuals_images[index].width =
-                      this.productImageData?.imageSizes[index].width;
+                      this.productOverrideData?.imageSizes[index].width;
                     product.visuals_images[index].height =
-                      this.productImageData?.imageSizes[index].height;
+                      this.productOverrideData?.imageSizes[index].height;
                   }
                 }
               };
@@ -662,8 +724,10 @@ export class Kiosk extends Entity {
     const lookup =
       " .:,;'^`!|jl/\\i-()JfIt[]?{}sr*a\"ce_gFzLxkP+0123456789<=>~qvy$SbduEphonTBCXY#VRKZN%GUAHD@OQ&wmMW";
     let measurement = 0;
+    log("productName", productName);
     for (let i = 0; i < productName.length; ++i) {
       const c = lookup.indexOf(productName.charAt(i));
+      log("i", i, "c", c);
       measurement += (c < 0 ? 60 : c) * 7 + 250;
       if (measurement > maxMeasurement) {
         productName = productName.substring(0, i - 1) + "...";

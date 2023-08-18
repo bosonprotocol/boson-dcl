@@ -60,6 +60,12 @@ async function loadScene() {
           3: { height: 1100, width: 880 },
           4: { height: 1100, width: 880 },
           5: { height: 1100, width: 880 }
+        },
+        override: {
+          productName: 'over. product name',
+          productDescription: 'overridden product description',
+          sellerName: 'over. seller name',
+          sellerDescription: 'overridden seller description'
         }
       }
     )
