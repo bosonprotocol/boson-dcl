@@ -21,6 +21,12 @@ constructor(_parent: Entity | {
                 width: number;
             };
         };
+        override?: {
+            productName?: string;
+            productDescription?: string;
+            sellerName?: string;
+            sellerDescription?: string;
+        };
     }, gateState?: eGateStateEnum);
 ```
 
@@ -29,6 +35,6 @@ constructor(_parent: Entity | {
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  \_parent | Entity \| { parent: Entity; panelPosition: Vector3; } |  |
-|  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } |  |
+|  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } |  |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |
 

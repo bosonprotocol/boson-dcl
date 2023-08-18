@@ -32,6 +32,12 @@ export class AbstractKiosk extends Entity {
                 width: number;
             };
         };
+        override?: {
+            productName?: string;
+            productDescription?: string;
+            sellerName?: string;
+            sellerDescription?: string;
+        };
     }, gateState?: eGateStateEnum);
     // (undocumented)
     static allBalances: object;
@@ -87,7 +93,11 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     productData: OfferFieldsFragment | undefined;
     // (undocumented)
-    productImageData: {
+    productName: Entity;
+    // (undocumented)
+    productNameText: TextShape | undefined;
+    // (undocumented)
+    productOverrideData: {
         mainImageIndex?: number;
         imageSizes?: {
             [key: number]: {
@@ -95,11 +105,13 @@ export class AbstractKiosk extends Entity {
                 width: number;
             };
         };
+        override?: {
+            productName?: string;
+            productDescription?: string;
+            sellerName?: string;
+            sellerDescription?: string;
+        };
     } | undefined;
-    // (undocumented)
-    productName: Entity;
-    // (undocumented)
-    productNameText: TextShape | undefined;
     // Warning: (ae-forgotten-export) The symbol "ProductPage" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)

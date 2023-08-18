@@ -38,9 +38,9 @@ export declare class AbstractKiosk extends Entity
 |  [parent](./boson-dcl.abstractkiosk.parent.md) |  | Entity |  |
 |  [productCurrency](./boson-dcl.abstractkiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
 |  [productData](./boson-dcl.abstractkiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
-|  [productImageData](./boson-dcl.abstractkiosk.productimagedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } \| undefined |  |
 |  [productName](./boson-dcl.abstractkiosk.productname.md) |  | Entity |  |
 |  [productNameText](./boson-dcl.abstractkiosk.productnametext.md) |  | TextShape \| undefined |  |
+|  [productOverrideData](./boson-dcl.abstractkiosk.productoverridedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } \| undefined |  |
 |  [productPage](./boson-dcl.abstractkiosk.productpage.md) |  | ProductPage \| undefined |  |
 |  [productUUID](./boson-dcl.abstractkiosk.productuuid.md) |  | string |  |
 |  [uiOpen](./boson-dcl.abstractkiosk.uiopen.md) |  | boolean |  |

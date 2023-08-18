@@ -724,10 +724,8 @@ export class Kiosk extends Entity {
     const lookup =
       " .:,;'^`!|jl/\\i-()JfIt[]?{}sr*a\"ce_gFzLxkP+0123456789<=>~qvy$SbduEphonTBCXY#VRKZN%GUAHD@OQ&wmMW";
     let measurement = 0;
-    log("productName", productName);
     for (let i = 0; i < productName.length; ++i) {
       const c = lookup.indexOf(productName.charAt(i));
-      log("i", i, "c", c);
       measurement += (c < 0 ? 60 : c) * 7 + 250;
       if (measurement > maxMeasurement) {
         productName = productName.substring(0, i - 1) + "...";
