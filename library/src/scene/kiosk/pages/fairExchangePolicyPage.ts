@@ -1,10 +1,11 @@
 import { getEnvironment } from "../../../core-sdk";
+import { AbstractKiosk } from "../abstractKiosk";
 import { Helper } from "../helper";
 import { Kiosk } from "../kiosk";
 import { Separator } from "../UIComponents/separator";
 
 export class FairExchangePolicyPage {
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
 
   productData: any = undefined;
   parent: Entity;
@@ -34,7 +35,7 @@ export class FairExchangePolicyPage {
   LicenseClickBox: Entity = new Entity();
   CommerceClickBox: Entity = new Entity();
 
-  constructor(_kiosk: Kiosk, _parent: Entity, _productData: any) {
+  constructor(_kiosk: Kiosk | AbstractKiosk, _parent: Entity, _productData: any) {
     // Parent
     this.parent = new Entity();
     this.parent.setParent(_parent);

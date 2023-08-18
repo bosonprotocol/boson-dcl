@@ -2,12 +2,13 @@ import { OfferFieldsFragment } from "@bosonprotocol/core-sdk/dist/esm/subgraph";
 import { getEnvironment } from "../../../core-sdk";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
-import { Kiosk } from "../kiosk";
 import { Separator } from "../UIComponents/separator";
 import { toBigNumber } from "eth-connect";
+import { Kiosk } from "../kiosk";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class CompletePage {
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
 
   productData: any = undefined;
   parent: Entity = new Entity();
@@ -45,7 +46,11 @@ export class CompletePage {
   openseaUrlBase = "";
   bosonDAppUrlBase = "";
 
-  constructor(_kiosk: Kiosk, _parent: Entity, _productData: any) {
+  constructor(
+    _kiosk: Kiosk | AbstractKiosk,
+    _parent: Entity,
+    _productData: any
+  ) {
     this.kiosk = _kiosk;
     this.productData = _productData;
 

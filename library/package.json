@@ -37,7 +37,8 @@
     "!dist/types",
     "scripts/postinstall.js",
     "images/kiosk",
-    "models/kiosk"
+    "models/kiosk",
+    "dcl-edit"
   ],
   "devDependencies": {
     "@bosonprotocol/core-sdk": "^1.25.3",
