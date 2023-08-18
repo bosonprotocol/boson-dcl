@@ -10,12 +10,13 @@ import {
   checkUserCanCommitToOffer,
 } from "../../../core-sdk";
 import { CoreSDK } from "../../..";
+import { AbstractKiosk } from "../abstractKiosk";
 
 export class ProcessPage {
   private _coreSdk: CoreSDK;
   private _userAccount: string;
 
-  kiosk: Kiosk;
+  kiosk: Kiosk | AbstractKiosk;
 
   productData: any = undefined;
   parent: Entity = new Entity();
@@ -39,7 +40,7 @@ export class ProcessPage {
   constructor(
     coreSDK: CoreSDK,
     userAccount: string,
-    _kiosk: Kiosk,
+    _kiosk: Kiosk | AbstractKiosk,
     _parent: Entity,
     _productData: any
   ) {
@@ -163,7 +164,7 @@ export class ProcessPage {
 
   show() {
     // Show Wave Animation
-    Kiosk.waveAnimationSystem?.setNewParent(this.parent)
+    Kiosk.waveAnimationSystem?.setNewParent(this.parent);
 
     new DelayedTask(() => {
       // Commit against the offerID
@@ -171,11 +172,15 @@ export class ProcessPage {
         (data: any) => {
           // succeeded
           log(data);
-          Kiosk.waveAnimationSystem?.hide()
+          Kiosk.waveAnimationSystem?.hide();
           // but do we have an error?
           if (data != undefined) {
             if (data.error != undefined) {
-              this.completePage.show(false, data.errorMessage, this.productData);
+              this.completePage.show(
+                false,
+                data.errorMessage,
+                this.productData
+              );
               this.hideTask.restart(1);
             } else {
               this.completePage.show(true, data, this.productData);
@@ -190,8 +195,8 @@ export class ProcessPage {
         (data: any) => {
           // rejected
           log(data);
-          Kiosk.waveAnimationSystem?.hide()
-          this.completePage.show(false, data);
+          Kiosk.waveAnimationSystem?.hide();
+          this.completePage.show(false, data, this.productData);
           this.hideTask.restart(1);
         }
       );

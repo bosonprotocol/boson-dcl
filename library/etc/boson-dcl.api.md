@@ -19,6 +19,116 @@ import { TransactionReceipt } from '@bosonprotocol/common';
 import { UserData } from '@decentraland/Identity';
 
 // @public (undocumented)
+export class AbstractKiosk extends Entity {
+    constructor(_parent: Entity | {
+        parent: Entity;
+        panelPosition: Vector3;
+    }, _productUUID: string | {
+        productUUID: string;
+        mainImageIndex?: number;
+        imageSizes?: {
+            [key: number]: {
+                height: number;
+                width: number;
+            };
+        };
+    }, gateState?: eGateStateEnum);
+    // (undocumented)
+    static allBalances: object;
+    // (undocumented)
+    billboardParent: Entity;
+    // (undocumented)
+    connectedToWeb3: boolean;
+    // (undocumented)
+    createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
+    // (undocumented)
+    currentItemIndex: number;
+    // (undocumented)
+    currentOfferID: string;
+    // Warning: (ae-forgotten-export) The symbol "Variation" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    currentVariation: Variation | undefined;
+    // (undocumented)
+    customQuestInformation: string;
+    // Warning: (ae-forgotten-export) The symbol "GatedToken" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    gatedTokens: GatedToken[];
+    // (undocumented)
+    gateState: eGateStateEnum;
+    // (undocumented)
+    static init(coreSDK: CoreSDK, userData: UserData, walletAddress: string, allBalances: object): void;
+    // (undocumented)
+    loadOffer(_data: {
+        product: BaseProductV1ProductFieldsFragment;
+        variants: {
+            offer: OfferFieldsFragment;
+            variations: ProductV1Variation[];
+        }[];
+        mainImageIndex?: number;
+    } | null): void;
+    // (undocumented)
+    loadProduct(): void;
+    // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    lockScreen: LockScreen | undefined;
+    // (undocumented)
+    maxItemIndex: number;
+    // (undocumented)
+    offer: OfferFieldsFragment | undefined;
+    // (undocumented)
+    onPointerDown: OnPointerDown;
+    // (undocumented)
+    parent: Entity;
+    // (undocumented)
+    productCurrency: eCurrency;
+    // (undocumented)
+    productData: OfferFieldsFragment | undefined;
+    // (undocumented)
+    productImageData: {
+        mainImageIndex?: number;
+        imageSizes?: {
+            [key: number]: {
+                height: number;
+                width: number;
+            };
+        };
+    } | undefined;
+    // (undocumented)
+    productName: Entity;
+    // (undocumented)
+    productNameText: TextShape | undefined;
+    // Warning: (ae-forgotten-export) The symbol "ProductPage" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    productPage: ProductPage | undefined;
+    // (undocumented)
+    productUUID: string;
+    // (undocumented)
+    showDisplayProduct(): void;
+    // (undocumented)
+    showLockScreen(): void;
+    // (undocumented)
+    showProduct(_product: OfferFieldsFragment | undefined): void;
+    // (undocumented)
+    uiOpen: boolean;
+    // (undocumented)
+    unlock(_tokenCount: number, _tokenAddress?: string): void;
+    // (undocumented)
+    update(_dt: number): void;
+    // (undocumented)
+    updateProductPrice(): void;
+    // (undocumented)
+    variations: Variation[];
+    // Warning: (ae-forgotten-export) The symbol "WaveAnimationSystem" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    static waveAnimationSystem: WaveAnimationSystem | undefined;
+}
+
+// @public (undocumented)
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 // @public (undocumented)
@@ -198,16 +308,12 @@ export class Kiosk extends Entity {
     currentItemIndex: number;
     // (undocumented)
     currentOfferID: string;
-    // Warning: (ae-forgotten-export) The symbol "Variation" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     currentVariation: Variation | undefined;
     // (undocumented)
     customQuestInformation: string;
     // (undocumented)
     displayProducts: DisplayProduct[];
-    // Warning: (ae-forgotten-export) The symbol "GatedToken" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     gatedTokens: GatedToken[];
     // (undocumented)
@@ -231,8 +337,6 @@ export class Kiosk extends Entity {
     } | null): void;
     // (undocumented)
     loadProduct(): void;
-    // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     lockScreen: LockScreen | undefined;
     // (undocumented)
@@ -261,8 +365,6 @@ export class Kiosk extends Entity {
     productName: Entity;
     // (undocumented)
     productNameText: TextShape | undefined;
-    // Warning: (ae-forgotten-export) The symbol "ProductPage" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     productPage: ProductPage | undefined;
     // (undocumented)
@@ -285,8 +387,6 @@ export class Kiosk extends Entity {
     updateProductPrice(): void;
     // (undocumented)
     variations: Variation[];
-    // Warning: (ae-forgotten-export) The symbol "WaveAnimationSystem" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     static waveAnimationSystem: WaveAnimationSystem | undefined;
 }

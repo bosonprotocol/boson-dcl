@@ -1,6 +1,10 @@
-import * as boson from '@bosonprotocol/boson-dcl'
-import { Kiosk } from '@bosonprotocol/boson-dcl'
+import { Kiosk, AbstractKiosk, getAllBalances, DisplayProduct } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
+
+const aCube = new Entity('aCube');
+aCube.addComponent(new Transform({ position: new Vector3(8, 2, 5) }))
+aCube.addComponent(new BoxShape())
+engine.addEntity(aCube)
 
 void loadScene()
 
@@ -23,8 +27,9 @@ engine.addEntity(floor)
 
 async function loadScene() {
   void useBoson().then(async ({ coreSDK, userAccount, walletAddress }) => {
-    const allBalances: object = await boson.getAllBalances(walletAddress)
+    const allBalances: object = await getAllBalances(walletAddress)
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
+    AbstractKiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 
     new Kiosk(
       new Transform({
@@ -33,7 +38,7 @@ async function loadScene() {
         scale: new Vector3(1, 1, 1)
       }),
       productUUIDs[0], // product UUID
-      new boson.DisplayProduct( // show a 3D model inside the kiosk
+      new DisplayProduct( // show a 3D model inside the kiosk
         'models/OGShirt.glb',
         new Transform({
           position: new Vector3(0, 1.7, 0),
@@ -95,7 +100,7 @@ async function loadScene() {
       productUUIDs[4], // product UUID
       [
         // combine 2 3D models inside the kiosk
-        new boson.DisplayProduct(
+        new DisplayProduct(
           'models/OGShirt.glb',
           new Transform({
             position: new Vector3(0, 1.7, 0),
@@ -103,7 +108,7 @@ async function loadScene() {
           }),
           50
         ),
-        new boson.DisplayProduct(
+        new DisplayProduct(
           'models/s0_Mannequin_02.glb',
           new Transform({
             position: new Vector3(0, 0.78, 0),
@@ -113,5 +118,7 @@ async function loadScene() {
         )
       ]
     )
+
+    new AbstractKiosk({ parent: aCube, panelPosition: new Vector3(0, -2, 2) }, productUUIDs[4])
   })
 }
