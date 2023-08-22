@@ -41,9 +41,9 @@ export declare class Kiosk extends Entity
 |  [parent](./boson-dcl.kiosk.parent.md) |  | Entity |  |
 |  [productCurrency](./boson-dcl.kiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
 |  [productData](./boson-dcl.kiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
-|  [productImageData](./boson-dcl.kiosk.productimagedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } \| undefined |  |
 |  [productName](./boson-dcl.kiosk.productname.md) |  | Entity |  |
 |  [productNameText](./boson-dcl.kiosk.productnametext.md) |  | TextShape \| undefined |  |
+|  [productOverrideData](./boson-dcl.kiosk.productoverridedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } \| undefined |  |
 |  [productPage](./boson-dcl.kiosk.productpage.md) |  | ProductPage \| undefined |  |
 |  [productUUID](./boson-dcl.kiosk.productuuid.md) |  | string |  |
 |  [specialEffects](./boson-dcl.kiosk.specialeffects.md) |  | Entity |  |

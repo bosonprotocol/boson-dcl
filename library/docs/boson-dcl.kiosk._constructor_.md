@@ -18,6 +18,12 @@ constructor(_transform: Transform, _productUUID: string | {
                 width: number;
             };
         };
+        override?: {
+            productName?: string;
+            productDescription?: string;
+            sellerName?: string;
+            sellerDescription?: string;
+        };
     }, _displayProduct?: DisplayProduct | DisplayProduct[], gateState?: eGateStateEnum);
 ```
 
@@ -26,7 +32,7 @@ constructor(_transform: Transform, _productUUID: string | {
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  \_transform | Transform |  |
-|  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; } |  |
+|  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } |  |
 |  \_displayProduct | [DisplayProduct](./boson-dcl.displayproduct.md) \| [DisplayProduct](./boson-dcl.displayproduct.md)<!-- -->\[\] | <i>(Optional)</i> |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |
 

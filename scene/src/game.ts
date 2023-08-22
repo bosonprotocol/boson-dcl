@@ -1,7 +1,7 @@
 import { Kiosk, AbstractKiosk, getAllBalances, DisplayProduct } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
 
-const aCube = new Entity('aCube');
+const aCube = new Entity('aCube')
 aCube.addComponent(new Transform({ position: new Vector3(8, 2, 5) }))
 aCube.addComponent(new BoxShape())
 engine.addEntity(aCube)
@@ -65,6 +65,12 @@ async function loadScene() {
           3: { height: 1100, width: 880 },
           4: { height: 1100, width: 880 },
           5: { height: 1100, width: 880 }
+        },
+        override: {
+          productName: 'over. product name',
+          productDescription: 'overridden product description',
+          sellerName: 'over. seller name',
+          sellerDescription: 'overridden seller description'
         }
       }
     )
@@ -119,6 +125,20 @@ async function loadScene() {
       ]
     )
 
-    new AbstractKiosk({ parent: aCube, panelPosition: new Vector3(0, -2, 2) }, productUUIDs[4])
+    new AbstractKiosk(
+      {
+        parent: aCube,
+        panelPosition: new Vector3(0, -2, 2)
+      },
+      {
+        productUUID: productUUIDs[4],
+        override: {
+          productName: 'over. product name',
+          productDescription: 'overridden product description',
+          sellerName: 'over. seller name',
+          sellerDescription: 'overridden seller description'
+        }
+      }
+    )
   })
 }
