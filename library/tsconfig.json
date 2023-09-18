@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.ts", "src/scene/kiosk/kiosk._ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist"],
   "compilerOptions": {
     "module": "ESNext",
