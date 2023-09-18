@@ -59,7 +59,6 @@ export class DisplayProduct extends Entity {
         );
 
         if (_productData.metadata.product.visuals_images.length > 0) {
-
           Helper.getIPFSImageTexture(
             _productData.metadata.product.visuals_images[mainImageIndex].url
           ).then((texture: Texture) => {
@@ -71,18 +70,20 @@ export class DisplayProduct extends Entity {
 
             if (texture.src.indexOf("waitingForImage") == -1) {
               const width =
-                _productData.metadata.product.visuals_images[mainImageIndex].width;
+                _productData.metadata.product.visuals_images[mainImageIndex]
+                  .width;
               const height =
-                _productData.metadata.product.visuals_images[mainImageIndex].height;
+                _productData.metadata.product.visuals_images[mainImageIndex]
+                  .height;
               transform.scale.y =
                 transform.scale.x * (width > 0 ? height / width : 1);
             }
             this.originalScale = transform.scale.clone();
-            if(this.getComponent(ScaleSpringComponent).targetScale.x>0){
-              this.getComponent(ScaleSpringComponent).targetScale = this.originalScale
+            if (this.getComponent(ScaleSpringComponent).targetScale.x > 0) {
+              this.getComponent(ScaleSpringComponent).targetScale =
+                this.originalScale;
             }
-          })
-
+          });
         }
 
         // Add image frame

@@ -1,6 +1,5 @@
 import { AbstractKiosk } from "../abstractKiosk";
 import { Helper } from "../helper";
-import { Kiosk } from "../kiosk";
 
 export class Option {
   id: string;
@@ -43,7 +42,7 @@ export class Variation {
 }
 
 export class VariationComponent {
-  kiosk: Kiosk | AbstractKiosk;
+  kiosk: AbstractKiosk;
 
   currentVariation: Variation = new Variation(
     -1,
@@ -85,7 +84,7 @@ export class VariationComponent {
   option2VariationNextEntity: Entity = new Entity();
 
   // UI
-  constructor(_kiosk: Kiosk | AbstractKiosk, _transform: Transform, _parent: Entity) {
+  constructor(_kiosk: AbstractKiosk, _transform: Transform, _parent: Entity) {
     this.kiosk = _kiosk;
 
     this.variationPrevMat = new Material();

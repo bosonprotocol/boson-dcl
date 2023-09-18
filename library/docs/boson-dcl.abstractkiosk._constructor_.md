@@ -10,7 +10,7 @@ Constructs a new instance of the `AbstractKiosk` class
 
 ```typescript
 constructor(_parent: Entity | {
-        parent: Entity;
+        parent: Entity | undefined;
         panelPosition: Vector3;
     }, _productUUID: string | {
         productUUID: string;
@@ -34,7 +34,7 @@ constructor(_parent: Entity | {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_parent | Entity \| { parent: Entity; panelPosition: Vector3; } |  |
+|  \_parent | Entity \| { parent: Entity \| undefined; panelPosition: Vector3; } |  |
 |  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } |  |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |
 

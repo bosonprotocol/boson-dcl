@@ -25,12 +25,14 @@ export declare class AbstractKiosk extends Entity
 |  [allBalances](./boson-dcl.abstractkiosk.allbalances.md) | <code>static</code> | object |  |
 |  [billboardParent](./boson-dcl.abstractkiosk.billboardparent.md) |  | Entity |  |
 |  [connectedToWeb3](./boson-dcl.abstractkiosk.connectedtoweb3.md) |  | boolean |  |
+|  [coreSDK](./boson-dcl.abstractkiosk.coresdk.md) | <p><code>protected</code></p><p><code>static</code></p> | CoreSDK |  |
 |  [currentItemIndex](./boson-dcl.abstractkiosk.currentitemindex.md) |  | number |  |
 |  [currentOfferID](./boson-dcl.abstractkiosk.currentofferid.md) |  | string |  |
 |  [currentVariation](./boson-dcl.abstractkiosk.currentvariation.md) |  | Variation \| undefined |  |
 |  [customQuestInformation](./boson-dcl.abstractkiosk.customquestinformation.md) |  | string |  |
 |  [gatedTokens](./boson-dcl.abstractkiosk.gatedtokens.md) |  | GatedToken\[\] |  |
 |  [gateState](./boson-dcl.abstractkiosk.gatestate.md) |  | [eGateStateEnum](./boson-dcl.egatestateenum.md) |  |
+|  [initialised](./boson-dcl.abstractkiosk.initialised.md) | <p><code>protected</code></p><p><code>static</code></p> | boolean |  |
 |  [lockScreen](./boson-dcl.abstractkiosk.lockscreen.md) |  | LockScreen \| undefined |  |
 |  [maxItemIndex](./boson-dcl.abstractkiosk.maxitemindex.md) |  | number |  |
 |  [offer](./boson-dcl.abstractkiosk.offer.md) |  | OfferFieldsFragment \| undefined |  |
@@ -44,17 +46,21 @@ export declare class AbstractKiosk extends Entity
 |  [productPage](./boson-dcl.abstractkiosk.productpage.md) |  | ProductPage \| undefined |  |
 |  [productUUID](./boson-dcl.abstractkiosk.productuuid.md) |  | string |  |
 |  [uiOpen](./boson-dcl.abstractkiosk.uiopen.md) |  | boolean |  |
+|  [userData](./boson-dcl.abstractkiosk.userdata.md) | <p><code>protected</code></p><p><code>static</code></p> | UserData |  |
 |  [variations](./boson-dcl.abstractkiosk.variations.md) |  | Variation\[\] |  |
+|  [walletAddress](./boson-dcl.abstractkiosk.walletaddress.md) | <p><code>protected</code></p><p><code>static</code></p> | string |  |
 |  [waveAnimationSystem](./boson-dcl.abstractkiosk.waveanimationsystem.md) | <code>static</code> | WaveAnimationSystem \| undefined |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [checkForGatedTokens()](./boson-dcl.abstractkiosk.checkforgatedtokens.md) | <code>protected</code> |  |
 |  [createdGatedTokens(\_offer)](./boson-dcl.abstractkiosk.createdgatedtokens.md) |  |  |
 |  [init(coreSDK, userData, walletAddress, allBalances)](./boson-dcl.abstractkiosk.init.md) | <code>static</code> |  |
 |  [loadOffer(\_data)](./boson-dcl.abstractkiosk.loadoffer.md) |  |  |
 |  [loadProduct()](./boson-dcl.abstractkiosk.loadproduct.md) |  |  |
+|  [setUpSystems()](./boson-dcl.abstractkiosk.setupsystems.md) | <code>protected</code> |  |
 |  [showDisplayProduct()](./boson-dcl.abstractkiosk.showdisplayproduct.md) |  |  |
 |  [showLockScreen()](./boson-dcl.abstractkiosk.showlockscreen.md) |  |  |
 |  [showProduct(\_product)](./boson-dcl.abstractkiosk.showproduct.md) |  |  |

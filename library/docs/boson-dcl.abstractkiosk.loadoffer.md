@@ -14,14 +14,14 @@ loadOffer(_data: {
             variations: ProductV1Variation[];
         }[];
         mainImageIndex?: number;
-    } | null): void;
+    }): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; mainImageIndex?: number; } \| null |  |
+|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; mainImageIndex?: number; } |  |
 
 <b>Returns:</b>
 

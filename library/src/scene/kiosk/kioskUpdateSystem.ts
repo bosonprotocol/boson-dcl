@@ -1,6 +1,5 @@
 import { AbstractKiosk } from "./abstractKiosk";
 import { Helper } from "./helper";
-import { Kiosk } from "./kiosk";
 
 export class KioskUpdateSystem implements ISystem {
   // Text update speed
@@ -11,7 +10,7 @@ export class KioskUpdateSystem implements ISystem {
   priceRefreshInterval = 60; // 1 minute
   currentRefreshInterval: number = this.priceTextUpdateInterval;
 
-  kiosks: (Kiosk | AbstractKiosk)[] = [];
+  kiosks: AbstractKiosk[] = [];
   static instance: KioskUpdateSystem;
 
   constructor() {
@@ -23,12 +22,12 @@ export class KioskUpdateSystem implements ISystem {
     Helper.refreshPrices();
   }
 
-  addKiosk(_kiosk: Kiosk | AbstractKiosk) {
+  addKiosk(_kiosk: AbstractKiosk) {
     this.kiosks.push(_kiosk);
   }
 
   update(_dt: number): void {
-    this.kiosks.forEach((kiosk: Kiosk | AbstractKiosk) => {
+    this.kiosks.forEach((kiosk: AbstractKiosk) => {
       kiosk.update(_dt);
     });
 

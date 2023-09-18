@@ -15,15 +15,16 @@ import {
 import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
 import { KioskUpdateSystem } from "./kioskUpdateSystem";
 import { ScaleSpringSystem } from "./animation/ScaleSpringSystem";
+import { toBigNumber } from "eth-connect";
 
 /**
  * @public
  */
 export class AbstractKiosk extends Entity {
-  private static coreSDK: CoreSDK;
-  private static walletAddress: string;
-  private static userData: UserData;
-  private static initialised = false;
+  protected static coreSDK: CoreSDK;
+  protected static walletAddress: string;
+  protected static userData: UserData;
+  protected static initialised = false;
   public static allBalances: object;
 
   parent: Entity;
@@ -91,7 +92,7 @@ export class AbstractKiosk extends Entity {
     _parent:
       | Entity
       | {
-          parent: Entity;
+          parent: Entity | undefined;
           panelPosition: Vector3;
         },
     _productUUID:
@@ -175,8 +176,12 @@ export class AbstractKiosk extends Entity {
     }
 
     this.lockScreen?.setGating();
-    this.setParent(parentEntity);
-    parentEntity.addComponentOrReplace(this.onPointerDown);
+    if (parentEntity) {
+      this.setParent(parentEntity);
+      parentEntity.addComponentOrReplace(this.onPointerDown);
+    } else {
+      this.addComponent(this.onPointerDown);
+    }
   }
 
   loadProduct() {
@@ -279,7 +284,7 @@ export class AbstractKiosk extends Entity {
       });
   }
 
-  private checkForGatedTokens() {
+  protected checkForGatedTokens() {
     if (!this.productData) {
       throw new Error("Cannot check undefined for gated tokens");
     }
@@ -324,7 +329,7 @@ export class AbstractKiosk extends Entity {
       });
   }
 
-  private setUpSystems() {
+  protected setUpSystems() {
     if (!KioskUpdateSystem.instance) {
       KioskUpdateSystem.instance = new KioskUpdateSystem();
     }
@@ -376,16 +381,14 @@ export class AbstractKiosk extends Entity {
     }
   }
 
-  loadOffer(
-    _data: {
-      product: BaseProductV1ProductFieldsFragment;
-      variants: {
-        offer: OfferFieldsFragment;
-        variations: ProductV1Variation[];
-      }[];
-      mainImageIndex?: number;
-    } | null
-  ) {
+  loadOffer(_data: {
+    product: BaseProductV1ProductFieldsFragment;
+    variants: {
+      offer: OfferFieldsFragment;
+      variations: ProductV1Variation[];
+    }[];
+    mainImageIndex?: number;
+  }) {
     if (!_data || !_data.variants[0] || !_data.variants[0].offer) {
       throw new Error("Cannot load offer.");
     }

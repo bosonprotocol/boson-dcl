@@ -1,9 +1,9 @@
-import { Kiosk } from "../kiosk";
 import { AbstractKiosk } from "../abstractKiosk";
+import { Kiosk } from "../kiosk";
 import { Helper } from "./../helper";
 
 export class DescriptionPage {
-  kiosk: Kiosk | AbstractKiosk;
+  kiosk: AbstractKiosk;
 
   productData: any = undefined;
   parent: Entity;
@@ -74,7 +74,7 @@ export class DescriptionPage {
   ShippingAndInventoryShippingInfoText: TextShape;
 
   constructor(
-    _kiosk: Kiosk | AbstractKiosk,
+    _kiosk: AbstractKiosk,
     _parent: Entity,
     _productData: any
   ) {

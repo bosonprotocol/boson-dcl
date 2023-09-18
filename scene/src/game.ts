@@ -29,7 +29,6 @@ async function loadScene() {
   void useBoson().then(async ({ coreSDK, userAccount, walletAddress }) => {
     const allBalances: object = await getAllBalances(walletAddress)
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
-    AbstractKiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 
     new Kiosk(
       new Transform({

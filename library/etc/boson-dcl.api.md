@@ -21,7 +21,7 @@ import { UserData } from '@decentraland/Identity';
 // @public (undocumented)
 export class AbstractKiosk extends Entity {
     constructor(_parent: Entity | {
-        parent: Entity;
+        parent: Entity | undefined;
         panelPosition: Vector3;
     }, _productUUID: string | {
         productUUID: string;
@@ -44,7 +44,11 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     billboardParent: Entity;
     // (undocumented)
+    protected checkForGatedTokens(): void;
+    // (undocumented)
     connectedToWeb3: boolean;
+    // (undocumented)
+    protected static coreSDK: CoreSDK;
     // (undocumented)
     createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
     // (undocumented)
@@ -66,6 +70,8 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     static init(coreSDK: CoreSDK, userData: UserData, walletAddress: string, allBalances: object): void;
     // (undocumented)
+    protected static initialised: boolean;
+    // (undocumented)
     loadOffer(_data: {
         product: BaseProductV1ProductFieldsFragment;
         variants: {
@@ -73,7 +79,7 @@ export class AbstractKiosk extends Entity {
             variations: ProductV1Variation[];
         }[];
         mainImageIndex?: number;
-    } | null): void;
+    }): void;
     // (undocumented)
     loadProduct(): void;
     // Warning: (ae-forgotten-export) The symbol "LockScreen" needs to be exported by the entry point index.d.ts
@@ -119,6 +125,8 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     productUUID: string;
     // (undocumented)
+    protected setUpSystems(): void;
+    // (undocumented)
     showDisplayProduct(): void;
     // (undocumented)
     showLockScreen(): void;
@@ -133,7 +141,11 @@ export class AbstractKiosk extends Entity {
     // (undocumented)
     updateProductPrice(): void;
     // (undocumented)
+    protected static userData: UserData;
+    // (undocumented)
     variations: Variation[];
+    // (undocumented)
+    protected static walletAddress: string;
     // Warning: (ae-forgotten-export) The symbol "WaveAnimationSystem" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -297,7 +309,7 @@ export function hasNft(walletAddress: string, contractId: string, tokenId: strin
 export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
 
 // @public (undocumented)
-export class Kiosk extends Entity {
+export class Kiosk extends AbstractKiosk {
     constructor(_transform: Transform, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
@@ -315,27 +327,7 @@ export class Kiosk extends Entity {
         };
     }, _displayProduct?: DisplayProduct | DisplayProduct[], gateState?: eGateStateEnum);
     // (undocumented)
-    static allBalances: object;
-    // (undocumented)
-    billboardParent: Entity;
-    // (undocumented)
-    connectedToWeb3: boolean;
-    // (undocumented)
-    createdGatedTokens(_offer: OfferFieldsFragment | undefined): void;
-    // (undocumented)
-    currentItemIndex: number;
-    // (undocumented)
-    currentOfferID: string;
-    // (undocumented)
-    currentVariation: Variation | undefined;
-    // (undocumented)
-    customQuestInformation: string;
-    // (undocumented)
     displayProducts: DisplayProduct[];
-    // (undocumented)
-    gatedTokens: GatedToken[];
-    // (undocumented)
-    gateState: eGateStateEnum;
     // (undocumented)
     static getAlphaMat(): Material;
     // (undocumented)
@@ -346,73 +338,21 @@ export class Kiosk extends Entity {
     static kioskSpecialEffects: GLTFShape;
     // (undocumented)
     loadOffer(_data: {
-        product: BaseProductV1ProductFieldsFragment;
+        product: subgraph.BaseProductV1ProductFieldsFragment;
         variants: {
-            offer: OfferFieldsFragment;
-            variations: ProductV1Variation[];
+            offer: subgraph.OfferFieldsFragment;
+            variations: subgraph.ProductV1Variation[];
         }[];
         mainImageIndex?: number;
-    } | null): void;
+    }): void;
     // (undocumented)
-    loadProduct(): void;
-    // (undocumented)
-    lockScreen: LockScreen | undefined;
-    // (undocumented)
-    maxItemIndex: number;
-    // (undocumented)
-    offer: OfferFieldsFragment | undefined;
-    // (undocumented)
-    onPointerDown: OnPointerDown;
-    // (undocumented)
-    parent: Entity;
-    // (undocumented)
-    productCurrency: eCurrency;
-    // (undocumented)
-    productData: OfferFieldsFragment | undefined;
-    // (undocumented)
-    productName: Entity;
-    // (undocumented)
-    productNameText: TextShape | undefined;
-    // (undocumented)
-    productOverrideData: {
-        mainImageIndex?: number;
-        imageSizes?: {
-            [key: number]: {
-                height: number;
-                width: number;
-            };
-        };
-        override?: {
-            productName?: string;
-            productDescription?: string;
-            sellerName?: string;
-            sellerDescription?: string;
-        };
-    } | undefined;
-    // (undocumented)
-    productPage: ProductPage | undefined;
-    // (undocumented)
-    productUUID: string;
+    protected setUpSystems(): void;
     // (undocumented)
     showDisplayProduct(): void;
     // (undocumented)
-    showLockScreen(): void;
-    // (undocumented)
-    showProduct(_product: OfferFieldsFragment | undefined): void;
-    // (undocumented)
     specialEffects: Entity;
     // (undocumented)
-    uiOpen: boolean;
-    // (undocumented)
-    unlock(_tokenCount: number, _tokenAddress?: string): void;
-    // (undocumented)
     update(_dt: number): void;
-    // (undocumented)
-    updateProductPrice(): void;
-    // (undocumented)
-    variations: Variation[];
-    // (undocumented)
-    static waveAnimationSystem: WaveAnimationSystem | undefined;
 }
 
 export { MetaTxConfig }

@@ -8,20 +8,20 @@
 
 ```typescript
 loadOffer(_data: {
-        product: BaseProductV1ProductFieldsFragment;
+        product: subgraph.BaseProductV1ProductFieldsFragment;
         variants: {
-            offer: OfferFieldsFragment;
-            variations: ProductV1Variation[];
+            offer: subgraph.OfferFieldsFragment;
+            variations: subgraph.ProductV1Variation[];
         }[];
         mainImageIndex?: number;
-    } | null): void;
+    }): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_data | { product: BaseProductV1ProductFieldsFragment; variants: { offer: OfferFieldsFragment; variations: ProductV1Variation\[\]; }\[\]; mainImageIndex?: number; } \| null |  |
+|  \_data | { product: subgraph.BaseProductV1ProductFieldsFragment; variants: { offer: subgraph.OfferFieldsFragment; variations: subgraph.ProductV1Variation\[\]; }\[\]; mainImageIndex?: number; } |  |
 
 <b>Returns:</b>
 
