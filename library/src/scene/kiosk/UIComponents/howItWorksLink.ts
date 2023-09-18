@@ -1,5 +1,5 @@
 import { HowDoesItWork } from "../pages/howDoesItWork";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 import { Kiosk } from "../kiosk";
 
 export class HowItWorksLink extends Entity {
@@ -7,7 +7,7 @@ export class HowItWorksLink extends Entity {
   viewHowItWorksClickBox: Entity = new Entity();
   howDoesItWorkPage: HowDoesItWork;
 
-  constructor(_kiosk: AbstractKiosk, _parent: Entity, _transform: Transform) {
+  constructor(_kiosk: ProductHandle, _parent: Entity, _transform: Transform) {
     super();
 
     this.howDoesItWorkPage = new HowDoesItWork(_kiosk, _parent);

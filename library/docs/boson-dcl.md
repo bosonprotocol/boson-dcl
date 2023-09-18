@@ -8,9 +8,9 @@
 
 |  Class | Description |
 |  --- | --- |
-|  [AbstractKiosk](./boson-dcl.abstractkiosk.md) |  |
 |  [DisplayProduct](./boson-dcl.displayproduct.md) |  |
 |  [Kiosk](./boson-dcl.kiosk.md) |  |
+|  [ProductHandle](./boson-dcl.producthandle.md) |  |
 
 ## Enumerations
 

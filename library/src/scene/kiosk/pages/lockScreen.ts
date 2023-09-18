@@ -1,4 +1,4 @@
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { eGateStateEnum } from "../enums";
 import { Helper } from "../helper";
@@ -10,7 +10,7 @@ import { TokenGatedOffer } from "../UIComponents/tokenGatedOffer";
 export class LockScreen {
   productData: any = undefined;
 
-  kiosk: AbstractKiosk;
+  kiosk: ProductHandle;
 
   parent: Entity = new Entity();
 
@@ -65,7 +65,7 @@ export class LockScreen {
   hideTask: DelayedTask;
   hideTaskFirstRun = true;
 
-  constructor(_kiosk: AbstractKiosk, _productData: any) {
+  constructor(_kiosk: ProductHandle, _productData: any) {
     this.kiosk = _kiosk;
 
     // Data

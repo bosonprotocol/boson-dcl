@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-export declare class Kiosk extends AbstractKiosk 
+export declare class Kiosk extends ProductHandle 
 ```
-<b>Extends:</b> [AbstractKiosk](./boson-dcl.abstractkiosk.md)
+<b>Extends:</b> [ProductHandle](./boson-dcl.producthandle.md)
 
 ## Constructors
 

@@ -1,4 +1,4 @@
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 import { Helper } from "../helper";
 
 export class Option {
@@ -42,7 +42,7 @@ export class Variation {
 }
 
 export class VariationComponent {
-  kiosk: AbstractKiosk;
+  kiosk: ProductHandle;
 
   currentVariation: Variation = new Variation(
     -1,
@@ -84,7 +84,7 @@ export class VariationComponent {
   option2VariationNextEntity: Entity = new Entity();
 
   // UI
-  constructor(_kiosk: AbstractKiosk, _transform: Transform, _parent: Entity) {
+  constructor(_kiosk: ProductHandle, _transform: Transform, _parent: Entity) {
     this.kiosk = _kiosk;
 
     this.variationPrevMat = new Material();

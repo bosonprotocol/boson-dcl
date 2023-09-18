@@ -12,14 +12,14 @@ import { VariationComponent } from "../UIComponents/variationComponent";
 import { CoreSDK } from "../../..";
 import { FairExchangePolicyPage } from "./fairExchangePolicyPage";
 import { toBigNumber } from "eth-connect";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 import { Kiosk } from "../kiosk";
 
 export class ProductPage {
   private _coreSdk: CoreSDK;
   private _userAccount: string;
 
-  kiosk: AbstractKiosk;
+  kiosk: ProductHandle;
 
   productData: any = undefined;
 
@@ -162,7 +162,7 @@ export class ProductPage {
   constructor(
     coreSDK: CoreSDK,
     userAccount: string,
-    _kiosk: AbstractKiosk,
+    _kiosk: ProductHandle,
     _productData: any
   ) {
     this._coreSdk = coreSDK;
@@ -1059,7 +1059,7 @@ export class ProductPage {
 
     let errorMessage = "";
 
-    const tokenBalance: number = (AbstractKiosk.allBalances as any)[
+    const tokenBalance: number = (ProductHandle.allBalances as any)[
       Helper.getCurrencySymbol(this.kiosk.productCurrency).toLocaleLowerCase()
     ];
 

@@ -1,5 +1,5 @@
 import { CoreSDK, subgraph } from "@bosonprotocol/core-sdk";
-import { AbstractKiosk } from "./abstractKiosk";
+import { ProductHandle } from "./productHandle";
 import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
 import { DisplayProduct } from "./displayProduct";
 import { eGateStateEnum } from "./enums";
@@ -8,7 +8,7 @@ import { DelayedTask } from "./tasks/DelayedTask";
 import { DelayedTaskSystem } from "./tasks/DelayedTaskSystem";
 import { UserData } from "@decentraland/Identity";
 
-export class Kiosk extends AbstractKiosk {
+export class Kiosk extends ProductHandle {
   private static alphaMat: Material;
   private static alphaTexture: Texture;
 
@@ -24,7 +24,7 @@ export class Kiosk extends AbstractKiosk {
     walletAddress: string,
     allBalances: object
   ) {
-    AbstractKiosk.init(coreSDK, userData, walletAddress, allBalances);
+    ProductHandle.init(coreSDK, userData, walletAddress, allBalances);
   }
 
   public static getAlphaMat() {

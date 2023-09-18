@@ -1,9 +1,9 @@
 import { GatedToken } from "../gating/gatedToken";
 import { Helper } from "../helper";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 
 export class TokenGatedOffer extends Entity {
-  kiosk: AbstractKiosk;
+  kiosk: ProductHandle;
 
   backgroundBox: Entity = new Entity();
   backgroundBoxMat: Material = new Material();
@@ -24,7 +24,7 @@ export class TokenGatedOffer extends Entity {
 
   parent: Entity;
 
-  constructor(_kiosk: AbstractKiosk, _parent: Entity, _transform: Transform) {
+  constructor(_kiosk: ProductHandle, _parent: Entity, _transform: Transform) {
     super();
 
     this.parent = new Entity();

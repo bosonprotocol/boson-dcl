@@ -4,11 +4,11 @@ import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
 import { Separator } from "../UIComponents/separator";
 import { toBigNumber } from "eth-connect";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 import { Kiosk } from "../kiosk";
 
 export class CompletePage {
-  kiosk: AbstractKiosk;
+  kiosk: ProductHandle;
 
   productData: any = undefined;
   parent: Entity = new Entity();
@@ -47,7 +47,7 @@ export class CompletePage {
   bosonDAppUrlBase = "";
 
   constructor(
-    _kiosk: AbstractKiosk,
+    _kiosk: ProductHandle,
     _parent: Entity,
     _productData: any
   ) {

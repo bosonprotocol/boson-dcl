@@ -1,4 +1,4 @@
-import { Kiosk, AbstractKiosk, getAllBalances, DisplayProduct } from '@bosonprotocol/boson-dcl'
+import { Kiosk, ProductHandle, getAllBalances, DisplayProduct } from '@bosonprotocol/boson-dcl'
 import { useBoson } from './boson'
 
 const aCube = new Entity('aCube')
@@ -124,7 +124,7 @@ async function loadScene() {
       ]
     )
 
-    new AbstractKiosk(
+    new ProductHandle(
       {
         parent: aCube,
         panelPosition: new Vector3(0, -2, 2)
