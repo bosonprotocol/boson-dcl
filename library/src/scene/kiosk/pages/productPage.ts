@@ -1,7 +1,6 @@
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { DescriptionPage } from "./descriptionPage";
 import { Helper } from "../helper";
-import { Kiosk } from "../kiosk";
 import { ProcessPage } from "./processPage";
 import { DelayedTask } from "../tasks/DelayedTask";
 import { HowItWorksLink } from "../UIComponents/howItWorksLink";
@@ -13,13 +12,14 @@ import { VariationComponent } from "../UIComponents/variationComponent";
 import { CoreSDK } from "../../..";
 import { FairExchangePolicyPage } from "./fairExchangePolicyPage";
 import { toBigNumber } from "eth-connect";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
+import { Kiosk } from "../kiosk";
 
 export class ProductPage {
   private _coreSdk: CoreSDK;
   private _userAccount: string;
 
-  kiosk: Kiosk | AbstractKiosk;
+  kiosk: ProductHandle;
 
   productData: any = undefined;
 
@@ -162,7 +162,7 @@ export class ProductPage {
   constructor(
     coreSDK: CoreSDK,
     userAccount: string,
-    _kiosk: Kiosk | AbstractKiosk,
+    _kiosk: ProductHandle,
     _productData: any
   ) {
     this._coreSdk = coreSDK;
@@ -1059,7 +1059,7 @@ export class ProductPage {
 
     let errorMessage = "";
 
-    const tokenBalance: number = (Kiosk.allBalances as any)[
+    const tokenBalance: number = (ProductHandle.allBalances as any)[
       Helper.getCurrencySymbol(this.kiosk.productCurrency).toLocaleLowerCase()
     ];
 

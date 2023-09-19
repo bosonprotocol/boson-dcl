@@ -4,13 +4,12 @@
 
 ## Kiosk class
 
-
 <b>Signature:</b>
 
 ```typescript
-export declare class Kiosk extends Entity 
+export declare class Kiosk extends ProductHandle 
 ```
-<b>Extends:</b> Entity
+<b>Extends:</b> [ProductHandle](./boson-dcl.producthandle.md)
 
 ## Constructors
 
@@ -22,48 +21,19 @@ export declare class Kiosk extends Entity
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [allBalances](./boson-dcl.kiosk.allbalances.md) | <code>static</code> | object |  |
-|  [billboardParent](./boson-dcl.kiosk.billboardparent.md) |  | Entity |  |
-|  [connectedToWeb3](./boson-dcl.kiosk.connectedtoweb3.md) |  | boolean |  |
-|  [currentItemIndex](./boson-dcl.kiosk.currentitemindex.md) |  | number |  |
-|  [currentOfferID](./boson-dcl.kiosk.currentofferid.md) |  | string |  |
-|  [currentVariation](./boson-dcl.kiosk.currentvariation.md) |  | Variation \| undefined |  |
-|  [customQuestInformation](./boson-dcl.kiosk.customquestinformation.md) |  | string |  |
 |  [displayProducts](./boson-dcl.kiosk.displayproducts.md) |  | [DisplayProduct](./boson-dcl.displayproduct.md)<!-- -->\[\] |  |
-|  [gatedTokens](./boson-dcl.kiosk.gatedtokens.md) |  | GatedToken\[\] |  |
-|  [gateState](./boson-dcl.kiosk.gatestate.md) |  | [eGateStateEnum](./boson-dcl.egatestateenum.md) |  |
 |  [kioskModel](./boson-dcl.kiosk.kioskmodel.md) | <code>static</code> | GLTFShape |  |
 |  [kioskSpecialEffects](./boson-dcl.kiosk.kioskspecialeffects.md) | <code>static</code> | GLTFShape |  |
-|  [lockScreen](./boson-dcl.kiosk.lockscreen.md) |  | LockScreen \| undefined |  |
-|  [maxItemIndex](./boson-dcl.kiosk.maxitemindex.md) |  | number |  |
-|  [offer](./boson-dcl.kiosk.offer.md) |  | OfferFieldsFragment \| undefined |  |
-|  [onPointerDown](./boson-dcl.kiosk.onpointerdown.md) |  | OnPointerDown |  |
-|  [parent](./boson-dcl.kiosk.parent.md) |  | Entity |  |
-|  [productCurrency](./boson-dcl.kiosk.productcurrency.md) |  | [eCurrency](./boson-dcl.ecurrency.md) |  |
-|  [productData](./boson-dcl.kiosk.productdata.md) |  | OfferFieldsFragment \| undefined |  |
-|  [productName](./boson-dcl.kiosk.productname.md) |  | Entity |  |
-|  [productNameText](./boson-dcl.kiosk.productnametext.md) |  | TextShape \| undefined |  |
-|  [productOverrideData](./boson-dcl.kiosk.productoverridedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } \| undefined |  |
-|  [productPage](./boson-dcl.kiosk.productpage.md) |  | ProductPage \| undefined |  |
-|  [productUUID](./boson-dcl.kiosk.productuuid.md) |  | string |  |
 |  [specialEffects](./boson-dcl.kiosk.specialeffects.md) |  | Entity |  |
-|  [uiOpen](./boson-dcl.kiosk.uiopen.md) |  | boolean |  |
-|  [variations](./boson-dcl.kiosk.variations.md) |  | Variation\[\] |  |
-|  [waveAnimationSystem](./boson-dcl.kiosk.waveanimationsystem.md) | <code>static</code> | WaveAnimationSystem \| undefined |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [createdGatedTokens(\_offer)](./boson-dcl.kiosk.createdgatedtokens.md) |  |  |
 |  [getAlphaMat()](./boson-dcl.kiosk.getalphamat.md) | <code>static</code> |  |
 |  [init(coreSDK, userData, walletAddress, allBalances)](./boson-dcl.kiosk.init.md) | <code>static</code> |  |
 |  [loadOffer(\_data)](./boson-dcl.kiosk.loadoffer.md) |  |  |
-|  [loadProduct()](./boson-dcl.kiosk.loadproduct.md) |  |  |
+|  [setUpSystems()](./boson-dcl.kiosk.setupsystems.md) | <code>protected</code> |  |
 |  [showDisplayProduct()](./boson-dcl.kiosk.showdisplayproduct.md) |  |  |
-|  [showLockScreen()](./boson-dcl.kiosk.showlockscreen.md) |  |  |
-|  [showProduct(\_product)](./boson-dcl.kiosk.showproduct.md) |  |  |
-|  [unlock(\_tokenCount, \_tokenAddress)](./boson-dcl.kiosk.unlock.md) |  |  |
 |  [update(\_dt)](./boson-dcl.kiosk.update.md) |  |  |
-|  [updateProductPrice()](./boson-dcl.kiosk.updateproductprice.md) |  |  |
 

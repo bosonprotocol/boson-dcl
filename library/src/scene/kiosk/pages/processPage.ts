@@ -1,6 +1,5 @@
 import { ScaleSpringComponent } from "../animation/ScaleSpringComponent";
 import { Helper } from "../helper";
-import { Kiosk } from "../kiosk";
 import { DelayedTask } from "../tasks/DelayedTask";
 import { Separator } from "../UIComponents/separator";
 import { CompletePage } from "./completePage";
@@ -10,13 +9,13 @@ import {
   checkUserCanCommitToOffer,
 } from "../../../core-sdk";
 import { CoreSDK } from "../../..";
-import { AbstractKiosk } from "../abstractKiosk";
+import { ProductHandle } from "../productHandle";
 
 export class ProcessPage {
   private _coreSdk: CoreSDK;
   private _userAccount: string;
 
-  kiosk: Kiosk | AbstractKiosk;
+  kiosk: ProductHandle;
 
   productData: any = undefined;
   parent: Entity = new Entity();
@@ -40,7 +39,7 @@ export class ProcessPage {
   constructor(
     coreSDK: CoreSDK,
     userAccount: string,
-    _kiosk: Kiosk | AbstractKiosk,
+    _kiosk: ProductHandle,
     _parent: Entity,
     _productData: any
   ) {
@@ -164,7 +163,7 @@ export class ProcessPage {
 
   show() {
     // Show Wave Animation
-    Kiosk.waveAnimationSystem?.setNewParent(this.parent);
+    ProductHandle.waveAnimationSystem?.setNewParent(this.parent);
 
     new DelayedTask(() => {
       // Commit against the offerID
@@ -172,7 +171,7 @@ export class ProcessPage {
         (data: any) => {
           // succeeded
           log(data);
-          Kiosk.waveAnimationSystem?.hide();
+          ProductHandle.waveAnimationSystem?.hide();
           // but do we have an error?
           if (data != undefined) {
             if (data.error != undefined) {
@@ -195,7 +194,7 @@ export class ProcessPage {
         (data: any) => {
           // rejected
           log(data);
-          Kiosk.waveAnimationSystem?.hide();
+          ProductHandle.waveAnimationSystem?.hide();
           this.completePage.show(false, data, this.productData);
           this.hideTask.restart(1);
         }

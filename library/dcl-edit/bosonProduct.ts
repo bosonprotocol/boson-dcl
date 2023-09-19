@@ -1,4 +1,4 @@
-import { AbstractKiosk } from '@bosonprotocol/boson-dcl'
+import { ProductHandle } from '@bosonprotocol/boson-dcl'
 
 /* 
 #DCECOMP
@@ -27,7 +27,7 @@ export class BosonProduct {
 
   init(entity: Entity) {
     log('BosonProduct:: init()')
-    new AbstractKiosk(entity, this.productUUID)
+    new ProductHandle(entity, this.productUUID)
   }
 }
 

@@ -1,17 +1,13 @@
 import { HowDoesItWork } from "../pages/howDoesItWork";
+import { ProductHandle } from "../productHandle";
 import { Kiosk } from "../kiosk";
-import { AbstractKiosk } from "../abstractKiosk";
 
 export class HowItWorksLink extends Entity {
   viewHowItWorksText: TextShape;
   viewHowItWorksClickBox: Entity = new Entity();
   howDoesItWorkPage: HowDoesItWork;
 
-  constructor(
-    _kiosk: Kiosk | AbstractKiosk,
-    _parent: Entity,
-    _transform: Transform
-  ) {
+  constructor(_kiosk: ProductHandle, _parent: Entity, _transform: Transform) {
     super();
 
     this.howDoesItWorkPage = new HowDoesItWork(_kiosk, _parent);
