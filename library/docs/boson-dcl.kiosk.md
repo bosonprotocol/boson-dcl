@@ -15,7 +15,7 @@ export declare class Kiosk extends ProductHandle
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(\_transform, \_productUUID, \_displayProduct, gateState)](./boson-dcl.kiosk._constructor_.md) |  | Constructs a new instance of the <code>Kiosk</code> class |
+|  [(constructor)(\_transform, \_sellerId, \_productUUID, \_displayProduct, gateState)](./boson-dcl.kiosk._constructor_.md) |  | Constructs a new instance of the <code>Kiosk</code> class |
 
 ## Properties
 

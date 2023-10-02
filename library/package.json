@@ -41,8 +41,8 @@
     "dcl-edit"
   ],
   "devDependencies": {
-    "@bosonprotocol/core-sdk": "^1.25.3",
-    "@bosonprotocol/eth-connect-sdk": "^1.5.2",
+    "@bosonprotocol/core-sdk": "^1.31.0",
+    "@bosonprotocol/eth-connect-sdk": "^1.5.8",
     "@microsoft/api-documenter": "^7.17.11",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.1.0",

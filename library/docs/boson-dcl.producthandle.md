@@ -16,7 +16,7 @@ export declare class ProductHandle extends Entity
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(\_parent, \_productUUID, gateState)](./boson-dcl.producthandle._constructor_.md) |  | Constructs a new instance of the <code>ProductHandle</code> class |
+|  [(constructor)(\_parent, \_sellerId, \_productUUID, gateState)](./boson-dcl.producthandle._constructor_.md) |  | Constructs a new instance of the <code>ProductHandle</code> class |
 
 ## Properties
 
@@ -45,6 +45,7 @@ export declare class ProductHandle extends Entity
 |  [productOverrideData](./boson-dcl.producthandle.productoverridedata.md) |  | { mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } \| undefined |  |
 |  [productPage](./boson-dcl.producthandle.productpage.md) |  | ProductPage \| undefined |  |
 |  [productUUID](./boson-dcl.producthandle.productuuid.md) |  | string |  |
+|  [sellerId](./boson-dcl.producthandle.sellerid.md) |  | string |  |
 |  [uiOpen](./boson-dcl.producthandle.uiopen.md) |  | boolean |  |
 |  [userData](./boson-dcl.producthandle.userdata.md) | <p><code>protected</code></p><p><code>static</code></p> | UserData |  |
 |  [variations](./boson-dcl.producthandle.variations.md) |  | Variation\[\] |  |

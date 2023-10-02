@@ -35,8 +35,8 @@
 |  [getEthPrice(\_query)](./boson-dcl.getethprice.md) |  |
 |  [getTokenData(\_query, \_tokenID)](./boson-dcl.gettokendata.md) |  |
 |  [hasNft(walletAddress, contractId, tokenId, nftType)](./boson-dcl.hasnft.md) |  |
-|  [initCoreSdk(envName, bosonConfigs, getUserAccount, inventory)](./boson-dcl.initcoresdk.md) |  |
-|  [processBiconomyConfig(envName, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
+|  [initCoreSdk(envName, configId, bosonConfigs, getUserAccount, inventory)](./boson-dcl.initcoresdk.md) |  |
+|  [processBiconomyConfig(envName, configId, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
 
 ## Variables
 
