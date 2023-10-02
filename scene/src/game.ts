@@ -8,13 +8,22 @@ engine.addEntity(aCube)
 
 void loadScene()
 
-const productUUIDs = [
-  'a234728-dc54-faa6-f1e-0886d3d0e18',
-  'f04f0f6-107a-b1ef-a4af-dc4bd0a8eb1f',
-  '5d7ad1-64ff-e80-bce8-14a6f32f72e',
-  '3fe1ace-b45e-715b-4be-a48a053c566f',
-  'cbbedf-6331-8b77-560f-3c144f6d8b23'
-]
+const productsPerEnv: { [key: string]: Array<{ sellerId: string; productUUID: string }> } = {
+  'staging-80001-0': [
+    { sellerId: '4', productUUID: 'a234728-dc54-faa6-f1e-0886d3d0e18' },
+    { sellerId: '4', productUUID: 'f04f0f6-107a-b1ef-a4af-dc4bd0a8eb1f' },
+    { sellerId: '4', productUUID: '5d7ad1-64ff-e80-bce8-14a6f32f72e' },
+    { sellerId: '4', productUUID: '3fe1ace-b45e-715b-4be-a48a053c566f' },
+    { sellerId: '4', productUUID: 'cbbedf-6331-8b77-560f-3c144f6d8b23' }
+  ],
+  'production-137-0': [
+    { sellerId: '2', productUUID: 'a234728-dc54-faa6-f1e-0886d3d0e18' },
+    { sellerId: '2', productUUID: 'f04f0f6-107a-b1ef-a4af-dc4bd0a8eb1f' },
+    { sellerId: '2', productUUID: '5d7ad1-64ff-e80-bce8-14a6f32f72e' },
+    { sellerId: '13', productUUID: '3fe1ace-b45e-715b-4be-a48a053c566f' },
+    { sellerId: '202', productUUID: 'cbbedf-6331-8b77-560f-3c144f6d8b23' }
+  ]
+}
 
 const floor: Entity = new Entity()
 floor.addComponent(
@@ -26,9 +35,11 @@ floor.addComponent(new GLTFShape('models/FloorBaseGrass_01.glb'))
 engine.addEntity(floor)
 
 async function loadScene() {
-  void useBoson().then(async ({ coreSDK, userAccount, walletAddress }) => {
+  void useBoson().then(async ({ coreSDK, userAccount, walletAddress, targetEnv, configId }) => {
     const allBalances: object = await getAllBalances(walletAddress)
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
+
+    const productIDs = productsPerEnv[configId]
 
     new Kiosk(
       new Transform({
@@ -36,7 +47,8 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      productUUIDs[0], // product UUID
+      productIDs[0].sellerId, // sellerId
+      productIDs[0].productUUID, // product UUID
       new DisplayProduct( // show a 3D model inside the kiosk
         'models/OGShirt.glb',
         new Transform({
@@ -53,8 +65,9 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
+      productIDs[1].sellerId, // sellerId
       {
-        productUUID: productUUIDs[1], // product UUID
+        productUUID: productIDs[1].productUUID, // product UUID
         mainImageIndex: 2, // choose which image is shown in the kiosk (default: 0)
         imageSizes: {
           // override the image size if missing from metadata (before March 2023)
@@ -80,8 +93,9 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
+      productIDs[2].sellerId, // sellerId
       {
-        productUUID: productUUIDs[2] // product UUID
+        productUUID: productIDs[2].productUUID // product UUID
       }
     )
 
@@ -91,8 +105,9 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
+      productIDs[3].sellerId, // sellerId
       {
-        productUUID: productUUIDs[3] // product UUID
+        productUUID: productIDs[3].productUUID // product UUID
       }
     )
 
@@ -102,7 +117,8 @@ async function loadScene() {
         rotation: Quaternion.Euler(0, 0, 0),
         scale: new Vector3(1, 1, 1)
       }),
-      productUUIDs[4], // product UUID
+      productIDs[4].sellerId, // sellerId
+      productIDs[4].productUUID, // product UUID
       [
         // combine 2 3D models inside the kiosk
         new DisplayProduct(
@@ -129,8 +145,9 @@ async function loadScene() {
         parent: aCube,
         panelPosition: new Vector3(0, -2, 2)
       },
+      productIDs[4].sellerId, // sellerId
       {
-        productUUID: productUUIDs[4],
+        productUUID: productIDs[4].productUUID,
         override: {
           productName: 'over. product name',
           productDescription: 'overridden product description',

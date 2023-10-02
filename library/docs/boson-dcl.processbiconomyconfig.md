@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function processBiconomyConfig(envName: EnvironmentType, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;
+export declare function processBiconomyConfig(envName: EnvironmentType, configId: ConfigId, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;
 ```
 
 ## Parameters
@@ -16,6 +16,7 @@ export declare function processBiconomyConfig(envName: EnvironmentType, biconomy
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  envName | EnvironmentType |  |
+|  configId | ConfigId |  |
 |  biconomyConfig | [BiconomyConfig](./boson-dcl.biconomyconfig.md) |  |
 
 <b>Returns:</b>

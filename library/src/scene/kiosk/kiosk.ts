@@ -46,6 +46,7 @@ export class Kiosk extends ProductHandle {
 
   constructor(
     _transform: Transform,
+    _sellerId: string,
     _productUUID:
       | string
       | {
@@ -68,6 +69,7 @@ export class Kiosk extends ProductHandle {
   ) {
     super(
       { parent: undefined, panelPosition: Vector3.Zero() },
+      _sellerId,
       _productUUID,
       gateState
     );

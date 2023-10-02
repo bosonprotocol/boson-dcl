@@ -24,14 +24,16 @@ export async function useBoson() {
   const provider = await getProvider()
   const requestManager = new RequestManager(provider)
   const chainId = await requestManager.net_version()
+  log('chainId', chainId)
   // If user wallet is connected on Ethereum mainnet --> PRODUCTION
   const targetEnv = chainId === '1' ? 'production' : 'staging'
-  log('Initialize BOSON on env', targetEnv)
+  const configId = chainId === '1' ? 'production-137-0' : 'staging-80001-0'
+  log('Initialize BOSON on env', targetEnv, 'config', configId)
   const userAccount: UserData = (await getUserData()) as UserData
 
   const walletAddress = userAccount?.publicKey || userAccount?.userId
   const inventory = await crypto.avatar.getUserInventory()
-  const coreSDK = await initCoreSdk(targetEnv, bosonConfig, getWalletAddress, inventory)
+  const coreSDK = await initCoreSdk(targetEnv, configId, bosonConfig, getWalletAddress, inventory)
 
-  return { coreSDK, userAccount, walletAddress }
+  return { coreSDK, userAccount, walletAddress, targetEnv, configId }
 }

@@ -31,6 +31,7 @@ export class ProductHandle extends Entity {
   currentItemIndex = 0;
   maxItemIndex = 0;
   offer: OfferFieldsFragment | undefined;
+  sellerId = "";
   productUUID = "";
   productOverrideData:
     | {
@@ -95,6 +96,7 @@ export class ProductHandle extends Entity {
           parent: Entity | undefined;
           panelPosition: Vector3;
         },
+    _sellerId: string,
     _productUUID:
       | string
       | {
@@ -124,6 +126,8 @@ export class ProductHandle extends Entity {
       throw "Call ProductHandle.init before constructing instances.";
     }
     this.setUpSystems();
+
+    this.sellerId = _sellerId;
 
     if (typeof _productUUID === "string") {
       this.productUUID = _productUUID;
@@ -186,7 +190,7 @@ export class ProductHandle extends Entity {
 
   loadProduct() {
     ProductHandle.coreSDK
-      .getProductWithVariants(this.productUUID)
+      .getProductWithVariants(this.sellerId, this.productUUID)
       .then(
         (
           data: {
@@ -280,7 +284,13 @@ export class ProductHandle extends Entity {
         }
       )
       .catch((e) => {
-        log("getProductWithVariants", this.productUUID, "Failed", e.toString());
+        log(
+          "getProductWithVariants",
+          this.sellerId,
+          this.productUUID,
+          "Failed",
+          e.toString()
+        );
       });
   }
 

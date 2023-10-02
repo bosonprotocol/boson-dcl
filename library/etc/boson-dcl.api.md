@@ -9,6 +9,7 @@
 
 import { BaseProductV1ProductFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
 import { BigNumber } from 'eth-connect';
+import { ConfigId } from '@bosonprotocol/core-sdk';
 import { CoreSDK } from '@bosonprotocol/core-sdk';
 import { EnvironmentType } from '@bosonprotocol/core-sdk';
 import { MetaTxConfig } from '@bosonprotocol/core-sdk';
@@ -172,11 +173,11 @@ export function getTokenData(_query: TemplateStringsArray, _tokenID: string): Pr
 export function hasNft(walletAddress: string, contractId: string, tokenId: string, nftType: string): Promise<number>;
 
 // @public (undocumented)
-export function initCoreSdk(envName: EnvironmentType, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
+export function initCoreSdk(envName: EnvironmentType, configId: ConfigId, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
 
 // @public (undocumented)
 export class Kiosk extends ProductHandle {
-    constructor(_transform: Transform, _productUUID: string | {
+    constructor(_transform: Transform, _sellerId: string, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
         imageSizes?: {
@@ -229,14 +230,14 @@ export type NamedToken = {
 };
 
 // @public (undocumented)
-export function processBiconomyConfig(envName: EnvironmentType, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;
+export function processBiconomyConfig(envName: EnvironmentType, configId: ConfigId, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;
 
 // @public (undocumented)
 export class ProductHandle extends Entity {
     constructor(_parent: Entity | {
         parent: Entity | undefined;
         panelPosition: Vector3;
-    }, _productUUID: string | {
+    }, _sellerId: string, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
         imageSizes?: {
@@ -337,6 +338,8 @@ export class ProductHandle extends Entity {
     productPage: ProductPage | undefined;
     // (undocumented)
     productUUID: string;
+    // (undocumented)
+    sellerId: string;
     // (undocumented)
     protected setUpSystems(): void;
     // (undocumented)

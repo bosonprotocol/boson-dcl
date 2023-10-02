@@ -23,11 +23,12 @@ import { ProductHandle } from '@bosonprotocol/boson-dcl'
 @Component('BosonProduct')
 export class BosonProduct {
   public productUUID: string = ''
+  public sellerId: string = ''
   public environment: string = ''
 
   init(entity: Entity) {
     log('BosonProduct:: init()')
-    new ProductHandle(entity, this.productUUID)
+    new ProductHandle(entity, this.sellerId, this.productUUID)
   }
 }
 

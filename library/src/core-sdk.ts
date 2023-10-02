@@ -6,7 +6,12 @@ import {
 } from "eth-connect";
 import { getProvider } from "@decentraland/web3-provider";
 import { EthConnectAdapter } from "@bosonprotocol/eth-connect-sdk";
-import { CoreSDK, EnvironmentType, subgraph } from "@bosonprotocol/core-sdk";
+import {
+  CoreSDK,
+  EnvironmentType,
+  ConfigId,
+  subgraph,
+} from "@bosonprotocol/core-sdk";
 import { Delay } from "./ecs-utils-clone/delay";
 import { BosonConfigs, processBiconomyConfig } from "./config";
 import { abis } from "@bosonprotocol/common";
@@ -28,6 +33,7 @@ export const ADDRESS_ZERO = `0x0000000000000000000000000000000000000000`;
  */
 export async function initCoreSdk(
   envName: EnvironmentType,
+  configId: ConfigId,
   bosonConfigs: BosonConfigs,
   getUserAccount: () => Promise<string>,
   inventory: string[]
@@ -38,6 +44,7 @@ export async function initCoreSdk(
   const providerUrl = bosonConfigs[envName]!.providerUrl;
   const metaTx = processBiconomyConfig(
     envName,
+    configId,
     bosonConfigs[envName]!.biconomy!
   );
 
@@ -55,6 +62,7 @@ export async function initCoreSdk(
   );
   const coreSDK = CoreSDK.fromDefaultConfig({
     envName,
+    configId,
     web3Lib: ethConnectAdapter,
     metaTx,
   });

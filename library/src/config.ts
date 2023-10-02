@@ -1,6 +1,7 @@
 import {
+  ConfigId,
   EnvironmentType,
-  getDefaultConfig,
+  getEnvConfigById,
   MetaTxConfig,
 } from "@bosonprotocol/core-sdk";
 
@@ -61,9 +62,10 @@ export type BosonConfigs = {
  */
 export function processBiconomyConfig(
   envName: EnvironmentType,
+  configId: ConfigId,
   biconomyConfig: BiconomyConfig
 ): Partial<MetaTxConfig> {
-  const defaultConfig = getDefaultConfig(envName);
+  const defaultConfig = getEnvConfigById(envName, configId);
   const protocolApiId: { [index: string]: string } = {};
   protocolApiId[biconomyConfig.apiIds.protocol.method] =
     biconomyConfig.apiIds.protocol.apiId;
