@@ -1372,7 +1372,10 @@ export class ProductPage {
           new Transform({
             position: new Vector3(0, 0, 0),
           }),
-          this.parent
+          this.parent,
+          {
+            variationSwitchVertOffset: 0.5,
+          }
         );
       }
     }

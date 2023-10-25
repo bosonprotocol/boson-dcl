@@ -84,8 +84,17 @@ export class VariationComponent {
   option2VariationNextEntity: Entity = new Entity();
 
   // UI
-  constructor(_kiosk: ProductHandle, _transform: Transform, _parent: Entity) {
+  constructor(
+    _kiosk: ProductHandle,
+    _transform: Transform,
+    _parent: Entity,
+    _options?: { variationSwitchVertOffset?: number }
+  ) {
     this.kiosk = _kiosk;
+
+    const variationSwitchVertOffset = _options?.variationSwitchVertOffset
+      ? _options?.variationSwitchVertOffset
+      : 0;
 
     this.variationPrevMat = new Material();
     this.variationPrevTexture = new Texture("images/kiosk/ui/prev_option.png", {
@@ -112,7 +121,11 @@ export class VariationComponent {
     this.option1VariationPrevEntity.setParent(_parent);
     this.option1VariationPrevEntity.addComponent(
       new Transform({
-        position: new Vector3(0.1 + 0.07, 0.44, -0.002),
+        position: new Vector3(
+          0.1 + 0.07,
+          0.44 + variationSwitchVertOffset,
+          -0.002
+        ),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.04, 0.04, 0.01),
       })
@@ -135,7 +148,7 @@ export class VariationComponent {
     this.option1VariationNextEntity.setParent(_parent);
     this.option1VariationNextEntity.addComponent(
       new Transform({
-        position: new Vector3(0.45, 0.44, -0.002),
+        position: new Vector3(0.45, 0.44 + variationSwitchVertOffset, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.04, 0.04, 0.01),
       })
@@ -188,7 +201,7 @@ export class VariationComponent {
     this.option2VariationPrevEntity.setParent(_parent);
     this.option2VariationPrevEntity.addComponent(
       new Transform({
-        position: new Vector3(0.67, 0.44, -0.002),
+        position: new Vector3(0.67, 0.44 + variationSwitchVertOffset, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.04, 0.04, 0.01),
       })
@@ -211,7 +224,7 @@ export class VariationComponent {
     this.option2VariationNextEntity.setParent(_parent);
     this.option2VariationNextEntity.addComponent(
       new Transform({
-        position: new Vector3(0.95, 0.44, -0.002),
+        position: new Vector3(0.95, 0.44 + variationSwitchVertOffset, -0.002),
         rotation: Quaternion.Euler(180, 180, 0),
         scale: new Vector3(0.04, 0.04, 0.01),
       })
