@@ -31,7 +31,10 @@ export async function useBoson() {
   const userAccount: UserData = (await getUserData()) as UserData
 
   const walletAddress = userAccount?.publicKey || userAccount?.userId
-  const inventory = await crypto.avatar.getUserInventory()
+  let inventory: string[] = [];
+  try {
+    inventory = await crypto.avatar.getUserInventory()
+  } catch (e) {}
   const coreSDK = await initCoreSdk(targetEnv, configEnv, bosonConfig, getWalletAddress, inventory)
 
   return { coreSDK, userAccount, walletAddress }
