@@ -1,8 +1,8 @@
 {
-  "customName": "Fridge Counter",
-  "guid": "06dd1540-5007-07e3-5a77-86ee94f03ecf",
+  "customName": "BosonSweater_F_posed",
+  "guid": "23420020-2cbe-44ae-bc0d-c9b0f394f8af",
   "parentGuid": null,
-  "hierarchyOrder": 1.0,
+  "hierarchyOrder": 4.0,
   "isExposed": false,
   "components": [
     {
@@ -13,9 +13,9 @@
           "name": "position",
           "type": "Vector3",
           "fixedValue": {
-            "x": 10.389843,
+            "x": 5.11452675,
             "y": 0.0,
-            "z": 7.393251
+            "z": 8.0
           }
         },
         {
@@ -46,7 +46,7 @@
         {
           "name": "asset",
           "type": "Asset",
-          "fixedValue": "cd54d23e-eef5-48f6-bfb2-ff7878b37d0b"
+          "fixedValue": "65cc17d2-5b0a-4665-95a7-9a9440d26b60"
         },
         {
           "name": "visible",
@@ -64,7 +64,42 @@
           "fixedValue": true
         }
       ]
+    },
+    {
+      "nameInCode": "BosonProduct",
+      "nameOfSlot": "BosonProduct",
+      "properties": [
+        {
+          "name": "productUUID",
+          "type": "String",
+          "fixedValue": "dda2fa-1242-32c1-1c8-f3548600ecd5"
+        },
+        {
+          "name": "sellerId",
+          "type": "String",
+          "fixedValue": "2"
+        },
+        {
+          "name": "productUUID_test",
+          "type": "String",
+          "fixedValue": "5312aec-f146-27b7-edfb-721540eb6"
+        },
+        {
+          "name": "sellerId_test",
+          "type": "String",
+          "fixedValue": "2"
+        },
+        {
+          "name": "panelPositionOffset",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      ]
     }
   ],
-  "dclEditVersionNumber": "1.0.4"
+  "dclEditVersionNumber": "1.0.5"
 }

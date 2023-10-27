@@ -1,0 +1,90 @@
+{
+  "customName": "BosonConfigurator",
+  "guid": "b75bf69b-55fc-4bbd-9fb2-bf92a9d5512a",
+  "parentGuid": null,
+  "hierarchyOrder": 3.0,
+  "isExposed": false,
+  "components": [
+    {
+      "nameInCode": "Transform",
+      "nameOfSlot": "Transform",
+      "properties": [
+        {
+          "name": "position",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          }
+        },
+        {
+          "name": "scale",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "nameInCode": "BosonConfigurator",
+      "nameOfSlot": "BosonConfigurator",
+      "properties": [
+        {
+          "name": "envName",
+          "type": "String",
+          "fixedValue": "production"
+        },
+        {
+          "name": "configId",
+          "type": "String",
+          "fixedValue": "production-1-0"
+        },
+        {
+          "name": "providerUrl",
+          "type": "String",
+          "fixedValue": "https://mainnet.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140"
+        },
+        {
+          "name": "biconomyConfig",
+          "type": "String",
+          "fixedValue": ""
+        },
+        {
+          "name": "envName_test",
+          "type": "String",
+          "fixedValue": "staging"
+        },
+        {
+          "name": "configId_test",
+          "type": "String",
+          "fixedValue": "staging-5-0"
+        },
+        {
+          "name": "providerUrl_test",
+          "type": "String",
+          "fixedValue": "https://goerli.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140"
+        },
+        {
+          "name": "biconomyConfig_test",
+          "type": "String",
+          "fixedValue": ""
+        }
+      ]
+    }
+  ],
+  "dclEditVersionNumber": "1.0.5"
+}

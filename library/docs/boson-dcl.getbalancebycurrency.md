@@ -8,14 +8,14 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function getBalanceByCurrency(currency: string, walletAddress: string): Promise<number>;
+export declare function getBalanceByCurrency(token: Token, walletAddress: string): Promise<number>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  currency | string |  |
+|  token | [Token](./boson-dcl.token.md) |  |
 |  walletAddress | string |  |
 
 <b>Returns:</b>

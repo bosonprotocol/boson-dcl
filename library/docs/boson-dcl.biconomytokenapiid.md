@@ -8,9 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type BiconomyTokenApiId = BiconomyBaseApiId & NamedToken & {
-    address: string;
-};
+export declare type BiconomyTokenApiId = BiconomyBaseApiId & Token;
 ```
-<b>References:</b> [BiconomyBaseApiId](./boson-dcl.biconomybaseapiid.md)<!-- -->, [NamedToken](./boson-dcl.namedtoken.md)
+<b>References:</b> [BiconomyBaseApiId](./boson-dcl.biconomybaseapiid.md)<!-- -->, [Token](./boson-dcl.token.md)
 

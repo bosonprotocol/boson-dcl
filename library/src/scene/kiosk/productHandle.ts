@@ -16,6 +16,7 @@ import { WaveAnimationSystem } from "./animation/waveAnimationSystem";
 import { KioskUpdateSystem } from "./kioskUpdateSystem";
 import { ScaleSpringSystem } from "./animation/ScaleSpringSystem";
 import { toBigNumber } from "eth-connect";
+import { clearInterval, setInterval } from "../../ecs-utils-clone/timeOut";
 
 /**
  * @public
@@ -76,6 +77,25 @@ export class ProductHandle extends Entity {
 
   static waveAnimationSystem: WaveAnimationSystem | undefined = undefined;
 
+  static whenInitialized(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        const interval = setInterval(1000, () => {
+          log("Checking ProductHandle is initialized ...");
+          if (ProductHandle.initialised) {
+            log("... ProductHandle is now initialized.");
+            clearInterval(interval);
+            engine.removeEntity(interval);
+            resolve();
+          }
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+
   public static init(
     coreSDK: CoreSDK,
     userData: UserData,
@@ -94,7 +114,8 @@ export class ProductHandle extends Entity {
       | Entity
       | {
           parent: Entity | undefined;
-          panelPosition: Vector3;
+          panelPosition?: Vector3;
+          hoverText?: string;
         },
     _sellerId: string,
     _productUUID:
@@ -114,13 +135,14 @@ export class ProductHandle extends Entity {
   ) {
     super();
     let parentEntity: Entity;
-    let panelPosition: Vector3;
+    let panelPosition = Vector3.Zero();
+    let hoverText = "View Product";
     if ((_parent as Entity).uuid) {
       parentEntity = _parent as Entity;
-      panelPosition = Vector3.Zero();
     } else {
       parentEntity = (_parent as any).parent;
-      panelPosition = (_parent as any).panelPosition;
+      panelPosition = (_parent as any).panelPosition || Vector3.Zero();
+      hoverText = (_parent as any).hoverText || hoverText;
     }
     if (!ProductHandle.initialised) {
       throw "Call ProductHandle.init before constructing instances.";
@@ -166,7 +188,7 @@ export class ProductHandle extends Entity {
         this.checkForGatedTokens();
       },
       {
-        hoverText: "View Product",
+        hoverText,
       }
     );
     KioskUpdateSystem.instance.addKiosk(this);
@@ -322,7 +344,8 @@ export class ProductHandle extends Entity {
       .hasNft(
         ProductHandle.walletAddress,
         this.productData.condition.tokenAddress,
-        this.productData.condition.tokenId,
+        // TODO: adapt with tokenId range minTokenId -> maxTokenId
+        this.productData.condition.minTokenId,
         nftType
       )
       .then((_tokenCount) => {

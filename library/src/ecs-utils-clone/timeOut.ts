@@ -1,4 +1,5 @@
 import { Delay } from "./delay";
+import { Interval } from "./interval";
 
 /**
  * Quick function to delay the execution of a lambda after a given amount of time.
@@ -18,4 +19,20 @@ export function setTimeout(ms: number, callback: () => void): Entity {
   engine.addEntity(entity);
 
   return entity;
+}
+
+export function setInterval(ms: number, callback: () => void): Entity {
+  const entity = new Entity();
+  entity.addComponent(
+    new Interval(ms, () => {
+      callback();
+    })
+  );
+  engine.addEntity(entity);
+
+  return entity;
+}
+
+export function clearInterval(entity: Entity) {
+  entity.removeComponent("timerInterval");
 }

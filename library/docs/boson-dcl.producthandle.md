@@ -68,4 +68,5 @@ export declare class ProductHandle extends Entity
 |  [unlock(\_tokenCount, \_tokenAddress)](./boson-dcl.producthandle.unlock.md) |  |  |
 |  [update(\_dt)](./boson-dcl.producthandle.update.md) |  |  |
 |  [updateProductPrice()](./boson-dcl.producthandle.updateproductprice.md) |  |  |
+|  [whenInitialized()](./boson-dcl.producthandle.wheninitialized.md) | <code>static</code> |  |
 

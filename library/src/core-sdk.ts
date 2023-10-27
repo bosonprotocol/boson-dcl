@@ -13,14 +13,20 @@ import {
   subgraph,
 } from "@bosonprotocol/core-sdk";
 import { Delay } from "./ecs-utils-clone/delay";
-import { BosonConfigs, processBiconomyConfig } from "./config";
+import {
+  BosonConfigs,
+  BosonConfiguration,
+  Token,
+  processBiconomyConfig,
+} from "./config";
 import { abis } from "@bosonprotocol/common";
 import { hasNft as helperHasNft, NFTType } from "./nft-helper";
 import request, { gql, Variables } from "graphql-request";
 import { TransactionReceipt } from "@bosonprotocol/common";
+import { getUserData } from "@decentraland/Identity";
 
 let httpRM: RequestManager;
-let specifiedConfigs: BosonConfigs;
+let tokensList: Token[] | undefined;
 let specifiedEnv: EnvironmentType;
 let specifiedInventory: string[];
 /**
@@ -52,8 +58,8 @@ export async function initCoreSdk(
   const metamaskRM = new RequestManager(signer);
   const provider: HTTPProvider = new HTTPProvider(providerUrl);
   httpRM = new RequestManager(provider);
-  specifiedConfigs = bosonConfigs;
-  specifiedEnv = envName;
+  // TODO: tokensList should be passed in configuration, independently from biconomy config
+  tokensList = bosonConfigs[envName]?.biconomy?.apiIds.tokens;
   specifiedInventory = inventory;
   const ethConnectAdapter = new EthConnectAdapter(
     httpRM,
@@ -67,6 +73,53 @@ export async function initCoreSdk(
     metaTx,
   });
   return coreSDK;
+}
+
+/**
+ * @public
+ */
+export async function initCoreSdk2(
+  bosonConfiguration: BosonConfiguration,
+  _tokensList: Token[] | undefined,
+  inventory: string[]
+): Promise<CoreSDK> {
+  const { envName, configId, biconomy, providerUrl } = bosonConfiguration;
+  const metaTx = biconomy
+    ? processBiconomyConfig(envName, configId, biconomy)
+    : undefined;
+
+  const signer = await getProvider();
+  const metamaskRM = new RequestManager(signer);
+  const provider: HTTPProvider = new HTTPProvider(providerUrl);
+  httpRM = new RequestManager(provider);
+  tokensList = _tokensList;
+  specifiedInventory = inventory;
+  const ethConnectAdapter = new EthConnectAdapter(
+    httpRM,
+    {
+      getSignerAddress: getWalletAddress,
+      delay,
+    },
+    metamaskRM
+  );
+  const coreSDK = CoreSDK.fromDefaultConfig({
+    envName,
+    configId,
+    web3Lib: ethConnectAdapter,
+    metaTx,
+  });
+  return coreSDK;
+}
+
+async function getWalletAddress(): Promise<string> {
+  return await getUserData()
+    .then((userAccount) => {
+      return userAccount?.publicKey || (userAccount?.userId as string);
+    })
+    .catch((error) => {
+      log(error);
+      return "";
+    });
 }
 
 async function delay(ms: number): Promise<undefined> {
@@ -104,22 +157,15 @@ export async function getBalanceDecimalised(address: string) {
  * @public
  */
 export async function getBalanceByCurrency(
-  currency: string,
+  token: Token,
   walletAddress: string
 ) {
   if (!httpRM) {
     throw "no http requestManager";
   }
-  if (!specifiedConfigs) {
-    throw "no specified configs";
-  }
 
   const factory = new ContractFactory(httpRM, abis.ERC20ABI);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const token = specifiedConfigs[specifiedEnv]?.biconomy?.apiIds.tokens.filter(
-    (i) => i.name === currency
-  )[0];
-
   if (!token) {
     return 0;
   }
@@ -135,19 +181,15 @@ export async function getBalanceByCurrency(
  * @public
  */
 export async function getAllBalances(walletAddress: string): Promise<object> {
-  if (!specifiedConfigs) {
-    throw "no specified configs";
+  if (!tokensList) {
+    throw "missing tokensList";
   }
   const rtn: { [id: string]: number } = {};
-  const tokens = specifiedConfigs[specifiedEnv]?.biconomy?.apiIds.tokens;
-  if (!tokens) {
-    return {};
-  }
 
-  const promises = tokens.map(async (token) => {
+  const promises = tokensList.map(async (token) => {
     let thisBalance = 0;
 
-    thisBalance = await getBalanceByCurrency(token.name, walletAddress);
+    thisBalance = await getBalanceByCurrency(token, walletAddress);
     return { id: token.name, balance: thisBalance };
   });
 

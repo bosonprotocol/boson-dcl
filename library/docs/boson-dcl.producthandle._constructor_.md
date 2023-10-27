@@ -11,7 +11,8 @@ Constructs a new instance of the `ProductHandle` class
 ```typescript
 constructor(_parent: Entity | {
         parent: Entity | undefined;
-        panelPosition: Vector3;
+        panelPosition?: Vector3;
+        hoverText?: string;
     }, _sellerId: string, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
@@ -34,7 +35,7 @@ constructor(_parent: Entity | {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_parent | Entity \| { parent: Entity \| undefined; panelPosition: Vector3; } |  |
+|  \_parent | Entity \| { parent: Entity \| undefined; panelPosition?: Vector3; hoverText?: string; } |  |
 |  \_sellerId | string |  |
 |  \_productUUID | string \| { productUUID: string; mainImageIndex?: number; imageSizes?: { \[key: number\]: { height: number; width: number; }; }; override?: { productName?: string; productDescription?: string; sellerName?: string; sellerDescription?: string; }; } |  |
 |  gateState | [eGateStateEnum](./boson-dcl.egatestateenum.md) | <i>(Optional)</i> |

@@ -1,0 +1,105 @@
+{
+  "customName": "BosonTEE_M_posed",
+  "guid": "0cc387a0-4a50-4d13-afab-280e97560205",
+  "parentGuid": null,
+  "hierarchyOrder": 2.0,
+  "isExposed": false,
+  "components": [
+    {
+      "nameInCode": "Transform",
+      "nameOfSlot": "Transform",
+      "properties": [
+        {
+          "name": "position",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 7.30434275,
+            "y": 0.0,
+            "z": 8.856848
+          }
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          }
+        },
+        {
+          "name": "scale",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "nameInCode": "GLTFShape",
+      "nameOfSlot": "Shape",
+      "properties": [
+        {
+          "name": "asset",
+          "type": "Asset",
+          "fixedValue": "e0d7eab5-64f0-4766-a56f-2dc22b18677c"
+        },
+        {
+          "name": "visible",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "withCollisions",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "isPointerBlocker",
+          "type": "Boolean",
+          "fixedValue": true
+        }
+      ]
+    },
+    {
+      "nameInCode": "BosonProduct",
+      "nameOfSlot": "BosonProduct",
+      "properties": [
+        {
+          "name": "productUUID",
+          "type": "String",
+          "fixedValue": "0e4ea4-5f35-ca5-4e68-26d561ac13"
+        },
+        {
+          "name": "sellerId",
+          "type": "String",
+          "fixedValue": "2"
+        },
+        {
+          "name": "productUUID_test",
+          "type": "String",
+          "fixedValue": "c707ae6-1e3b-76f6-1a6d-860e33feaf1"
+        },
+        {
+          "name": "sellerId_test",
+          "type": "String",
+          "fixedValue": "18"
+        },
+        {
+          "name": "panelPositionOffset",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "dclEditVersionNumber": "1.0.5"
+}

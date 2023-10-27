@@ -10,8 +10,11 @@
 import { BaseProductV1ProductFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
 import { BigNumber } from 'eth-connect';
 import { ConfigId } from '@bosonprotocol/core-sdk';
+import { ConfigId as ConfigId_2 } from '@bosonprotocol/core-sdk/dist/esm';
 import { CoreSDK } from '@bosonprotocol/core-sdk';
+import { CoreSDK as CoreSDK_2 } from '@bosonprotocol/core-sdk/dist/esm';
 import { EnvironmentType } from '@bosonprotocol/core-sdk';
+import { EnvironmentType as EnvironmentType_2 } from '@bosonprotocol/core-sdk/dist/esm';
 import { MetaTxConfig } from '@bosonprotocol/core-sdk';
 import { OfferFieldsFragment } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
 import { ProductV1Variation } from '@bosonprotocol/core-sdk/dist/esm/subgraph';
@@ -38,9 +41,7 @@ export type BiconomyConfig = {
 };
 
 // @public (undocumented)
-export type BiconomyTokenApiId = BiconomyBaseApiId & NamedToken & {
-    address: string;
-};
+export type BiconomyTokenApiId = BiconomyBaseApiId & Token;
 
 // @public (undocumented)
 export type BosonConfigs = {
@@ -49,6 +50,33 @@ export type BosonConfigs = {
     staging?: BosonEnvConfig;
     production?: BosonEnvConfig;
 };
+
+// @public (undocumented)
+export type BosonConfiguration = {
+    envName: EnvironmentType;
+    configId: ConfigId;
+} & BosonEnvConfig;
+
+// @public (undocumented)
+export class BosonConfigurator {
+    // (undocumented)
+    static getWalletAddress(): Promise<string>;
+    // (undocumented)
+    static initialize(bosonConfig: BosonConfiguration, bosonConfig_test: BosonConfiguration | undefined, userInventory?: string[]): Promise<{
+        envName: EnvironmentType_2;
+        configId: ConfigId_2;
+        biconomy?: BiconomyConfig | undefined;
+        providerUrl: string;
+        coreSDK: CoreSDK_2;
+        userAccount: UserData;
+        walletAddress: string;
+        allBalances: object;
+    }>;
+    // (undocumented)
+    static testEnv: boolean;
+    // (undocumented)
+    static whenInitialized(): Promise<void>;
+}
 
 // @public (undocumented)
 export type BosonEnvConfig = {
@@ -155,7 +183,7 @@ export function getAllBalances(walletAddress: string): Promise<object>;
 export function getBalance(address: string): Promise<BigNumber>;
 
 // @public (undocumented)
-export function getBalanceByCurrency(currency: string, walletAddress: string): Promise<number>;
+export function getBalanceByCurrency(token: Token, walletAddress: string): Promise<number>;
 
 // @public (undocumented)
 export function getBalanceDecimalised(address: string): Promise<number>;
@@ -174,6 +202,9 @@ export function hasNft(walletAddress: string, contractId: string, tokenId: strin
 
 // @public (undocumented)
 export function initCoreSdk(envName: EnvironmentType, configId: ConfigId, bosonConfigs: BosonConfigs, getUserAccount: () => Promise<string>, inventory: string[]): Promise<CoreSDK>;
+
+// @public (undocumented)
+export function initCoreSdk2(bosonConfiguration: BosonConfiguration, _tokensList: Token[] | undefined, inventory: string[]): Promise<CoreSDK>;
 
 // @public (undocumented)
 export class Kiosk extends ProductHandle {
@@ -225,18 +256,14 @@ export class Kiosk extends ProductHandle {
 export { MetaTxConfig }
 
 // @public (undocumented)
-export type NamedToken = {
-    name: string;
-};
-
-// @public (undocumented)
 export function processBiconomyConfig(envName: EnvironmentType, configId: ConfigId, biconomyConfig: BiconomyConfig): Partial<MetaTxConfig>;
 
 // @public (undocumented)
 export class ProductHandle extends Entity {
     constructor(_parent: Entity | {
         parent: Entity | undefined;
-        panelPosition: Vector3;
+        panelPosition?: Vector3;
+        hoverText?: string;
     }, _sellerId: string, _productUUID: string | {
         productUUID: string;
         mainImageIndex?: number;
@@ -366,7 +393,15 @@ export class ProductHandle extends Entity {
     //
     // (undocumented)
     static waveAnimationSystem: WaveAnimationSystem | undefined;
+    // (undocumented)
+    static whenInitialized(): Promise<void>;
 }
+
+// @public (undocumented)
+export type Token = {
+    name: string;
+    address: string;
+};
 
 // (No @packageDocumentation comment for this package)
 
