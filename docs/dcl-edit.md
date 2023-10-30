@@ -25,46 +25,6 @@
 
 Please refer to [DCL-Edit Install Instructions](https://dcl-edit.com/install-guide)
 
-## Create a Decentraland scene project
-
-```
-dcl init -p scene
-```
-
-## Install @bosonprotocol/boson-dcl and their dependencies
-
-Run npm to install @bosonprotocol/boson-dcl library and some required dependencies in your scene
-
-```bash
-npm install -D eth-connect patch-package
-```
-
-```bash
-npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils
-```
-
-```bash
-npm install @bosonprotocol/boson-dcl
-```
-
-Once you have added all dependencies in your scene project, please launch the build to finish initializing your project:
-```bash
-dcl build
-```
-
-### Note:
-- You may have some building errors, that are removed by adding some compiler configuration properties in the `tsconfig.json` file
-  ```ts
-  {
-    "compilerOptions": {
-      ...
-      "skipLibCheck": true
-    },
-    ...
-  }
-
-  ```
-
 ## Edit the scene with DCL-Edit
 
 With DCL-Edit, you can place and manipulate objects in your scene just like in any other state-of-the-art game engine.
