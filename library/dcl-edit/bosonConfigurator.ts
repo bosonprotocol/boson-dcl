@@ -65,8 +65,10 @@ export class BosonConfigurator {
 
   async init(entity: Entity) {
     log("BosonConfigurator:: init()", this);
-    const biconomy = parseJSON(this.biconomyConfig);
-    const biconomy_test = parseJSON(this.biconomyConfig_test);
+    const biconomy = parseJSON(String(this.biconomyConfig).replace(/'/g, '"'));
+    const biconomy_test = parseJSON(
+      String(this.biconomyConfig_test).replace(/'/g, '"')
+    );
     const bosonConfig: BosonConfiguration = {
       envName: this.envName,
       configId: this.configId,
@@ -81,19 +83,11 @@ export class BosonConfigurator {
           biconomy: biconomy_test,
         }
       : undefined;
-    const {
-      coreSDK,
-      userAccount,
-      walletAddress,
-      allBalances,
-      envName,
-      configId,
-    } = await BosonConfiguratorHandler.initialize(
+    await BosonConfiguratorHandler.initialize(
       bosonConfig,
       bosonConfig_test,
       []
     );
-    ProductHandle.init(coreSDK, userAccount, walletAddress, allBalances);
   }
 }
 
@@ -102,7 +96,7 @@ function parseJSON(str: string | undefined) {
     try {
       return JSON.parse(str);
     } catch (e) {
-      log(e);
+      log(`Unable to parse JSON from string '${str}': ${e}`);
     }
   }
   return undefined;

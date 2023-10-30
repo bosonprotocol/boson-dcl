@@ -5,6 +5,7 @@ import { UserData, getUserData } from "@decentraland/Identity";
 import { getAllBalances, initCoreSdk2 } from "./core-sdk";
 import { BosonConfiguration } from "./config";
 import { ConfigId } from "@bosonprotocol/core-sdk/dist/esm";
+import { ProductHandle } from ".";
 
 const TOKENS_LIST = {
   ethereum: [
@@ -160,7 +161,8 @@ export class BosonConfigurator {
       "Initialize BOSON on env",
       bosonConfig_.envName,
       "config",
-      bosonConfig_.configId
+      bosonConfig_.configId,
+      bosonConfig_
     );
     const userAccount: UserData = (await getUserData()) as UserData;
     const walletAddress = userAccount?.publicKey || userAccount?.userId;
@@ -174,6 +176,7 @@ export class BosonConfigurator {
 
     const allBalances: object = await getAllBalances(walletAddress);
     BosonConfigurator._isInitialized = true;
+    ProductHandle.init(coreSDK, userAccount, walletAddress, allBalances);
 
     return {
       coreSDK,
