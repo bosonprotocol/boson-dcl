@@ -5,6 +5,26 @@
 This repo provides the first instance of the Boson Protocol Metaverse Toolkit. This will allow scene builders, in [Decentraland](https://play.decentraland.org/?position=-86%2C108), the ability to add a Boson Kiosk to their scene, that will allow potential buyers to buy Boson rNFTs directly from the Metaverse, interacting directly with the Boson Protocol on Polygon.
 
 
+# Integrate **@bosonprotocol/boson-dcl** in your own Decentraland Scene
+
+Create your Decentraland Scene and use BOSON to sell redeemable NFT for physical products.
+
+See [README.md](./library/README.md)
+
+# Contribute to **@bosonprotocol/boson-dcl** development
+We welcome contributions! Until now, Boson Protocol has been largely worked on by a small dedicated team. However, the ultimate goal is for all of the Boson Protocol repositories to be fully owned by the community and contributors. Issues, pull requests, suggestions, and any sort of involvement are more than welcome.
+
+If you have noticed a bug, please report them here as an issue.
+
+Questions and feedback are always welcome, we will use them to improve our offering.
+
+All PRs must pass all tests before being merged.
+
+By being in this community, you agree to the [Code of Conduct](./docs/code-of-conduct.md). Take a look at it, if you haven't already.
+
+Before starting to contribute, please check out Local development guide.
+
+
 ## Prerequisites
 
 Install `decentraland` CLI
@@ -52,25 +72,6 @@ dcl start --web3
 ## How to publish the library
 
 A Github action automatically runs when a Release is created
-
-# Integrate Boson-DCL in your own Decentraland Scene
-
-Create your Decentraland Scene and use BOSON to sell redeemable NFT for physical products.
-
-See [README.md](./library/README.md)
-
-# Contributing
-We welcome contributions! Until now, Boson Protocol has been largely worked on by a small dedicated team. However, the ultimate goal is for all of the Boson Protocol repositories to be fully owned by the community and contributors. Issues, pull requests, suggestions, and any sort of involvement are more than welcome.
-
-If you have noticed a bug, please report them here as an issue.
-
-Questions and feedback are always welcome, we will use them to improve our offering.
-
-All PRs must pass all tests before being merged.
-
-By being in this community, you agree to the [Code of Conduct](./docs/code-of-conduct.md). Take a look at it, if you haven't already.
-
-Before starting to contribute, please check out Local development guide.
 
 # License
 
