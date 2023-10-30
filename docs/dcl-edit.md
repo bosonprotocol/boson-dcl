@@ -4,41 +4,36 @@
 
 # Use Boson Protocol with [DCL Edit](https://dcl-edit.com)
 
-- boson-dcl library allows to use Boson Protocol from a Decentraland scene. Doing so, you are able to build a completely new shopping experience to your users.
-- dcl-edit makes scene building an easy and user-friendly process, allowing to place and manipulate 3D objets just like in any other state-of-the-art game engine.
-- combining boson-dcl with dcl-edit, you can easily create a 3D scene with objects which can be clicked to commit to some Boson Protocol products/offers.
+![Overview](./assets/DCLEdit-Boson-Overview.png)
+
+- The [**@bosonprotocol/boson-dcl**](https://npm.io/package/@bosonprotocol/boson-dcl) library allows to use Boson Protocol in a Decentraland scene. Doing so, you can build a completely new shopping experience to your users.
+- [**DCL Edit**](https://dcl-edit.com) makes scene building an easy and user-friendly process, allowing to place and manipulate 3D objets just like in any other state-of-the-art game engine.
+- Combining **@bosonprotocol/boson-dcl** with **DCL-Edit**, you can easily create a 3D scene with objects which can be clicked to commit to some Boson Protocol products/offers.
 
 ## Prerequisites
 
 - register a Boson Seller account in the [Boson Protocol Marketplace](https://bosonapp.io)
 - create some Boson Protocol products in the marketplace
 
-Note: when using the [Boson Protocol Marketplace](https://bosonapp.io), you can choose to use Boson Protocol on [Ethereum](https://ethereum.org/en/) or on [Polygon](https://polygon.technology/polygon-pos).
-
-Your choice between Ethereum and Polygon must consider different points, detailed here after:
-| | Ethereum | Polygon |
-| - | - | - |
-| ***transaction fees*** | Choosing Ethereum means your scene's users will pay transaction fees to operate with Boson Protocol. These fees may be significant (ex: ~$5), compared with the price of the items being purchased. | Choosing Polygon means you will have to use meta-transactions(*) and pay the gas fees of your users, at least for the transactions operated from Decentraland. These fees are very low (ex: $0.02) compared to the ones on Ethereum, thought.
-***payment currencies*** | Users will commit to Boson Protocol products, paying with ETH native currency or ERC20 tokens on Ethereum | users will commit to Boson Protocol products, paying with MATIC native currency or ERC20 tokens on Polygon, meaning they will have to bridge their funds from Ethereum to Polygon, if not done yet
-***token-gated offers*** (Boson Protocol allows you to create token-gated products, meaning that only users that owns specific tokens (ERC20 or NFT ERC721/ERC1155) can commit to them.) | The token (ERC20 or NFT ERC721/ERC1155) used for the token-gating condition must be an Ethereum token | The token (ERC20 or NFT ERC721/ERC1155) used for the token-gating condition must be a Polygon token
-***meta-transactions*** (in Decentraland, the user wallet is forced to be connected to Ethereum, meaning that to interact with another blockchain, transactions need to be relayed - we called them meta-transactions) | on Ethereum, use of meta-transaction is not required | on Polygon, use of meta-transaction is required. We advice the scene builder to subscribe to [Biconomy](biconomy.io) that provides this service. A proper configuration needs to be done to setup the relaying service, and this configuration needs to be passed on ***boson-dcl*** when initializing.
-
- 
+### Notes: 
+- when using the [Boson Protocol Marketplace](https://bosonapp.io), you can choose to use Boson Protocol on [Ethereum](https://ethereum.org/en/) or on [Polygon](https://polygon.technology/polygon-pos).
+  Your choice between Ethereum and Polygon must consider different points, detailed [here](./ethereum-or-polygon.md).
+- it is also possible to use a test environment to create your products and discover Boson Protocol (https://interface-staging.on.fleek.co), in which case the testnet blockchains will be, respectively Goerli and Polygon Mumbai.
 
 
 ## DCL-Edit installation
 
 Please refer to [DCL-Edit Install Instructions](https://dcl-edit.com/install-guide)
 
-## create a Decentraland scene project
+## Create a Decentraland scene project
 
 ```
 dcl init -p scene
 ```
 
-## boson-dcl installation
+## Install @bosonprotocol/boson-dcl and their dependencies
 
-Install boson-dcl library and some required dependencies in your scene
+Run npm to install @bosonprotocol/boson-dcl library and some required dependencies in your scene
 
 ```bash
 npm install -D eth-connect patch-package
@@ -49,7 +44,7 @@ npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils
 ```
 
 ```bash
-npm install  @bosonprotocol/boson-dcl
+npm install @bosonprotocol/boson-dcl
 ```
 
 Once you have added all dependencies in your scene project, please launch the build to finish initializing your project:
@@ -58,7 +53,7 @@ dcl build
 ```
 
 ### Note:
-You may have some building errors, that are removed by adding some compiler configuration properties in the `tsconfig.json` file
+- You may have some building errors, that are removed by adding some compiler configuration properties in the `tsconfig.json` file
   ```ts
   {
     "compilerOptions": {
@@ -70,24 +65,122 @@ You may have some building errors, that are removed by adding some compiler conf
 
   ```
 
-## edit the scene with DCL-Edit
+## Edit the scene with DCL-Edit
 
 With DCL-Edit, you can place and manipulate objects in your scene just like in any other state-of-the-art game engine.
 
-### Add BosonConfiguration component
+Launch DCL-Edit from your scene folder:
+```
+dcl-edit
+```
 
-This component is required to initialize the boson-dcl library with the correct configuration.
+### Note:
+- The complete example code created for your scene at this stage (in `./src/game.ts`) can be removed, as you won't probably use it.
 
-You have to add this component to any object (at least one, and preferably only one) in the scene.
+  Instead, you will be asked to call the SceneFactory method generated by DCL-Edit when you'll save your scene (details given in the next steps).
 
-### Add BosonProducts components to some objects in your scene
+### Add a BosonConfigurator component
 
-Within DCL-Edit, select an object in your scene and Add Component > Custom > Boson Products
+This component is required to initialize the **@bosonprotocol/boson-dcl** library with the correct configuration.
 
-This object will be clickable and, when clicked, will show the Commit Popup of boson-dcl to commit to a given Boson Protocol Product.
+It must be unique to your scene.
 
-Set the seller ID and the product ID of the Boson Protocol product you want to associate with this object
+Even if any entity of any kind could fit, ideally, you should create an Empty Entity, for instance called "BosonConfigurator" (the chosen name doesn't have any impact)
 
+![DCLEdit - Empty Entity](./assets/DCLEdit_EmptyEntity.png)
 
+![DCLEdit - BosonConfigurator](./assets/DCLEdit_BosonConfigurator_1.png)
 
+Then, click **Add Component** and select **BosonProtocol > BosonConfigurator**
 
+![DCLEdit - BosonConfigurator](./assets/DCLEdit_BosonConfigurator_2.png)
+
+And configure the component's properties, as follow:
+- **envName**: is the Boson environment used in your scene when users connect their wallet on Ethereum, which is the standard case in Decentraland. You should set it to `production`.
+- **configId**: is the Boson configuration activated in your scene. This depends on which blockchain you decide to create your Boson products (see [Ethereum or Polygon](./ethereum-or-polygon.md))
+  - on Polygon: `production-137-0`
+  - on Ehtereum: `production-1-0`
+- **providerUrl**: is the endpoint to an RPC Node on the blockchain you address (Polygon or Ethereum). If you don't have such endpoints, you can subscribe to [Infura](https://www.infura.io/networks) (a free-plan is available) or any other [chain node provider](https://101blockchains.com/blockchain-node-providers-in-web3/). For instance:
+  - on Polygon: `https://polygon-mainnet.infura.io/v3/<your-api-key>`,
+  - on Ethereum: `https://mainnet.infura.io/v3/<your-api-key`.
+- **biconomyConfig**: is the Biconomy configuration required to activate the meta-transactions relay for Boson Protocol.
+  - on Polygon: see [Biconomy configuration](./biconomy.md).
+    If you don't set any Biconomy Configuration yet, you will be able to run your scene in preview mode only. However, once deployed on Decentraland, interacting with the Boson Protocol without meta-transactions won't be possible.
+  - on Ethereum: you probably don't need to use meta-transactions, so you can let the field empty. If not sure about which chain to choose, please refer to [Ethereum or Polygon](./ethereum-or-polygon.md).
+- **envName_test**: is the Boson environment used in your scene when users connect their wallet on a chain different from Ethereum, which means the scene is not in a production environment. You should set this property to the `staging` value.
+- **configId_test**: is the Boson configuration activated in your scene when users connect their wallet on a chain different from Ethereum. This depends on which blockchain you decide to create your Boson products
+  - on Mumbai (Polygon testnet): `staging-80001-0`,
+  - on Goerli (Ethereum testnet): `staging-5-0`,
+  - or let empty if you don't want to use a test environment.
+- **providerUrl_test**: is the endpoint to an RPC Node on the blockchain you address (Mumbai or Goerli). For instance:
+  - on Mumbai: `https://polygon-mumbai.infura.io/v3/<your-api-key>`,
+  - on Goerli: `https://goerli.infura.io/v3/<your-api-key>`,
+  - or let empty if you don't want to use a test environment.
+- **biconomyConfig_test**: is the Biconomy configuration required to activate the meta-transactions relay for Boson Protocol in the test environment.
+  - on Mumbai: see [Biconomy configuration](./biconomy.md),
+  - on Goerli: you probably don't need to use Biconomy.
+
+![DCLEdit - BosonConfigurator](./assets/DCLEdit_BosonConfigurator_3.png)
+
+### Identify the Boson Products to be referenced in your scene
+
+Assuming the Boson Products you want to sell in your scene have been created on Boson Protocol, you should be able to find them in the Boson Marketplace:
+- [www.bosonapp.io](https://www.bosonapp.io) in the production environment
+- [interface-staging.on.fleek.co](https://interface-staging.on.fleek.co) in the test (staging) environment
+
+For instance: [https://www.bosonapp.io/#/products/2/0e4ea4-5f35-ca5-4e68-26d561ac13](https://www.bosonapp.io/#/products/2/0e4ea4-5f35-ca5-4e68-26d561ac13) is the product in the production Boson Marketplace. The sellerId and the productUUID can be found in the URL:
+- sellerId: `"2"`
+- productUUID: `"0e4ea4-5f35-ca5-4e68-26d561ac13"`
+![Boson T-Shirt](./assets/BosonTShirt_production.png)
+
+Similarly, [the same product](https://interface-staging.on.fleek.co/#/products/18/3f27e-7d7-fab-4f12-8aebc147fa) has been created in the test (staging) environment, with the following references:
+- sellerId: `"18"`
+- productUUID: `"3f27e-7d7-fab-4f12-8aebc147fa"`
+![Boson T-Shirt (staging)](./assets/BosonTShirt_staging.png)
+
+### Add BosonProduct components on 3D objects
+
+Once you have started building your scene with DCL-Edit, and placed some 3D entities representing the Boson Products for sale, add to them a **BosonProduct** component to associate an existing Boson Product.
+
+These objects will be clickable and, when clicked, the Commit Popup will appear to let the user commit to the associated Boson Product.
+
+Practically, 2 products can be associated to an object, one for the production environment (mainnet blockchain) and another one for the test environment (testnet blockchain), as the same product will be differently identified between the 2 environments.
+
+- Within DCL-Edit, select an object, then click **Add Component > BosonProtocol > BosonProduct**.
+
+  ![DCLEdit - BosonProduct](./assets/DCLEdit_BosonProduct_1.png)
+
+- Set the component properties to associate the object with your Boson Product (seller Id and product UUID), on production and on test environment:
+  - **productUUID**: identifies the product created on Boson Protocol in the production environment
+  - **sellerId**: identifies the Seller having created the Boson Product in the production environment
+  - **productUUID_test**: identifies the product created on Boson Protocol in the test environment
+  - **sellerId_test**: identifies the seller having created the Boson Product in the test environment
+  - **panelPositionOffset**: sets the position of the Commit panel regarding to the object, shown when the object is clicked by the user. Default value is [0, 0, 0]
+
+  ![DCLEdit - BosonProduct](./assets/DCLEdit_BosonProduct_2.png)
+
+### Save and Run your scene preview
+
+- Save your scene with DCL-Edit
+  (be sure you save into the `assets` subfolder)
+  ![DCL-Edit Save Scene](assets/DCLEdit_SaveScene.png)
+
+- Check your scene source code (`./src/game.ts`) is calling the SceneFactory method generated by DCL-Edit (*the name of this method depends on the name of your scene, chosen when you've saved it*)
+  ```
+  // game.ts
+  import { SceneFactory } from "dcl-edit/build/scripts/scenes"
+
+  const scene = SceneFactory.createBosonScene()
+  ```
+
+- Run the scene preview
+  ```shell
+  dcl start --web3
+  ```
+  Ensure you Sign In with your wallet. If connected on Ethereum, the scene is going to run in production environment, otherwise it will use the test environment.
+
+  ![DCL-Edit Preview](assets/DCLEdit_ScenePreview1.png)
+
+- You should be able to click on objects that have a BosonProduct component. When clicked, the Commit popup opens, show details about the associated Boson Product and allow the user to commit to this offer.
+  ![DCL-Edit Preview](assets/DCLEdit_ScenePreview2.png)
+  ![DCL-Edit Preview](assets/DCLEdit_ScenePreview3.png)
