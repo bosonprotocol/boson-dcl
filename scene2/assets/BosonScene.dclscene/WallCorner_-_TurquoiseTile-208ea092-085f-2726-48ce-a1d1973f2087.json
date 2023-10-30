@@ -1,8 +1,8 @@
 {
-  "customName": "Fridge Counter",
-  "guid": "06dd1540-5007-07e3-5a77-86ee94f03ecf",
+  "customName": "WallCorner - TurquoiseTile",
+  "guid": "208ea092-085f-2726-48ce-a1d1973f2087",
   "parentGuid": null,
-  "hierarchyOrder": 1.0,
+  "hierarchyOrder": 7.0,
   "isExposed": false,
   "components": [
     {
@@ -13,9 +13,9 @@
           "name": "position",
           "type": "Vector3",
           "fixedValue": {
-            "x": 10.389843,
-            "y": 0.0,
-            "z": 7.393251
+            "x": 14.0,
+            "y": 0.01,
+            "z": 12.90278
           }
         },
         {
@@ -46,7 +46,7 @@
         {
           "name": "asset",
           "type": "Asset",
-          "fixedValue": "cd54d23e-eef5-48f6-bfb2-ff7878b37d0b"
+          "fixedValue": "b0a17706-c962-430b-b29c-b0965c58a168"
         },
         {
           "name": "visible",

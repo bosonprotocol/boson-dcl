@@ -1,8 +1,8 @@
 {
-  "customName": "BosonSweater_F_posed",
-  "guid": "23420020-2cbe-44ae-bc0d-c9b0f394f8af",
+  "customName": "Cross Table",
+  "guid": "c7dc7c19-0043-2e03-fd0d-418c0825c763",
   "parentGuid": null,
-  "hierarchyOrder": 4.0,
+  "hierarchyOrder": 3.0,
   "isExposed": false,
   "components": [
     {
@@ -13,9 +13,9 @@
           "name": "position",
           "type": "Vector3",
           "fixedValue": {
-            "x": 5.11452675,
-            "y": 0.0,
-            "z": 8.0
+            "x": 6.830111,
+            "y": 0.05,
+            "z": 10.0357533
           }
         },
         {
@@ -23,9 +23,9 @@
           "type": "Quaternion",
           "fixedValue": {
             "x": 0.0,
-            "y": 0.0,
+            "y": -0.310714215,
             "z": 0.0,
-            "w": 1.0
+            "w": 0.9505034
           }
         },
         {
@@ -46,7 +46,7 @@
         {
           "name": "asset",
           "type": "Asset",
-          "fixedValue": "65cc17d2-5b0a-4665-95a7-9a9440d26b60"
+          "fixedValue": "741e12b9-17c2-4c59-bf8d-871780fbf0cd"
         },
         {
           "name": "visible",
@@ -62,41 +62,6 @@
           "name": "isPointerBlocker",
           "type": "Boolean",
           "fixedValue": true
-        }
-      ]
-    },
-    {
-      "nameInCode": "BosonProduct",
-      "nameOfSlot": "BosonProduct",
-      "properties": [
-        {
-          "name": "productUUID",
-          "type": "String",
-          "fixedValue": "dda2fa-1242-32c1-1c8-f3548600ecd5"
-        },
-        {
-          "name": "sellerId",
-          "type": "String",
-          "fixedValue": "2"
-        },
-        {
-          "name": "productUUID_test",
-          "type": "String",
-          "fixedValue": "5312aec-f146-27b7-edfb-721540eb6"
-        },
-        {
-          "name": "sellerId_test",
-          "type": "String",
-          "fixedValue": "2"
-        },
-        {
-          "name": "panelPositionOffset",
-          "type": "Vector3",
-          "fixedValue": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          }
         }
       ]
     }

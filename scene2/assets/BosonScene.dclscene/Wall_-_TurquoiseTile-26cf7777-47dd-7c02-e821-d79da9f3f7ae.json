@@ -1,8 +1,8 @@
 {
-  "customName": "Microwave",
-  "guid": "be673ecc-b041-4eb7-bbc7-c1fb6aade306",
-  "parentGuid": null,
-  "hierarchyOrder": 0.0,
+  "customName": "Wall - TurquoiseTile",
+  "guid": "26cf7777-47dd-7c02-e821-d79da9f3f7ae",
+  "parentGuid": "208ea092-085f-2726-48ce-a1d1973f2087",
+  "hierarchyOrder": 3.0,
   "isExposed": false,
   "components": [
     {
@@ -13,9 +13,9 @@
           "name": "position",
           "type": "Vector3",
           "fixedValue": {
-            "x": 8.463157,
-            "y": 1.073172,
-            "z": 7.32211971
+            "x": -7.96043634,
+            "y": 7.450581E-09,
+            "z": 0.0
           }
         },
         {
@@ -46,7 +46,7 @@
         {
           "name": "asset",
           "type": "Asset",
-          "fixedValue": "69695443-7b21-4caa-9bf9-4147bab4ab6c"
+          "fixedValue": "a50e0ada-4a73-4044-8d84-b9833e1d0896"
         },
         {
           "name": "visible",
