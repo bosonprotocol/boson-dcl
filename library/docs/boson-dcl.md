@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [BosonConfigurator](./boson-dcl.bosonconfigurator.md) |  |
 |  [DisplayProduct](./boson-dcl.displayproduct.md) |  |
 |  [Kiosk](./boson-dcl.kiosk.md) |  |
 |  [ProductHandle](./boson-dcl.producthandle.md) |  |
@@ -29,13 +30,14 @@
 |  [commitToOffer(coreSDK, offer, userAccount)](./boson-dcl.committooffer.md) |  |
 |  [getAllBalances(walletAddress)](./boson-dcl.getallbalances.md) |  |
 |  [getBalance(address)](./boson-dcl.getbalance.md) |  |
-|  [getBalanceByCurrency(currency, walletAddress)](./boson-dcl.getbalancebycurrency.md) |  |
+|  [getBalanceByCurrency(token, walletAddress)](./boson-dcl.getbalancebycurrency.md) |  |
 |  [getBalanceDecimalised(address)](./boson-dcl.getbalancedecimalised.md) |  |
 |  [getEnvironment()](./boson-dcl.getenvironment.md) |  |
 |  [getEthPrice(\_query)](./boson-dcl.getethprice.md) |  |
 |  [getTokenData(\_query, \_tokenID)](./boson-dcl.gettokendata.md) |  |
 |  [hasNft(walletAddress, contractId, tokenId, nftType)](./boson-dcl.hasnft.md) |  |
 |  [initCoreSdk(envName, configId, bosonConfigs, getUserAccount, inventory)](./boson-dcl.initcoresdk.md) |  |
+|  [initCoreSdk2(bosonConfiguration, \_tokensList, inventory)](./boson-dcl.initcoresdk2.md) |  |
 |  [processBiconomyConfig(envName, configId, biconomyConfig)](./boson-dcl.processbiconomyconfig.md) |  |
 
 ## Variables
@@ -52,6 +54,7 @@
 |  [BiconomyConfig](./boson-dcl.biconomyconfig.md) |  |
 |  [BiconomyTokenApiId](./boson-dcl.biconomytokenapiid.md) |  |
 |  [BosonConfigs](./boson-dcl.bosonconfigs.md) |  |
+|  [BosonConfiguration](./boson-dcl.bosonconfiguration.md) |  |
 |  [BosonEnvConfig](./boson-dcl.bosonenvconfig.md) |  |
-|  [NamedToken](./boson-dcl.namedtoken.md) |  |
+|  [Token](./boson-dcl.token.md) |  |
 

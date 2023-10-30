@@ -1,0 +1,70 @@
+{
+  "customName": "Floor - Hexagon",
+  "guid": "8a038f75-5fb5-611d-f027-4fbdf4fdfa1f",
+  "parentGuid": null,
+  "hierarchyOrder": 6.0,
+  "isExposed": false,
+  "components": [
+    {
+      "nameInCode": "Transform",
+      "nameOfSlot": "Transform",
+      "properties": [
+        {
+          "name": "position",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 13.6155977,
+            "y": 0.05,
+            "z": 12.4990253
+          }
+        },
+        {
+          "name": "rotation",
+          "type": "Quaternion",
+          "fixedValue": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          }
+        },
+        {
+          "name": "scale",
+          "type": "Vector3",
+          "fixedValue": {
+            "x": 2.85,
+            "y": 1.0,
+            "z": 2.85
+          }
+        }
+      ]
+    },
+    {
+      "nameInCode": "GLTFShape",
+      "nameOfSlot": "Shape",
+      "properties": [
+        {
+          "name": "asset",
+          "type": "Asset",
+          "fixedValue": "c2f3bda2-7ffc-4873-8d2b-026d2a4abeb6"
+        },
+        {
+          "name": "visible",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "withCollisions",
+          "type": "Boolean",
+          "fixedValue": true
+        },
+        {
+          "name": "isPointerBlocker",
+          "type": "Boolean",
+          "fixedValue": true
+        }
+      ]
+    }
+  ],
+  "dclEditVersionNumber": "1.0.5"
+}

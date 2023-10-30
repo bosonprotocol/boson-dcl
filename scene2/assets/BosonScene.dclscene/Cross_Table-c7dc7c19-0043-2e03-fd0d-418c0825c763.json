@@ -1,8 +1,8 @@
 {
-  "customName": "Fridge Counter",
-  "guid": "06dd1540-5007-07e3-5a77-86ee94f03ecf",
+  "customName": "Cross Table",
+  "guid": "c7dc7c19-0043-2e03-fd0d-418c0825c763",
   "parentGuid": null,
-  "hierarchyOrder": 1.0,
+  "hierarchyOrder": 3.0,
   "isExposed": false,
   "components": [
     {
@@ -13,9 +13,9 @@
           "name": "position",
           "type": "Vector3",
           "fixedValue": {
-            "x": 10.389843,
-            "y": 0.0,
-            "z": 7.393251
+            "x": 6.830111,
+            "y": 0.05,
+            "z": 10.0357533
           }
         },
         {
@@ -23,9 +23,9 @@
           "type": "Quaternion",
           "fixedValue": {
             "x": 0.0,
-            "y": 0.0,
+            "y": -0.310714215,
             "z": 0.0,
-            "w": 1.0
+            "w": 0.9505034
           }
         },
         {
@@ -46,7 +46,7 @@
         {
           "name": "asset",
           "type": "Asset",
-          "fixedValue": "cd54d23e-eef5-48f6-bfb2-ff7878b37d0b"
+          "fixedValue": "741e12b9-17c2-4c59-bf8d-871780fbf0cd"
         },
         {
           "name": "visible",
@@ -66,5 +66,5 @@
       ]
     }
   ],
-  "dclEditVersionNumber": "1.0.4"
+  "dclEditVersionNumber": "1.0.5"
 }

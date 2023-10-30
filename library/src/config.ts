@@ -16,17 +16,15 @@ export type BiconomyBaseApiId = {
 /**
  * @public
  */
-export type NamedToken = {
+export type Token = {
   name: string;
+  address: string;
 };
 
 /**
  * @public
  */
-export type BiconomyTokenApiId = BiconomyBaseApiId &
-  NamedToken & {
-    address: string;
-  };
+export type BiconomyTokenApiId = BiconomyBaseApiId & Token;
 
 /**
  * @public
@@ -38,6 +36,14 @@ export type BiconomyConfig = {
     tokens: BiconomyTokenApiId[];
   };
 };
+
+/**
+ * @public
+ */
+export type BosonConfiguration = {
+  envName: EnvironmentType;
+  configId: ConfigId;
+} & BosonEnvConfig;
 
 /**
  * @public
