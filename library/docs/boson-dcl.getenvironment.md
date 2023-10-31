@@ -7,9 +7,12 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function getEnvironment(): EnvironmentType;
+export declare function getEnvironment(): {
+    envName: EnvironmentType;
+    configId: ConfigId;
+};
 ```
 <b>Returns:</b>
 
-EnvironmentType
+{ envName: EnvironmentType; configId: ConfigId; }
 

@@ -189,7 +189,10 @@ export function getBalanceByCurrency(token: Token, walletAddress: string): Promi
 export function getBalanceDecimalised(address: string): Promise<number>;
 
 // @public (undocumented)
-export function getEnvironment(): EnvironmentType;
+export function getEnvironment(): {
+    envName: EnvironmentType;
+    configId: ConfigId;
+};
 
 // @public (undocumented)
 export function getEthPrice(_query: TemplateStringsArray): Promise<any>;

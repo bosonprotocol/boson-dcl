@@ -1,44 +1,9 @@
-import { BosonConfigs } from '@bosonprotocol/boson-dcl'
+import { BosonConfiguration } from '@bosonprotocol/boson-dcl'
 
-export const bosonConfig: BosonConfigs = {
-  testing: {
-    // mumbai
-    biconomy: {
-      apiKey: '7gGMKijfb.eeecde6e-0aef-4744-8d4c-267ce442b814',
-      apiIds: {
-        protocol: {
-          method: 'executeMetaTransaction',
-          apiId: '0a35ec78-dfde-4cb8-b015-cd793684b71f'
-        },
-        tokens: [
-          {
-            // boson
-            name: 'boson',
-            address: '0x1f5431e8679630790e8eba3a9b41d1bb4d41aed0',
-            method: 'executeMetaTransaction',
-            apiId: '0cfeee86-a304-4761-a1fd-dcf63ffd153c'
-          },
-          {
-            // weth
-            name: 'weth',
-            address: '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
-            method: 'executeMetaTransaction',
-            apiId: '29560f78-014f-4d48-97e8-779545606df6'
-          },
-          {
-            // usdc
-            name: 'usdc',
-            address: '0xe6b8a5cf854791412c1f6efc7caf629f5df1c747',
-            method: 'executeMetaTransaction',
-            apiId: 'a3154a77-c410-456e-9d90-9f56a5787ae8'
-          }
-        ]
-      }
-    },
-    providerUrl: 'https://rpc-mumbai.maticvigil.com'
-  },
-  staging: {
-    // mumbai
+export const bosonConfig: { [key: string]: BosonConfiguration } = {
+  'staging-80001-0': {
+    envName: 'staging',
+    configId: 'staging-80001-0',
     biconomy: {
       apiKey: '-zIIdi_LF.27130c33-e2c6-4cd8-9419-fb053c4963cf',
       apiIds: {
@@ -71,10 +36,16 @@ export const bosonConfig: BosonConfigs = {
         ]
       }
     },
-    providerUrl: 'https://rpc-mumbai.maticvigil.com'
+    providerUrl: 'https://polygon-mumbai.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140'
   },
-  production: {
-    // polygon
+  'staging-5-0': {
+    envName: 'staging',
+    configId: 'staging-5-0',
+    providerUrl: 'https://goerli.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140'
+  },
+  'production-137-0': {
+    envName: 'production',
+    configId: 'production-137-0',
     biconomy: {
       apiKey: 'production-project-api-key',
       apiIds: {
@@ -121,6 +92,11 @@ export const bosonConfig: BosonConfigs = {
         ]
       }
     },
-    providerUrl: 'polygon-rpc-node'
+    providerUrl: 'https://polygon-mainnet.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140'
+  },
+  'production-1-0': {
+    envName: 'production',
+    configId: 'production-1-0',
+    providerUrl: 'https://mainnet.infura.io/v3/faa208f0a9d24b6b9eac43ae0fa72140'
   }
 }
