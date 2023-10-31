@@ -11,6 +11,7 @@ import {
   EnvironmentType,
   ConfigId,
   subgraph,
+  getEnvConfigById,
 } from "@bosonprotocol/core-sdk";
 import { Delay } from "./ecs-utils-clone/delay";
 import {
@@ -27,7 +28,8 @@ import { getUserData } from "@decentraland/Identity";
 
 let httpRM: RequestManager;
 let tokensList: Token[] | undefined;
-let specifiedEnv: EnvironmentType;
+let specifiedEnvName: EnvironmentType;
+let specifiedConfigId: ConfigId;
 let specifiedInventory: string[];
 /**
  * @public
@@ -60,6 +62,8 @@ export async function initCoreSdk(
   httpRM = new RequestManager(provider);
   // TODO: tokensList should be passed in configuration, independently from biconomy config
   tokensList = bosonConfigs[envName]?.biconomy?.apiIds.tokens;
+  specifiedEnvName = envName;
+  specifiedConfigId = configId;
   specifiedInventory = inventory;
   const ethConnectAdapter = new EthConnectAdapter(
     httpRM,
@@ -84,15 +88,30 @@ export async function initCoreSdk2(
   inventory: string[]
 ): Promise<CoreSDK> {
   const { envName, configId, biconomy, providerUrl } = bosonConfiguration;
+  const coreSdkConfig = getEnvConfigById(envName, configId);
+  if (!coreSdkConfig) {
+    throw new Error(
+      `Invalid coreSDK configuration (envName: ${envName}, configId: ${configId})`
+    );
+  }
   const metaTx = biconomy
     ? processBiconomyConfig(envName, configId, biconomy)
     : undefined;
 
   const signer = await getProvider();
   const metamaskRM = new RequestManager(signer);
+  const chainId = await metamaskRM.net_version();
+  if (!metaTx && chainId !== String(coreSdkConfig.chainId)) {
+    throw new Error(
+      `Wallet must be connected to chainId ${coreSdkConfig.chainId} (current: ${chainId}), or meta-transactions should be activated for this chain`
+    );
+  }
+
   const provider: HTTPProvider = new HTTPProvider(providerUrl);
   httpRM = new RequestManager(provider);
   tokensList = _tokensList;
+  specifiedEnvName = envName;
+  specifiedConfigId = configId;
   specifiedInventory = inventory;
   const ethConnectAdapter = new EthConnectAdapter(
     httpRM,
@@ -448,6 +467,9 @@ export function getTokenData(
   return result;
 }
 
-export function getEnvironment(): EnvironmentType {
-  return specifiedEnv;
+export function getEnvironment(): {
+  envName: EnvironmentType;
+  configId: ConfigId;
+} {
+  return { envName: specifiedEnvName, configId: specifiedConfigId };
 }

@@ -16,12 +16,26 @@ const productsPerEnv: { [key: string]: Array<{ sellerId: string; productUUID: st
     { sellerId: '4', productUUID: '3fe1ace-b45e-715b-4be-a48a053c566f' },
     { sellerId: '4', productUUID: 'cbbedf-6331-8b77-560f-3c144f6d8b23' }
   ],
+  'staging-5-0': [
+    { sellerId: '2', productUUID: '5312aec-f146-27b7-edfb-721540eb6' },
+    { sellerId: '2', productUUID: '5312aec-f146-27b7-edfb-721540eb6' },
+    { sellerId: '2', productUUID: '5312aec-f146-27b7-edfb-721540eb6' },
+    { sellerId: '2', productUUID: '5312aec-f146-27b7-edfb-721540eb6' },
+    { sellerId: '2', productUUID: '5312aec-f146-27b7-edfb-721540eb6' }
+  ],
   'production-137-0': [
     { sellerId: '2', productUUID: 'a234728-dc54-faa6-f1e-0886d3d0e18' },
     { sellerId: '2', productUUID: 'f04f0f6-107a-b1ef-a4af-dc4bd0a8eb1f' },
     { sellerId: '2', productUUID: '5d7ad1-64ff-e80-bce8-14a6f32f72e' },
     { sellerId: '13', productUUID: '3fe1ace-b45e-715b-4be-a48a053c566f' },
     { sellerId: '202', productUUID: 'cbbedf-6331-8b77-560f-3c144f6d8b23' }
+  ],
+  'production-1-0': [
+    { sellerId: '2', productUUID: '3f27ad-d13-8f15-df8-df018271d0a' },
+    { sellerId: '2', productUUID: '3f27ad-d13-8f15-df8-df018271d0a' },
+    { sellerId: '2', productUUID: '81355af-a10e-052f-88c-2f27bf234b88' },
+    { sellerId: '2', productUUID: '81355af-a10e-052f-88c-2f27bf234b88' },
+    { sellerId: '2', productUUID: 'dda2fa-1242-32c1-1c8-f3548600ecd5' }
   ]
 }
 
@@ -35,7 +49,7 @@ floor.addComponent(new GLTFShape('models/FloorBaseGrass_01.glb'))
 engine.addEntity(floor)
 
 async function loadScene() {
-  void useBoson().then(async ({ coreSDK, userAccount, walletAddress, targetEnv, configId }) => {
+  void useBoson().then(async ({ coreSDK, userAccount, walletAddress, envName, configId }) => {
     const allBalances: object = await getAllBalances(walletAddress)
     Kiosk.init(coreSDK, userAccount, walletAddress, allBalances)
 

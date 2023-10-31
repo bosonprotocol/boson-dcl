@@ -1,42 +1,25 @@
-import { initCoreSdk } from '@bosonprotocol/boson-dcl'
-import { getUserData, UserData } from '@decentraland/Identity'
+import { BosonConfigurator } from '@bosonprotocol/boson-dcl'
 import { bosonConfig } from './bosonConfig'
 import * as crypto from '@dcl/crypto-scene-utils'
-import { getProvider } from '@decentraland/web3-provider'
-import { RequestManager } from 'eth-connect'
-
-// const targetEnv = 'production'
-// const targetEnv = 'staging'
-// const targetEnv = 'testing'
-
-async function getWalletAddress(): Promise<string> {
-  return await getUserData()
-    .then((userAccount) => {
-      return userAccount?.publicKey || (userAccount?.userId as string)
-    })
-    .catch((error) => {
-      log(error)
-      return ''
-    })
-}
 
 export async function useBoson() {
-  const provider = await getProvider()
-  const requestManager = new RequestManager(provider)
-  const chainId = await requestManager.net_version()
-  log('chainId', chainId)
-  // If user wallet is connected on Ethereum mainnet --> PRODUCTION
-  const targetEnv = chainId === '1' ? 'production' : 'staging'
-  const configId = chainId === '1' ? 'production-137-0' : 'staging-80001-0'
-  log('Initialize BOSON on env', targetEnv, 'config', configId)
-  const userAccount: UserData = (await getUserData()) as UserData
+  const productionConfigId = 'production-137-0' // polygon
+  // const productionConfigId = 'production-1-0' // ethereum
+  const productionBosonConfig = bosonConfig[productionConfigId]
+  if (!productionBosonConfig) {
+    throw new Error(`Unable to get bosonConfig for configId ${productionConfigId}`)
+  }
+  const stagingConfigId = 'staging-80001-0' // mumbai
+  // const stagingConfigId = 'staging-5-0' // goerli
+  const stagingBosonConfig = bosonConfig[stagingConfigId]
+  if (!stagingBosonConfig) {
+    throw new Error(`Unable to get bosonConfig for configId ${stagingConfigId}`)
+  }
 
-  const walletAddress = userAccount?.publicKey || userAccount?.userId
-  let inventory: string[] = [];
+  let inventory: string[] = []
   try {
     inventory = await crypto.avatar.getUserInventory()
   } catch (e) {}
-  const coreSDK = await initCoreSdk(targetEnv, configId, bosonConfig, getWalletAddress, inventory)
 
-  return { coreSDK, userAccount, walletAddress, targetEnv, configId }
+  return BosonConfigurator.initialize(productionBosonConfig, stagingBosonConfig, inventory)
 }

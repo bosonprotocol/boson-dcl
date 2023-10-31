@@ -46,11 +46,7 @@ export class CompletePage {
   openseaUrlBase = "";
   bosonDAppUrlBase = "";
 
-  constructor(
-    _kiosk: ProductHandle,
-    _parent: Entity,
-    _productData: any
-  ) {
+  constructor(_kiosk: ProductHandle, _parent: Entity, _productData: any) {
     this.kiosk = _kiosk;
     this.productData = _productData;
 
@@ -233,22 +229,40 @@ export class CompletePage {
       })
     );
 
-    switch (getEnvironment()) {
+    const { envName, configId } = getEnvironment();
+    switch (envName) {
       case "local":
+        this.bosonDAppUrlBase = "http://localhost:3000";
+        break;
       case "testing":
-        this.explorerUrlBase = "https://mumbai.polygonscan.com";
-        this.openseaUrlBase = "https://testnets.opensea.io/assets/mumbai";
         this.bosonDAppUrlBase = "https://interface-test.on.fleek.co";
         break;
       case "staging":
-        this.explorerUrlBase = "https://mumbai.polygonscan.com";
-        this.openseaUrlBase = "https://testnets.opensea.io/assets/mumbai";
         this.bosonDAppUrlBase = "https://interface-staging.on.fleek.co";
         break;
       case "production":
+        this.bosonDAppUrlBase = "https://bosonapp.io";
+        break;
+    }
+    switch (configId) {
+      case "local-31337-0":
+      case "testing-80001-0":
+      case "staging-80001-0":
+        this.explorerUrlBase = "https://mumbai.polygonscan.com";
+        this.openseaUrlBase = "https://testnets.opensea.io/assets/mumbai";
+        break;
+      case "testing-5-0":
+      case "staging-5-0":
+        this.explorerUrlBase = "https://goerli.etherscan.io";
+        this.openseaUrlBase = "https://testnets.opensea.io/assets/goerli";
+        break;
+      case "production-137-0":
         this.explorerUrlBase = "https://polygonscan.com";
         this.openseaUrlBase = "https://opensea.io/assets/matic";
-        this.bosonDAppUrlBase = "https://bosonapp.io";
+        break;
+      case "production-1-0":
+        this.explorerUrlBase = "https://etherscan.io";
+        this.openseaUrlBase = "https://opensea.io/assets/ethereum";
         break;
     }
 
@@ -312,6 +326,15 @@ export class CompletePage {
       this.openSeaLinkClickBox.addComponentOrReplace(
         new OnPointerDown(
           () => {
+            log("openseaUrlBase", this.openseaUrlBase);
+            log(
+              "openseaUrl",
+              this.openseaUrlBase +
+                "/" +
+                productData.seller.voucherCloneAddress +
+                "/" +
+                tokenId
+            );
             openExternalURL(
               this.openseaUrlBase +
                 "/" +

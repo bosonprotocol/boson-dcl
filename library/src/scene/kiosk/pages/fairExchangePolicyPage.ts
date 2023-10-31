@@ -227,8 +227,9 @@ export class FairExchangePolicyPage {
     // Click boxes
 
     let URLBase = "";
+    const { envName } = getEnvironment();
 
-    switch (getEnvironment()) {
+    switch (envName) {
       case "local":
       case "testing":
         URLBase = "https://interface-test.on.fleek.co/";
