@@ -191,11 +191,5 @@ Practically, 2 products can be associated to an object, one for the production e
 
 ## Boson x DCL-Edit Demo Video
 
-[Boson x DCL-Edit Demo Video](./assets/Demo_Boson_x_DCL-Edit.avi)
-
-<video src="./assets/Demo_Boson_x_DCL-Edit.avi"></video>
-
-[Boson x DCL-Edit Demo Video](https://raw.githubusercontent.com/bosonprotocol/boson-dcl/dcl-edit-demo-video/docs/assets/Demo_Boson_x_DCL-Edit.avi)
-
-<video src="https://raw.githubusercontent.com/bosonprotocol/boson-dcl/dcl-edit-demo-video/docs/assets/Demo_Boson_x_DCL-Edit.avi"></video>
+https://github.com/bosonprotocol/boson-dcl/assets/7184124/6ef6e775-dd8f-41ab-a045-b7ce0c987a9e
 
