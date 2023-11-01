@@ -187,3 +187,8 @@ Practically, 2 products can be associated to an object, one for the production e
 - You should be able to click on objects that have a BosonProduct component. When clicked, the Commit popup opens, show details about the associated Boson Product and allow the user to commit to this offer.
   ![DCL-Edit Preview](assets/DCLEdit_ScenePreview2.png)
   ![DCL-Edit Preview](assets/DCLEdit_ScenePreview3.png)
+
+
+## Boson x DCL-Edit Demo Video
+
+![Boson x DCL-Edit Demo Video](./assets/Demo_Boson_x_DCL-Edit.avi)
